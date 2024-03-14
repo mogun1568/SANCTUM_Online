@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0d4e3b11d5cf79409296247a25bd423, type: 3}
+  m_Name: Item 3
+  m_EditorClassIdentifier: 
+  itemType: 1
+  itemId: 3
+  itemName: Water
+  itemIcon: {fileID: 21300000, guid: 4af8d7337b1e1ee4d9041f4c54ef9a43, type: 3}
+  damage: 0
+  range: 0
+  fireRate: 0
+  returnExp: 1
+  towerPrefab: {fileID: 0}
+  elementPrefabs:
+  - {fileID: 3532731467981227953, guid: 773bb678ea7ba354fa576e27abafede3, type: 3}
+  - {fileID: 1180411428738408414, guid: 0b6a518bee45e5645b9631c675ab3701, type: 3}
+  - {fileID: 1165012536672940043, guid: c64674c80a05fe245a2ec37947f9953e, type: 3}

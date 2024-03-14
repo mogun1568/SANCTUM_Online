@@ -1,0 +1,44 @@
+{
+	"enemys": [
+		{
+			"enemyType": "General",
+			"enemyName": "AlienDefault"
+		},
+		{
+			"enemyType": "General",
+			"enemyName": "ChemicalmanDefault"
+		},
+		{
+			"enemyType": "General",
+			"enemyName": "Enemy_Bear"
+		},
+		{
+			"enemyType": "General",
+			"enemyName": "Enemy_Chicken"
+		},
+		{
+			"enemyType": "General",
+			"enemyName": "Enemy_Jester"
+		},
+		{
+			"enemyType": "General",
+			"enemyName": "NinjaDefault"
+		},
+		{
+			"enemyType": "General",
+			"enemyName": "RobotDefault"
+		},
+		{
+			"enemyType": "General",
+			"enemyName": "SpacemanDefault"
+		},
+		{
+			"enemyType": "Attack",
+			"enemyName": "KnightDefault"
+		},
+		{
+			"enemyType": "Boss",
+			"enemyName": "SalarymanDefault"
+		}
+	]
+}
