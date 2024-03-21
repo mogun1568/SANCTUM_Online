@@ -13,7 +13,11 @@ public class PlayerManager
 
     public void Add(S_PlayerList packet)
     {
-        Object obj = Resources.Load("Player");
+        Object obj = Resources.Load("Prefabs/Environment/Map");
+        if (obj == null)
+        {
+            Debug.Log(null);
+        }
 
         foreach (S_PlayerList.Player p in packet.players)
         {
@@ -23,13 +27,11 @@ public class PlayerManager
             {
                 MyPlayer myPlayer = go.AddComponent<MyPlayer>();
                 myPlayer.PlayerId = p.playerId;
-                myPlayer.transform.position = new Vector3(p.posX, p.posY, p.posZ);
                 _myPlayer = myPlayer;
             } else
             {
                 Player player = go.AddComponent<Player>();
                 player.PlayerId = p.playerId;
-                player.transform.position = new Vector3(p.posX, p.posY, p.posZ);
                 _players.Add(p.playerId, player);
             }
         }
@@ -39,13 +41,29 @@ public class PlayerManager
     {
         if (_myPlayer.PlayerId == packet.playerId)
         {
-            _myPlayer.targetPosition = new Vector3(packet.posX, packet.posY, packet.posZ);
+            //_myPlayer.targetPosition = new Vector3(packet.posX, packet.posY, packet.posZ);
         } else
         {
             Player player = null;
             if (_players.TryGetValue(packet.playerId, out player))
             {
-                player.targetPosition = new Vector3(packet.posX, packet.posY, packet.posZ);
+                //player.targetPosition = new Vector3(packet.posX, packet.posY, packet.posZ);
+            }
+        }
+    }
+
+    public void Map(S_BroadcastMap packet)
+    {
+        if (_myPlayer.PlayerId == packet.playerId)
+        {
+            
+        }
+        else
+        {
+            Player player = null;
+            if (_players.TryGetValue(packet.playerId, out player))
+            {
+                
             }
         }
     }
@@ -57,11 +75,10 @@ public class PlayerManager
             return;
         }
 
-        Object obj = Resources.Load("Player");
+        Object obj = Resources.Load("/Prefabs/Environment/Map");
         GameObject go = Object.Instantiate(obj) as GameObject;
 
         Player player = go.AddComponent<Player>();
-        player.transform.position = new Vector3(packet.posX, packet.posY, packet.posZ);
         _players.Add(packet.playerId, player);
     }
 

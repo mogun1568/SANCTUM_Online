@@ -12,6 +12,8 @@ public enum PacketID
 	S_PlayerList = 4,
 	C_Move = 5,
 	S_BroadcastMove = 6,
+	C_Map = 7,
+	S_BroadcastMap = 8,
 	
 }
 
@@ -348,6 +350,193 @@ public class S_BroadcastMove : IPacket
 		count += sizeof(float);
 		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.posZ);
 		count += sizeof(float);
+        success &= BitConverter.TryWriteBytes(s, count);
+        if (success == false)
+        {
+            return null;
+        }
+        return SendBufferHelper.Close(count);
+    }
+}
+
+public class C_Map : IPacket
+{
+    
+	public class Map
+	{
+	    public int r;
+		public int c;
+		public int nodeType;
+		public bool isStart;
+		public bool isEnd;
+	
+	    public void Read(ReadOnlySpan<byte> s, ref ushort count)
+	    {
+	        this.r = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+			count += sizeof(int);
+			this.c = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+			count += sizeof(int);
+			this.nodeType = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+			count += sizeof(int);
+			this.isStart = BitConverter.ToBoolean(s.Slice(count, s.Length - count));
+			count += sizeof(bool);
+			this.isEnd = BitConverter.ToBoolean(s.Slice(count, s.Length - count));
+			count += sizeof(bool);
+	    }
+	
+	    public bool Write(Span<byte>s, ref ushort count)
+	    {
+	        bool success = true;
+	        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.r);
+			count += sizeof(int);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.c);
+			count += sizeof(int);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.nodeType);
+			count += sizeof(int);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.isStart);
+			count += sizeof(bool);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.isEnd);
+			count += sizeof(bool);
+	        return success;
+	    } 
+	}
+	public List<Map> maps = new List<Map>();
+
+    public ushort Protocol { get { return (ushort)PacketID.C_Map; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        // 역직렬화
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.maps.Clear();
+		ushort mapLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		for (int i = 0; i < mapLen; i++)
+		{
+		    Map map = new Map();
+		    map.Read(s, ref count);
+		    maps.Add(map);
+		}
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        // 직렬화
+        ArraySegment<byte> segment = SendBufferHelper.Open(65535);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.C_Map);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)this.maps.Count);
+		count += sizeof(ushort);
+		foreach (Map map in this.maps)
+		{
+		    success &= map.Write(s, ref count);
+		}
+        success &= BitConverter.TryWriteBytes(s, count);
+        if (success == false)
+        {
+            return null;
+        }
+        return SendBufferHelper.Close(count);
+    }
+}
+
+public class S_BroadcastMap : IPacket
+{
+    public int playerId;
+	
+	public class Map
+	{
+	    public int r;
+		public int c;
+		public int nodeType;
+		public bool isStart;
+		public bool isEnd;
+	
+	    public void Read(ReadOnlySpan<byte> s, ref ushort count)
+	    {
+	        this.r = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+			count += sizeof(int);
+			this.c = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+			count += sizeof(int);
+			this.nodeType = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+			count += sizeof(int);
+			this.isStart = BitConverter.ToBoolean(s.Slice(count, s.Length - count));
+			count += sizeof(bool);
+			this.isEnd = BitConverter.ToBoolean(s.Slice(count, s.Length - count));
+			count += sizeof(bool);
+	    }
+	
+	    public bool Write(Span<byte>s, ref ushort count)
+	    {
+	        bool success = true;
+	        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.r);
+			count += sizeof(int);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.c);
+			count += sizeof(int);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.nodeType);
+			count += sizeof(int);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.isStart);
+			count += sizeof(bool);
+			success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.isEnd);
+			count += sizeof(bool);
+	        return success;
+	    } 
+	}
+	public List<Map> maps = new List<Map>();
+
+    public ushort Protocol { get { return (ushort)PacketID.S_BroadcastMap; } }
+
+    public void Read(ArraySegment<byte> segment)
+    {
+        // 역직렬화
+        ushort count = 0;
+
+        ReadOnlySpan<byte> s = new ReadOnlySpan<byte>(segment.Array, segment.Offset, segment.Count);
+        count += sizeof(ushort);
+        count += sizeof(ushort);
+        this.playerId = BitConverter.ToInt32(s.Slice(count, s.Length - count));
+		count += sizeof(int);
+		this.maps.Clear();
+		ushort mapLen = BitConverter.ToUInt16(s.Slice(count, s.Length - count));
+		count += sizeof(ushort);
+		for (int i = 0; i < mapLen; i++)
+		{
+		    Map map = new Map();
+		    map.Read(s, ref count);
+		    maps.Add(map);
+		}
+    }
+
+    public ArraySegment<byte> Write()
+    {
+        // 직렬화
+        ArraySegment<byte> segment = SendBufferHelper.Open(65535);
+        ushort count = 0;
+        bool success = true;
+
+        Span<byte> s = new Span<byte>(segment.Array, segment.Offset, segment.Count);
+
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)PacketID.S_BroadcastMap);
+        count += sizeof(ushort);
+        success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), this.playerId);
+		count += sizeof(int);
+		success &= BitConverter.TryWriteBytes(s.Slice(count, s.Length - count), (ushort)this.maps.Count);
+		count += sizeof(ushort);
+		foreach (Map map in this.maps)
+		{
+		    success &= map.Write(s, ref count);
+		}
         success &= BitConverter.TryWriteBytes(s, count);
         if (success == false)
         {

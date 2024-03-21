@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
 
     void OnEnable()
     {
-        gameObject.GetOrAddComponent<Poolable>();
+        //gameObject.GetOrAddComponent<Poolable>();
 
         gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         distanceFromTower = 0f;

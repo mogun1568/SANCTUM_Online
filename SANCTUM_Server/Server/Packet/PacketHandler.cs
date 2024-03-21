@@ -36,4 +36,20 @@ class PacketHandler
         GameRoom room = clientSession.Room;
         room.Push(() => room.Move(clientSession, movePacket));
     }
+
+    public static void C_MapHandler(PacketSession session, IPacket packet)
+    {
+        C_Move movePacket = packet as C_Move;
+        ClientSession clientSession = session as ClientSession;
+
+        if (clientSession.Room == null)
+        {
+            return;
+        }
+
+        //Console.WriteLine($"{movePacket.posX}, {movePacket.posY}, {movePacket.posZ}");
+
+        GameRoom room = clientSession.Room;
+        room.Push(() => room.Move(clientSession, movePacket));
+    }
 }

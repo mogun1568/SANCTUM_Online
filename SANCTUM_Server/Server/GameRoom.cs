@@ -99,5 +99,21 @@ namespace Server
             move.posZ = packet.posZ;
             Broadcast(move.Write());
         }
+
+        public void Map(ClientSession session, C_Map packet)
+        {
+            // 좌표 저장하고
+            foreach (C_Map.Map m in packet.maps)
+            {
+                session.Map[m.r, m.c] = m.nodeType;
+            }
+
+            // 모두에게 알린다
+            S_BroadcastMap map = new S_BroadcastMap();
+            map.playerId = session.SessionId;
+            // packet.maps를 map.maps로 복사하기 전에 변환 수행
+            map.maps = packet.maps.ConvertAll(m => new S_BroadcastMap.Map { r = m.r, c = m.c, nodeType = m.nodeType, isStart = m.isStart, isEnd = m.isEnd });
+            Broadcast(map.Write());
+        }
     }
 }

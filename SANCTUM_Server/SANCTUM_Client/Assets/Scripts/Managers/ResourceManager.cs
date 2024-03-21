@@ -58,6 +58,12 @@ public class ResourceManager
             return null;
         }
 
+        // 2번 조건문을 위한 조건문, Poolable 컴포넌트가 필요한 오브젝트에 미리 넣어주기(뭔가 효율적이지 않아보임)
+        if (original.GetComponent<TowerControl>() != null || original.GetComponent<EnemyControl>() != null || original.GetComponent<Bullet>() != null)
+        {
+            original.GetOrAddComponent<Poolable>();
+        }
+
         // 2. 혹시 풀링된 애가 있을까?
         if (original.GetComponent<Poolable>() != null)
         {

@@ -33,7 +33,7 @@ public class EnemyControl : MonoBehaviour
         enemyData = Managers.Data.EnemyDict[enemyName];
 
         gameObject.GetOrAddComponent<EnemyMovement>();
-        gameObject.GetOrAddComponent<Poolable>();
+        //gameObject.GetOrAddComponent<Poolable>();
         _stat = gameObject.GetOrAddComponent<EnemyStat>();
         if (enemyData.enemyType == "Attack")
         {

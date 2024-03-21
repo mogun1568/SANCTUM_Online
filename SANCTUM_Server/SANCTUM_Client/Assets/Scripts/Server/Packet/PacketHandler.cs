@@ -39,4 +39,12 @@ class PacketHandler
 
         PlayerManager.Instance.Move(pkt);
     }
+
+    public static void S_BroadcastMapHandler(PacketSession session, IPacket packet)
+    {
+        S_BroadcastMap pkt = packet as S_BroadcastMap;
+        ServerSession serverSession = session as ServerSession;
+
+        PlayerManager.Instance.Map(pkt);
+    }
 }

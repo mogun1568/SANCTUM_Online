@@ -23,6 +23,8 @@ public class PacketManager
         _handler.Add((ushort)PacketID.C_LeaveGame, PacketHandler.C_LeaveGameHandler);
         _makeFunc.Add((ushort)PacketID.C_Move, MakePacket<C_Move>);
         _handler.Add((ushort)PacketID.C_Move, PacketHandler.C_MoveHandler);
+        _makeFunc.Add((ushort)PacketID.C_Map, MakePacket<C_Map>);
+        _handler.Add((ushort)PacketID.C_Map, PacketHandler.C_MapHandler);
     
     }
 

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class NodeInfo
 {
@@ -58,10 +57,14 @@ public class NewMap : MonoBehaviour
     int mapLength = 3;
     int NodeSize = 4;
 
-    void Start()
-    {
-        Init();
-    }
+    public int playerId = 0;
+    int startdirR, startdirC;
+    int interval = 100;
+
+    //void Start()
+    //{
+    //    Init();
+    //}
 
     //void Update()
     //{
@@ -121,8 +124,32 @@ public class NewMap : MonoBehaviour
         Debug.Log(boolString);*/
     }
 
-    void Init()
+    public void Init()
     {
+        if (playerId == 0)
+        {
+            startdirR = 0;
+            startdirC = 0;
+        } else if (playerId == 1)
+        {
+            startdirR = 1;
+            startdirC = -1;
+        } else if (playerId == 2)
+        {
+            startdirR = -1;
+            startdirC = -1;
+        } else
+        {
+            startdirR = 0;
+            startdirC = -2;
+        }
+        startdirR *= interval;
+        startdirC *= interval;
+
+        roadParent = GameObject.Find("Roads");
+        GroundParent = GameObject.Find("Nodes");
+        EnvironmentParent = GameObject.Find("Enviroment");
+
         //parent = Instantiate(parentPrefab);
         //EnvironmentParent = Instantiate(EnvironmentParentPrefab);
         startObj = Managers.Resource.Instantiate("Start");
@@ -309,16 +336,19 @@ public class NewMap : MonoBehaviour
 
     void UpdatePosition()
     {
-        startObj.transform.position = new Vector3(startPoint.R * NodeSize, 1, startPoint.C * NodeSize);
+        startObj.transform.position = new Vector3(startPoint.R * NodeSize + startdirR, 1, startPoint.C * NodeSize + startdirC);
         startObj.transform.rotation = Quaternion.Euler(0, startPoint.Direction * 90, 0);
         StartCoroutine(SetScaleCoroutine(startObj.transform, 1));
-        endObj.transform.position = new Vector3(endPoint.R * NodeSize, 1, endPoint.C * NodeSize);
+        endObj.transform.position = new Vector3(endPoint.R * NodeSize + startdirR, 1, endPoint.C * NodeSize + startdirC);
         endObj.transform.rotation = Quaternion.Euler(0, endPoint.Direction * 90 + 180, 0);
         StartCoroutine(SetScaleCoroutine(endObj.transform, 0.003f));
     }
 
     void CreateNode(string type, int r, int c)
     {
+        r += startdirR;
+        c += startdirC;
+
         GameObject node;
 
         if (type == "RoadS")

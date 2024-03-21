@@ -55,7 +55,7 @@ public class TowerControl : MonoBehaviour
 
         itemData = Managers.Select.getItemData();
 
-        gameObject.GetOrAddComponent<Poolable>();
+        //gameObject.GetOrAddComponent<Poolable>();
         _stat = gameObject.GetOrAddComponent<TowerStat>();
 
         if (_stat.TowerType == "StandardTower")

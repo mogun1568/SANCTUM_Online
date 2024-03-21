@@ -16,6 +16,7 @@ namespace Server
         public float PosX { get; set; }
         public float PosY { get; set; }
         public float PosZ { get; set; }
+        public int[,] Map { get; set; }
 
         public override void OnConnected(EndPoint endPoint)
         {

@@ -106,7 +106,6 @@ public class PoolManager
         // 거의 일어날 수 없는데 유니티에서 드래그앤드롭으로 생성된 경우에는 일어날 수도 있음
         if (_pool.ContainsKey(name) == false)
         {
-            //CreatePool(poolable.gameObject);
             GameObject.Destroy(poolable.gameObject);
             return;
         }

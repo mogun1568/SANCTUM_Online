@@ -31,4 +31,23 @@
 		<float name="posY"/>
 		<float name="posZ"/>
 	</packet>
+	<packet name="C_Map">
+		<list name="map">
+			<int name="r"/>
+			<int name="c"/>
+			<int name="nodeType"/>
+			<bool name="isStart"/>
+			<bool name="isEnd"/>
+		</list>
+	</packet>
+	<packet name="S_BroadcastMap">
+		<int name="playerId"/>
+		<list name="map">
+			<int name="r"/>
+			<int name="c"/>
+			<int name="nodeType"/>
+			<bool name="isStart"/>
+			<bool name="isEnd"/>
+		</list>
+	</packet>
 </PDL>
