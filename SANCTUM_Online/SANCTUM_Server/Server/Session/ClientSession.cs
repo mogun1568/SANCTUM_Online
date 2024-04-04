@@ -8,24 +8,24 @@ using ServerCore;
 using System.Net;
 using Google.Protobuf.Protocol;
 using Google.Protobuf;
+using Server.Game;
 
 namespace Server
 {
-    class ClientSession : PacketSession
+    public class ClientSession : PacketSession
     {
+        public Player MyPlayer { get; set; }
         public int SessionId { get; set; }
 
         public void Send(IMessage packet)
         {
             string msgName = packet.Descriptor.Name.Replace("_", string.Empty);
             MsgId msgId = (MsgId)Enum.Parse(typeof(MsgId), msgName);
-
             ushort size = (ushort)packet.CalculateSize();
             byte[] sendBuffer = new byte[size + 4];
-            Array.Copy(BitConverter.GetBytes(size + 4), 0, sendBuffer, 0, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)(size + 4)), 0, sendBuffer, 0, sizeof(ushort));
             Array.Copy(BitConverter.GetBytes((ushort)msgId), 0, sendBuffer, 2, sizeof(ushort));
             Array.Copy(packet.ToByteArray(), 0, sendBuffer, 4, size);
-
             Send(new ArraySegment<byte>(sendBuffer));
         }
 
@@ -33,13 +33,17 @@ namespace Server
         {
             Console.WriteLine($"OnConnected : {endPoint}");
 
-            // PROTO Test
-            S_Chat chat = new S_Chat()
+            // 원래는 서버에서 패킷을 보내고 클라에서 준비됐다는 패킷을 보내면 입장시킴
+            // 지금은 그냥 강제 입장시키는 방식으로 진행
+            MyPlayer = PlayerManager.Instance.Add();
             {
-                Context = "안녕하세요"
-            };
+                MyPlayer.Info.Name = $"Player_{MyPlayer.Info.PlayerId}";
+                MyPlayer.Info.PosX = 0;
+                MyPlayer.Info.PosY = 0;
+                MyPlayer.Session = this;
+            }
 
-            Send(chat);
+            RoomManager.Instance.Find(1).EnterGame(MyPlayer);
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
@@ -49,6 +53,8 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
+            RoomManager.Instance.Find(1).LeaveGame(MyPlayer.Info.PlayerId);
+
             SessionManager.Instance.Remove(this);
 
             Console.WriteLine($"OnDisconnected : {endPoint}");
