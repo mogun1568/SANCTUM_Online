@@ -45,6 +45,7 @@ public class WaveSpawner : MonoBehaviour
 
     }
 
+    /*
     void Update()
     {
         if (!Managers.Game.isLive)
@@ -93,6 +94,7 @@ public class WaveSpawner : MonoBehaviour
             bossTime *= 2f;
         }
     }
+    */
 
     IEnumerator SpawnWave()
     {

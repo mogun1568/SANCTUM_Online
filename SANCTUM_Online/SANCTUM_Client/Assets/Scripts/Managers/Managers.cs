@@ -10,10 +10,12 @@ public class Managers : MonoBehaviour
     #region Contents
     GameManager _game = new GameManager();
     SelectMananger _select = new SelectMananger();
+    ObjectManager _obj = new ObjectManager();
     NetworkManager _network = new NetworkManager();
 
     public static GameManager Game { get { return Instance._game; } }
     public static SelectMananger Select { get { return Instance._select; } }
+    public static ObjectManager Object { get { return Instance._obj; } }
     public static NetworkManager Network { get { return Instance._network; } }
     #endregion
 
