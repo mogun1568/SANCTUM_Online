@@ -11,7 +11,8 @@ public class ObjectManager
 
 	public void Add(PlayerInfo info, bool myMap = false)
 	{
-		if (myMap)
+        Debug.Log($"{info.PosX}, {info.PosY}");
+        if (myMap)
 		{
 			GameObject go = Managers.Resource.Instantiate("Map/MyMap");
 			go.name = info.Name;

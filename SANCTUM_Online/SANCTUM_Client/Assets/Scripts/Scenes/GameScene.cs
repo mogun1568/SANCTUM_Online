@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using static Cinemachine.DocumentationSortingAttribute;
 
@@ -20,6 +21,8 @@ public class GameScene : BaseScene
         base.Init();
 
         SceneType = Define.Scene.GamePlay;
+
+        Screen.SetResolution(640, 480, false);
 
         //Managers.Game.Init();
         //Managers.Scene.Init();

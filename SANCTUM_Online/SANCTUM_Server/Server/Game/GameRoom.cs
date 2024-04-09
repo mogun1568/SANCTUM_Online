@@ -10,7 +10,7 @@ namespace Server.Game
 		object _lock = new object();
 		public int RoomId { get; set; }
 
-		List<Player> _players = new List<Player>();
+        public List<Player> _players = new List<Player>();
 
 		public void EnterGame(Player newPlayer)
 		{
@@ -19,6 +19,28 @@ namespace Server.Game
 
 			lock (_lock)
 			{
+				// 아직 조금 더 수정 필요
+                if (_players.Count == 0)
+				{
+                    newPlayer.Info.PosX = -200;
+                    newPlayer.Info.PosY = -200;
+				}
+				else if (_players.Count == 1)
+				{
+                    newPlayer.Info.PosX = 0;
+                    newPlayer.Info.PosY = -200;
+				}
+				else if (_players.Count == 2)
+				{
+                    newPlayer.Info.PosX = -200;
+                    newPlayer.Info.PosY = 0;
+				}
+				else
+				{
+                    newPlayer.Info.PosX = 0;
+                    newPlayer.Info.PosY = 0;
+				}
+
 				_players.Add(newPlayer);
 				newPlayer.Room = this;
 
@@ -61,8 +83,8 @@ namespace Server.Game
 				_players.Remove(player);
 				player.Room = null;
 
-				// 본인한테 정보 전송
-				{
+                // 본인한테 정보 전송
+                {
 					S_LeaveGame leavePacket = new S_LeaveGame();
 					player.Session.Send(leavePacket);
 				}

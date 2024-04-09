@@ -47,9 +47,8 @@ public class NewMap : CreatureController
     protected int mapLength = 3;
     protected int NodeSize = 4;
 
-    public int playerId = 0;
     int startdirR, startdirC;
-    int interval = 0;
+    //int interval = 100;
 
     void Start()
     {
@@ -116,25 +115,9 @@ public class NewMap : CreatureController
 
     public virtual void Init()
     {
-        //if (playerId == 0)
-        //{
-        //    startdirR = 0;
-        //    startdirC = 0;
-        //} else if (playerId == 1)
-        //{
-        //    startdirR = 1;
-        //    startdirC = -1;
-        //} else if (playerId == 2)
-        //{
-        //    startdirR = -1;
-        //    startdirC = -1;
-        //} else
-        //{
-        //    startdirR = 0;
-        //    startdirC = -2;
-        //}
-        startdirR *= interval;
-        startdirC *= interval;
+        transform.position = new Vector3(Pos.x, Pos.y, Pos.z);
+        startdirR = (int)Pos.x;
+        startdirC = (int)Pos.z;
 
         roadParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
         roadParent.name = "" + "Roads";
