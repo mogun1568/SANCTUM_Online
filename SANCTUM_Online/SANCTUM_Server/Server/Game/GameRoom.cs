@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.Protocol;
+﻿using Google.Protobuf;
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,26 +20,27 @@ namespace Server.Game
 
 			lock (_lock)
 			{
-				// 아직 조금 더 수정 필요
+                // 아직 조금 더 수정 필요
+                Console.WriteLine(_players.Count);
                 if (_players.Count == 0)
 				{
-                    newPlayer.Info.PosX = -200;
-                    newPlayer.Info.PosY = -200;
+                    newPlayer.Info.PosInfo.PosX = -100;
+                    newPlayer.Info.PosInfo.PosZ = -100;
 				}
 				else if (_players.Count == 1)
 				{
-                    newPlayer.Info.PosX = 0;
-                    newPlayer.Info.PosY = -200;
+                    newPlayer.Info.PosInfo.PosX = 0;
+                    newPlayer.Info.PosInfo.PosZ = -100;
 				}
 				else if (_players.Count == 2)
 				{
-                    newPlayer.Info.PosX = -200;
-                    newPlayer.Info.PosY = 0;
+                    newPlayer.Info.PosInfo.PosX = -100;
+                    newPlayer.Info.PosInfo.PosZ = 0;
 				}
 				else
 				{
-                    newPlayer.Info.PosX = 0;
-                    newPlayer.Info.PosY = 0;
+                    newPlayer.Info.PosInfo.PosX = 0;
+                    newPlayer.Info.PosInfo.PosZ = 0;
 				}
 
 				_players.Add(newPlayer);
@@ -101,5 +103,19 @@ namespace Server.Game
 				}
 			}
 		}
-	}
+
+        public void Broadcast(IMessage packet)
+        {
+            // 매번 lock을 거는 것은 멀티쓰레드의 의미가 희석됨
+            // 고로 Job을 통해 단일쓰레드에서 쭉 실행하는 방식 이용(예정)
+            lock (_lock)
+            {
+                Console.WriteLine($"_playersCount : {_players.Count}");
+                foreach (Player p in _players)
+                {
+                    p.Session.Send(packet);
+                }
+            }
+        }
+    } 
 }

@@ -52,6 +52,12 @@ public class GameScene : BaseScene
 
     void Update()
     {
+        // 확인용 (나중에 고쳐야됨 문제 많음)
+        if (Managers.Object._objects.Count >= 2)
+        {
+            Managers.Object.MyMap.GameStart();
+        }
+
         if (Managers.Game.GameIsOver)
         {
             return;

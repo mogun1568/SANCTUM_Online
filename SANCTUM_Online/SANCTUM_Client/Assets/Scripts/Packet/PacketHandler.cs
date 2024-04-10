@@ -37,11 +37,34 @@ class PacketHandler
         }
     }
 
-    public static void S_MoveHandler(PacketSession session, IMessage packet)
+    public static void S_CreateMapHandler(PacketSession session, IMessage packet)
     {
-        S_Move movePacket = packet as S_Move;
+        S_CreateMap CreatePacket = packet as S_CreateMap;
         ServerSession serverSession = session as ServerSession;
 
-        Debug.Log("S_MoveHandler");
+        GameObject go = Managers.Object.FindById(CreatePacket.PlayerId);
+        if (go == null)
+        {
+            return;
+        }
+
+        Debug.Log($"{CreatePacket.PlayerId}, {Managers.Object.MyMap.Id}");
+        if (CreatePacket.PlayerId == Managers.Object.MyMap.Id)
+        {
+            return;
+        }
+
+
+        NewMap mc = go.GetComponent<NewMap>();
+        if (mc == null)
+        {
+            return;
+        }
+
+        // 자기 자신은 클라에서 이동시키므로 굳이 이렇게 콜백을 받을 필요는 없음
+        foreach (NodeInfo nodeInfo in CreatePacket.NodeInfo)
+        {
+            mc.CreateNode(nodeInfo.NodeType, nodeInfo.PosInfo.PosX, nodeInfo.PosInfo.PosZ);
+        }
     }
 }

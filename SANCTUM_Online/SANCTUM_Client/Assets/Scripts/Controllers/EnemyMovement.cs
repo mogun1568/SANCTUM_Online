@@ -50,7 +50,7 @@ public class EnemyMovement : MonoBehaviour
     }*/
 
 
-    LinkedListNode<NodeInfo> nextRoad;
+    LinkedListNode<LocationInfo> nextRoad;
 
     //private Vector3 target;
     //private LinkedListNode<Vector3> Mnode;

@@ -7,11 +7,10 @@ using UnityEngine;
 public class ObjectManager
 {
 	public MyMapController MyMap { get; set; }
-	Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
+	public Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
 
 	public void Add(PlayerInfo info, bool myMap = false)
 	{
-        Debug.Log($"{info.PosX}, {info.PosY}");
         if (myMap)
 		{
 			GameObject go = Managers.Resource.Instantiate("Map/MyMap");
@@ -20,7 +19,7 @@ public class ObjectManager
 
 			MyMap = go.GetComponent<MyMapController>();
 			MyMap.Id = info.PlayerId;
-			MyMap.Pos = new Vector3(info.PosX, 1, info.PosY);
+			MyMap.PosInfo = info.PosInfo;
 		}
 		else
 		{
@@ -30,19 +29,21 @@ public class ObjectManager
 
 			NewMap mc = go.GetComponent<NewMap>();
             mc.Id = info.PlayerId;
-            mc.Pos = new Vector3(info.PosX, 1, info.PosY);
+			mc.PosInfo = info.PosInfo;
         }
-    }
-
-	public void Add(int id, GameObject go)
-	{
-		_objects.Add(id, go);
 	}
 
 	public void Remove(int id)
 	{
-		_objects.Remove(id);
-	}
+        GameObject go = FindById(id);
+        if (go == null)
+        {
+            return;
+        }
+
+        _objects.Remove(id);
+        Managers.Resource.Destroy(go);
+    }
 
 	public void RemoveMyPlayer()
 	{
@@ -55,7 +56,14 @@ public class ObjectManager
 		MyMap = null;
 	}
 
-	public GameObject Find(Vector3 Pos)
+    public GameObject FindById(int id)
+    {
+        GameObject go = null;
+        _objects.TryGetValue(id, out go);
+        return go;
+    }
+
+    public GameObject Find(Vector3 Pos)
 	{
 		foreach (GameObject obj in _objects.Values)
 		{
@@ -83,6 +91,10 @@ public class ObjectManager
 
 	public void Clear()
 	{
-		_objects.Clear();
-	}
+        foreach (GameObject obj in _objects.Values)
+        {
+            Managers.Resource.Destroy(obj);
+        }
+        _objects.Clear();
+    }
 }

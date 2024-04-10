@@ -9,8 +9,8 @@ enum MsgId {
   S_LEAVE_GAME = 1;
   S_SPAWN = 2;
   S_DESPAWN = 3;
-  C_MOVE = 4;
-  S_MOVE = 5;
+  C_CREATE_MAP = 4;
+  S_CREATE_MAP = 5;
 }
 
 message S_EnterGame {
@@ -28,20 +28,27 @@ message S_Despawn {
   repeated int32 playerIds = 1;
 }
 
-message C_Move {
-  int32 posX = 1;
-  int32 posY = 2;
+message C_CreateMap {
+  repeated NodeInfo nodeInfo = 1;
 }
 
-message S_Move {
+message S_CreateMap {
   int32 playerId = 1;
-  int32 posX = 2;
-  int32 posY = 3;
+  repeated NodeInfo nodeInfo = 2;
 }
 
 message PlayerInfo {
   int32 playerId = 1;
   string name = 2;
-  int32 posX = 3;
-  int32 posY = 4;
+  PositionInfo posInfo = 3;
+}
+
+message PositionInfo {
+  int32 posX = 1;
+  int32 posZ = 2;
+}
+
+message NodeInfo {
+  string nodeType = 1;
+  PositionInfo posInfo = 2;
 }

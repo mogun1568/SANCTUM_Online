@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class NodeInfo
+public class LocationInfo
 {
     public int R { get; set; }
     public int C { get; set; }
     public int Direction { get; set; }
 
-    public NodeInfo(int r = 0, int c = 0, int direction = 0)
+    public LocationInfo(int r = 0, int c = 0, int direction = 0)
     {
         R = r;
         C = c;
@@ -35,14 +35,12 @@ public class NewMap : CreatureController
 
     //GameObject enemyPrefab;
 
-    const int mapDefaultLength = 101;
+    protected const int mapDefaultLength = 101;
 
-    protected int[,] map = new int[mapDefaultLength, mapDefaultLength];
-    protected bool[,] visit = new bool[mapDefaultLength, mapDefaultLength];
-    public static LinkedList<NodeInfo> roads = new LinkedList<NodeInfo>();
+    public static LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
 
-    protected NodeInfo startPoint = new NodeInfo();
-    protected NodeInfo endPoint = new NodeInfo();
+    protected LocationInfo startPoint = new LocationInfo();
+    protected LocationInfo endPoint = new LocationInfo();
 
     protected int mapLength = 3;
     protected int NodeSize = 4;
@@ -75,7 +73,8 @@ public class NewMap : CreatureController
     //    }
     //}
 
-    void Print2DArray()
+
+    /*void Print2DArray()
     {
         string s = "(" + startPoint.R + ", " + startPoint.C + "), (" + endPoint.R + ", " + endPoint.C + ")";
         Debug.Log(s);
@@ -93,31 +92,31 @@ public class NewMap : CreatureController
 
         Debug.Log(patternString);
 
-        /*string boolString = "";
+        //string boolString = "";
 
-        for (int i = 0; i < mapDefaultLength; i++)
-        {
-            for (int j = 0; j < mapDefaultLength; j++)
-            {
-                if (visit[i, j])
-                {
-                    boolString += 1;
-                } else
-                {
-                    boolString += 0;
-                }
-            }
-            boolString += "\n"; // ÇÑ Çà Ãâ·Â ÈÄ ÁÙ ¹Ù²Þ
-        }
+        //for (int i = 0; i < mapDefaultLength; i++)
+        //{
+        //    for (int j = 0; j < mapDefaultLength; j++)
+        //    {
+        //        if (visit[i, j])
+        //        {
+        //            boolString += 1;
+        //        } else
+        //        {
+        //            boolString += 0;
+        //        }
+        //    }
+        //    boolString += "\n"; // ÇÑ Çà Ãâ·Â ÈÄ ÁÙ ¹Ù²Þ
+        //}
 
-        Debug.Log(boolString);*/
-    }
+        //Debug.Log(boolString);
+    }*/
 
-    public virtual void Init()
+    protected virtual void Init()
     {
-        transform.position = new Vector3(Pos.x, Pos.y, Pos.z);
-        startdirR = (int)Pos.x;
-        startdirC = (int)Pos.z;
+        transform.position = Pos;
+        startdirR = Pos.x;
+        startdirC = Pos.z;
 
         roadParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
         roadParent.name = "" + "Roads";
@@ -131,94 +130,9 @@ public class NewMap : CreatureController
 
         startObj = Managers.Resource.Instantiate("Map/Start", default, default, transform);
         endObj = Managers.Resource.Instantiate("Map/End", default, default, transform);
+    }  
 
-        CreateDefaultMap(); 
-        //CreateDefaultMap1();
-        //CreateDefaultMap2();
-    }
-
-    // 1x1 ¸Ê (ÀÌ°É·Î ÇÒ µí)
-    protected void CreateDefaultMap()
-    {
-        int mid = mapDefaultLength / 2;
-
-        map[mid, mid] = 1;
-        CreateNode("RoadE", mid * NodeSize, mid * NodeSize);
-        visit[mid, mid] = true;
-
-        startPoint.SetValues(mid, mid);
-        endPoint.SetValues(mid, mid);
-
-        mapLength = 3;
-    }
-
-    /*
-    // 3x3 ¸Ê
-    void CreateDefaultMap1()
-    {
-        int mid = mapDefaultLength / 2;
-
-        startPoint[0] = mid - 1;
-        startPoint[1] = mid;
-        endPoint[0] = mid + 1;
-        endPoint[1] = mid;
-
-        for (int i = mid - 1; i < mid + 2; i++)
-        {
-            for (int j = mid - 1; j < mid + 2; j++)
-            {
-                if (j == mid)
-                {
-                    map[i, j] = 1;
-                    Instantiate(roadPrefab, new Vector3(i, 0, j), Quaternion.identity, parent.transform);
-                } else
-                {
-                    map[i, j] = 2;
-                    Instantiate(groundPrefab, new Vector3(i, 0, j), Quaternion.identity, parent.transform);
-                }
-                visit[i, j] = true;
-            }
-        }
-
-        mapLength = 5;
-    }
-
-    // 2x2 ¸Ê (¸Ê È®Àå¿¡¼­ ¹®Á¦°¡ ÀÖ´Â µí ¾ÈµÊ)
-    void CreateDefaultMap2()
-    {
-        int mid = mapDefaultLength / 2;
-        int[] nodeR = new int[4] { mid - 1, mid, mid - 1, mid };
-        int[] nodeC = new int[4] { mid - 1, mid - 1, mid, mid };
-
-        int startNode = Random.Range(0, 4);
-        int endNode = Random.Range(0, 4);
-        while (Mathf.Abs(nodeR[startNode] - nodeR[endNode]) + Mathf.Abs(nodeC[startNode] - nodeC[endNode]) != 1)
-        {
-            endNode = Random.Range(0, 4);
-        }
-
-        startPoint[0] = nodeR[startNode];
-        startPoint[1] = nodeC[startNode];
-        endPoint[0] = nodeR[endNode];
-        endPoint[1] = nodeC[endNode];
-
-        for (int i = 0; i < 4; i++)
-        {
-            if (i == startNode || i == endNode)
-            {
-                map[nodeR[i], nodeC[i]] = 1;
-                Instantiate(roadPrefab, new Vector3(nodeR[i], 0, nodeC[i]), Quaternion.identity, parent.transform);
-            } else
-            {
-                map[nodeR[i], nodeC[i]] = 2;
-                Instantiate(groundPrefab, new Vector3(nodeR[i], 0, nodeC[i]), Quaternion.identity, parent.transform);
-            }
-
-            visit[nodeR[i], nodeC[i]] = true;
-        }
-    }
-    */
-
+    // protected·Î ¹Ù²ÜÁöµµ
     public virtual void ExpendMap()
     {
         // ÀÌ°Å ·º ¿ÀÁü
@@ -240,7 +154,7 @@ public class NewMap : CreatureController
         StartCoroutine(SetScaleCoroutine(endObj.transform, 0.003f));
     }
 
-    protected void CreateNode(string type, int r, int c)
+    public virtual void CreateNode(string type, int r, int c)
     {
         r += startdirR;
         c += startdirC;
@@ -251,12 +165,12 @@ public class NewMap : CreatureController
         {
             node = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
             //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
-            roads.AddFirst(new NodeInfo(r, c));
+            roads.AddFirst(new LocationInfo(r, c));
         } else if (type == "RoadE") 
         {
             node = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
             //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
-            roads.AddLast(new NodeInfo(r, c));
+            roads.AddLast(new LocationInfo(r, c));
         } else
         {
             float y = Random.Range(-0.25f, 0.25f);
@@ -394,8 +308,6 @@ public class NewMap : CreatureController
 
         go.localScale = targetScale;
     }
-
-    
 
     public static void clear()
     {

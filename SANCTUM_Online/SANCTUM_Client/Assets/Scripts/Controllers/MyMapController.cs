@@ -1,6 +1,8 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MyMapController : NewMap
@@ -9,9 +11,20 @@ public class MyMapController : NewMap
     int[] dr = new int[4] { 0, 1, 0, -1 };
     int[] dc = new int[4] { 1, 0, -1, 0 };
 
-    public override void Init()
+    int[,] map = new int[mapDefaultLength, mapDefaultLength];
+    bool[,] visit = new bool[mapDefaultLength, mapDefaultLength];
+
+    public List<NodeInfo> nodes = new List<NodeInfo>();
+
+    protected override void Init()
     {
         base.Init();
+
+        Camera.main.transform.position = Pos + new Vector3(178, 40, 178);
+
+        CreateDefaultMap();
+        //CreateDefaultMap1();
+        //CreateDefaultMap2();
 
         //for (int i = mapLength - 2; i < 6; i++)
         //{
@@ -24,10 +37,102 @@ public class MyMapController : NewMap
         //}
     }
 
+    public void GameStart()
+    {
+        for (int i = mapLength - 2; i < 6; i++)
+        {
+            ExpendMap();
+        }
+    }
+
+    // 1x1 맵 (이걸로 할 듯)
+    protected void CreateDefaultMap()
+    {
+        int mid = mapDefaultLength / 2;
+
+        map[mid, mid] = 1;
+        CreateNode("RoadE", mid * NodeSize, mid * NodeSize);
+        visit[mid, mid] = true;
+
+        startPoint.SetValues(mid, mid);
+        endPoint.SetValues(mid, mid);
+
+        mapLength = 3;
+    }
+
+    /*
+    // 3x3 맵
+    void CreateDefaultMap1()
+    {
+        int mid = mapDefaultLength / 2;
+
+        startPoint[0] = mid - 1;
+        startPoint[1] = mid;
+        endPoint[0] = mid + 1;
+        endPoint[1] = mid;
+
+        for (int i = mid - 1; i < mid + 2; i++)
+        {
+            for (int j = mid - 1; j < mid + 2; j++)
+            {
+                if (j == mid)
+                {
+                    map[i, j] = 1;
+                    Instantiate(roadPrefab, new Vector3(i, 0, j), Quaternion.identity, parent.transform);
+                } else
+                {
+                    map[i, j] = 2;
+                    Instantiate(groundPrefab, new Vector3(i, 0, j), Quaternion.identity, parent.transform);
+                }
+                visit[i, j] = true;
+            }
+        }
+
+        mapLength = 5;
+    }
+
+    // 2x2 맵 (맵 확장에서 문제가 있는 듯 안됨)
+    void CreateDefaultMap2()
+    {
+        int mid = mapDefaultLength / 2;
+        int[] nodeR = new int[4] { mid - 1, mid, mid - 1, mid };
+        int[] nodeC = new int[4] { mid - 1, mid - 1, mid, mid };
+
+        int startNode = Random.Range(0, 4);
+        int endNode = Random.Range(0, 4);
+        while (Mathf.Abs(nodeR[startNode] - nodeR[endNode]) + Mathf.Abs(nodeC[startNode] - nodeC[endNode]) != 1)
+        {
+            endNode = Random.Range(0, 4);
+        }
+
+        startPoint[0] = nodeR[startNode];
+        startPoint[1] = nodeC[startNode];
+        endPoint[0] = nodeR[endNode];
+        endPoint[1] = nodeC[endNode];
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (i == startNode || i == endNode)
+            {
+                map[nodeR[i], nodeC[i]] = 1;
+                Instantiate(roadPrefab, new Vector3(nodeR[i], 0, nodeC[i]), Quaternion.identity, parent.transform);
+            } else
+            {
+                map[nodeR[i], nodeC[i]] = 2;
+                Instantiate(groundPrefab, new Vector3(nodeR[i], 0, nodeC[i]), Quaternion.identity, parent.transform);
+            }
+
+            visit[nodeR[i], nodeC[i]] = true;
+        }
+    }
+    */
+
     public override void ExpendMap()
     {
         CreateStartPath(startPoint);
         CreateEndPath(endPoint);
+
+        CheckUpdatedFlag();
 
         // 이거 렉 오짐
         //Print2DArray();
@@ -38,12 +143,23 @@ public class MyMapController : NewMap
         //}
     }
 
+    public override void CreateNode(string type, int r, int c)
+    {
+        nodes.Add(new NodeInfo
+        {
+            NodeType = type,
+            PosInfo = new PositionInfo { PosX = r, PosZ = c }
+        });
+
+        base.CreateNode(type, r, c);
+    }
+
     // 길이 만들어지는 경우가 너무 적으면
     // 길을 만들 개수를 랜덤으로 정하고 출발지와 도착지의 거리를 구해서 해야 할듯
 
 
     // 맵의 마지막 길 노드 다음 방향 구하기 
-    int FirstPathDirection(NodeInfo node)
+    int FirstPathDirection(LocationInfo node)
     {
         bool[] dir = new bool[4];
 
@@ -81,7 +197,7 @@ public class MyMapController : NewMap
     }
 
     // 첫 노드 다음 노드들 방향 정하기
-    int NextPathDirection(NodeInfo node, int firstNodeDirection)
+    int NextPathDirection(LocationInfo node, int firstNodeDirection)
     {
         bool[] dir = new bool[4];
 
@@ -105,10 +221,10 @@ public class MyMapController : NewMap
         return result;
     }
 
-    void CreateStartPath(NodeInfo startNode)
+    void CreateStartPath(LocationInfo startNode)
     {
         // 밑에 SetValues 함수를 실행하면 startNode 값이 참조되어 바뀌므로 새로 NodeInfo 객체를 만들어서 할당해줘야 함
-        NodeInfo node = new NodeInfo(startNode.R, startNode.C, startNode.Direction);
+        LocationInfo node = new LocationInfo(startNode.R, startNode.C, startNode.Direction);
 
         // 첫 노드 방향, 현재 길 방향, 다음 길 방향, 회전 방향
         int firstNodeDirection, currentPathDirection, nextPathDirection, clockwise = 1;
@@ -194,10 +310,10 @@ public class MyMapController : NewMap
             MaxNodeCount--;
         }
     }
-    void CreateEndPath(NodeInfo endNode)
+    void CreateEndPath(LocationInfo endNode)
     {
         // 밑에 SetValues 함수를 실행하면 endNode 값이 참조되어 바뀌므로 새로 NodeInfo 객체를 만들어서 할당해줘야 함
-        NodeInfo node = new NodeInfo(endNode.R, endNode.C, endNode.Direction);
+        LocationInfo node = new LocationInfo(endNode.R, endNode.C, endNode.Direction);
 
         // 첫 노드 방향, 현재 길 방향, 다음 길 방향, 회전 방향, 길인지 땅인지 확인 변수
         int firstNodeDirection, currentPathDirection, nextPathDirection, clockwise = 1, createNode = 1;
@@ -299,5 +415,15 @@ public class MyMapController : NewMap
         UpdatePosition();
 
         mapLength += 2;
+    }
+
+    void CheckUpdatedFlag()
+    {
+        C_CreateMap CreatePacket = new C_CreateMap();
+        foreach (NodeInfo nodeInfo in nodes)
+        {
+            CreatePacket.NodeInfo.Add(nodeInfo);
+        }
+        Managers.Network.Send(CreatePacket);
     }
 }
