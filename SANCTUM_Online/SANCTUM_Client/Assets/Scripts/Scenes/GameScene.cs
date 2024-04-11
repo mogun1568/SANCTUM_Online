@@ -11,6 +11,8 @@ public class GameScene : BaseScene
 {
     //Coroutine co;
 
+    bool check = false;
+
     void Start()
     {
         Init();
@@ -53,10 +55,24 @@ public class GameScene : BaseScene
     void Update()
     {
         // 확인용 (나중에 고쳐야됨 문제 많음)
-        if (Managers.Object._objects.Count >= 2)
+        if (Managers.Object._objects.Count >= 2 && !check)
         {
             Managers.Object.MyMap.GameStart();
+            check = true;
         }
+        //if (Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    if (Managers.Object._objects.Count >= 2 && !check)
+        //    {
+        //        Managers.Object.MyMap.GameStart();
+        //        check = true;
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("No more than 1 player.");
+        //    }
+        //}
+        
 
         if (Managers.Game.GameIsOver)
         {

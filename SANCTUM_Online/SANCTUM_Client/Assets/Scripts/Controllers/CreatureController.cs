@@ -19,6 +19,8 @@ public class CreatureController : MonoBehaviour
             }
 
             Pos = new Vector3Int(value.PosX, 0, value.PosZ);
+            Dir = value.Dir;
+
         }
     }
 
@@ -38,6 +40,18 @@ public class CreatureController : MonoBehaviour
 
             PosInfo.PosX = value.x;
             PosInfo.PosZ = value.z;
+        }
+    }
+
+    public int Dir
+    {
+        get { return PosInfo.Dir; }
+        set
+        {
+            if (PosInfo.Dir == value)
+                return;
+
+            PosInfo.Dir = value;
         }
     }
 }

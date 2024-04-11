@@ -25,9 +25,6 @@ class PacketHandler
 
         // TODO : 검증
 
-        // 일단 서버에서
-        PlayerInfo info = clientSession.MyPlayer.Info;
-
         // 다른 플레이어한테도 알려준다
         S_CreateMap rescreatePacket = new S_CreateMap();
         rescreatePacket.PlayerId = clientSession.MyPlayer.Info.PlayerId;
@@ -37,5 +34,30 @@ class PacketHandler
         }
 
         clientSession.MyPlayer.Room.Broadcast(rescreatePacket);
+    }
+
+    public static void C_MoveHandler(PacketSession session, IMessage packet)
+    {
+        C_Move movePacket = packet as C_Move;
+        ClientSession clientSession = session as ClientSession;
+
+        if (clientSession.MyPlayer == null)
+        {
+            return;
+        }
+        if (clientSession.MyPlayer.Room == null)
+        {
+            return;
+        }
+
+        // TODO : 검증
+
+        // 다른 플레이어한테도 알려준다
+        S_Move resMovePacket = new S_Move();
+        resMovePacket.PlayerId = clientSession.MyPlayer.Info.PlayerId;
+        resMovePacket.IsStart = movePacket.IsStart;
+        resMovePacket.PosInfo = movePacket.PosInfo;
+
+        clientSession.MyPlayer.Room.Broadcast(resMovePacket);
     }
 }

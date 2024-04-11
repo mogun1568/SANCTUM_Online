@@ -39,8 +39,8 @@ public class NewMap : CreatureController
 
     public static LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
 
-    protected LocationInfo startPoint = new LocationInfo();
-    protected LocationInfo endPoint = new LocationInfo();
+    public LocationInfo startPoint = new LocationInfo();
+    public LocationInfo endPoint = new LocationInfo();
 
     protected int mapLength = 3;
     protected int NodeSize = 4;
@@ -123,10 +123,7 @@ public class NewMap : CreatureController
         GroundParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
         GroundParent.name = "" + "Nodes";
         EnvironmentParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
-        EnvironmentParent.name = "" + "Enviroments";
-        //roadParent = GameObject.Find("Roads");
-        //GroundParent = GameObject.Find("Nodes");
-        //EnvironmentParent = GameObject.Find("Enviroment");
+        EnvironmentParent.name = "" + "Environments";
 
         startObj = Managers.Resource.Instantiate("Map/Start", default, default, transform);
         endObj = Managers.Resource.Instantiate("Map/End", default, default, transform);
@@ -144,7 +141,7 @@ public class NewMap : CreatureController
         //}
     }
 
-    protected void UpdatePosition()
+    public void UpdatePosition()
     {
         startObj.transform.position = new Vector3(startPoint.R * NodeSize + startdirR, 1, startPoint.C * NodeSize + startdirC);
         startObj.transform.rotation = Quaternion.Euler(0, startPoint.Direction * 90, 0);
@@ -154,12 +151,17 @@ public class NewMap : CreatureController
         StartCoroutine(SetScaleCoroutine(endObj.transform, 0.003f));
     }
 
-    public virtual void CreateNode(string type, int r, int c)
+    public virtual void CreateNode(string type, int r, int c, bool haveEnvironment = false)
     {
         r += startdirR;
         c += startdirC;
 
         GameObject node;
+
+        if (roadParent == null)
+        {
+            Debug.Log("null");
+        }
 
         if (type == "RoadS")
         {
@@ -177,9 +179,9 @@ public class NewMap : CreatureController
             node = Managers.Resource.Instantiate($"Map/ForestGround01", new Vector3(r, y, c), Quaternion.identity, GroundParent.transform);
             //Instantiate(groundPrefab, new Vector3(r, y, c), Quaternion.identity, parent.transform);
             SetChildCount(node.transform);
-            if (Random.Range(0, 10) == 1)
+            if (haveEnvironment)
             {
-                node.GetComponent<Node>().enviroment = true;
+                node.GetComponent<Node>().environment = true;
                 CreateEnvironment(r, y, c);
             }
         }
@@ -188,7 +190,7 @@ public class NewMap : CreatureController
         SetTransparency(node);
     }
 
-    void CreateEnvironment(int r, float y, int c)
+    protected void CreateEnvironment(int r, float y, int c)
     {
         GameObject EnvironmentObj = Managers.Resource.Instantiate($"Map/Environment/TFF_Birch_Tree_01A", new Vector3(r, y + 1, c), Quaternion.identity, EnvironmentParent.transform);
         //Instantiate(EnvironmentPrefab, new Vector3(r, y + NodeSize - 0.5f, c), Quaternion.identity, EnvironmentParent.transform);

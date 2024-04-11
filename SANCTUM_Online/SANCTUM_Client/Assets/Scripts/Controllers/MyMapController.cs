@@ -2,7 +2,6 @@ using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MyMapController : NewMap
@@ -37,12 +36,21 @@ public class MyMapController : NewMap
         //}
     }
 
+    // 임시방편, 수정 필요
     public void GameStart()
+    {
+        Invoke("test", 1f);
+    }
+
+    void test()
     {
         for (int i = mapLength - 2; i < 6; i++)
         {
             ExpendMap();
         }
+
+        CheckUpdatedMap();
+        CheckUpdatedStartAndEndPoint();
     }
 
     // 1x1 맵 (이걸로 할 듯)
@@ -132,7 +140,7 @@ public class MyMapController : NewMap
         CreateStartPath(startPoint);
         CreateEndPath(endPoint);
 
-        CheckUpdatedFlag();
+        //CheckUpdatedFlag();
 
         // 이거 렉 오짐
         //Print2DArray();
@@ -143,15 +151,24 @@ public class MyMapController : NewMap
         //}
     }
 
-    public override void CreateNode(string type, int r, int c)
+    public override void CreateNode(string type, int r, int c, bool haveEnvironment = false)
     {
+        if (type == "Ground")
+        {
+            if (Random.Range(0, 10) == 1)
+            {
+                haveEnvironment = true;
+            }
+        }
+
+        base.CreateNode(type, r, c, haveEnvironment);
+
         nodes.Add(new NodeInfo
         {
             NodeType = type,
-            PosInfo = new PositionInfo { PosX = r, PosZ = c }
+            PosInfo = new PositionInfo { PosX = r, PosZ = c },
+            HaveEnvironment = haveEnvironment
         });
-
-        base.CreateNode(type, r, c);
     }
 
     // 길이 만들어지는 경우가 너무 적으면
@@ -417,13 +434,27 @@ public class MyMapController : NewMap
         mapLength += 2;
     }
 
-    void CheckUpdatedFlag()
+    void CheckUpdatedMap()
     {
-        C_CreateMap CreatePacket = new C_CreateMap();
+        C_CreateMap createPacket = new C_CreateMap();
         foreach (NodeInfo nodeInfo in nodes)
         {
-            CreatePacket.NodeInfo.Add(nodeInfo);
+            createPacket.NodeInfo.Add(nodeInfo);
         }
-        Managers.Network.Send(CreatePacket);
+        Managers.Network.Send(createPacket);
+        nodes.Clear();
+    }
+
+    void CheckUpdatedStartAndEndPoint()
+    {
+        C_Move movePacket = new C_Move();
+
+        movePacket.IsStart = true;
+        movePacket.PosInfo = new PositionInfo() { PosX = startPoint.R, PosZ = startPoint.C, Dir = startPoint.Direction};
+        Managers.Network.Send(movePacket);
+
+        movePacket.IsStart = false;
+        movePacket.PosInfo = new PositionInfo() { PosX = endPoint.R, PosZ = endPoint.C, Dir = endPoint.Direction };
+        Managers.Network.Send(movePacket);
     }
 }

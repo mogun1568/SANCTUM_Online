@@ -10,6 +10,5 @@ namespace Server.Game
 		public PlayerInfo Info { get; set; } = new PlayerInfo() { PosInfo = new PositionInfo() };
 		public GameRoom Room { get; set; }
 		public ClientSession Session { get; set; }
-		public int[,] Map { get; set; }
 	}
 }

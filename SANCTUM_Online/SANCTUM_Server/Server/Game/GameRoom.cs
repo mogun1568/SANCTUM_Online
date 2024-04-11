@@ -110,7 +110,6 @@ namespace Server.Game
             // 고로 Job을 통해 단일쓰레드에서 쭉 실행하는 방식 이용(예정)
             lock (_lock)
             {
-                Console.WriteLine($"_playersCount : {_players.Count}");
                 foreach (Player p in _players)
                 {
                     p.Session.Send(packet);

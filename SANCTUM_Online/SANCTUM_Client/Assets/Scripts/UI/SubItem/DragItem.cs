@@ -86,7 +86,7 @@ public class DragItem : UI_Base
         {
             if (itemData.itemType == "Tower")
             {
-                if ((hit.transform.GetComponent<Node>().turret != null || !hit.transform.GetComponent<Node>().turret) && !hit.transform.GetComponent<Node>().enviroment)
+                if ((hit.transform.GetComponent<Node>().turret != null || !hit.transform.GetComponent<Node>().turret) && !hit.transform.GetComponent<Node>().environment)
                 {
                     foreach (Component com in SilhouetteItem.GetComponentsInChildren<Component>())
                         foreach (Renderer ren in com.GetComponentsInChildren<Renderer>())

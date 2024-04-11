@@ -39,17 +39,16 @@ class PacketHandler
 
     public static void S_CreateMapHandler(PacketSession session, IMessage packet)
     {
-        S_CreateMap CreatePacket = packet as S_CreateMap;
+        S_CreateMap createPacket = packet as S_CreateMap;
         ServerSession serverSession = session as ServerSession;
 
-        GameObject go = Managers.Object.FindById(CreatePacket.PlayerId);
+        GameObject go = Managers.Object.FindById(createPacket.PlayerId);
         if (go == null)
         {
             return;
         }
 
-        Debug.Log($"{CreatePacket.PlayerId}, {Managers.Object.MyMap.Id}");
-        if (CreatePacket.PlayerId == Managers.Object.MyMap.Id)
+        if (createPacket.PlayerId == Managers.Object.MyMap.Id)
         {
             return;
         }
@@ -62,9 +61,46 @@ class PacketHandler
         }
 
         // 자기 자신은 클라에서 이동시키므로 굳이 이렇게 콜백을 받을 필요는 없음
-        foreach (NodeInfo nodeInfo in CreatePacket.NodeInfo)
+        foreach (NodeInfo nodeInfo in createPacket.NodeInfo)
         {
-            mc.CreateNode(nodeInfo.NodeType, nodeInfo.PosInfo.PosX, nodeInfo.PosInfo.PosZ);
+            mc.CreateNode(nodeInfo.NodeType, nodeInfo.PosInfo.PosX, nodeInfo.PosInfo.PosZ, nodeInfo.HaveEnvironment);
         }
+    }
+
+    public static void S_MoveHandler(PacketSession session, IMessage packet)
+    {
+        S_Move movePacket = packet as S_Move;
+        ServerSession serverSession = session as ServerSession;
+
+        GameObject go = Managers.Object.FindById(movePacket.PlayerId);
+        if (go == null)
+        {
+            return;
+        }
+
+        if (movePacket.PlayerId == Managers.Object.MyMap.Id)
+        {
+            return;
+        }
+
+        NewMap mc = go.GetComponent<NewMap>();
+        if (mc == null)
+        {
+            return;
+        }
+
+        if (movePacket.IsStart)
+        {
+            Debug.Log("start");
+            // 자기 자신은 클라에서 이동시키므로 굳이 이렇게 콜백을 받을 필요는 없음
+            mc.startPoint = new LocationInfo(movePacket.PosInfo.PosX, movePacket.PosInfo.PosZ, movePacket.PosInfo.Dir);
+        }
+        else
+        {
+            Debug.Log("end");
+            mc.endPoint = new LocationInfo(movePacket.PosInfo.PosX, movePacket.PosInfo.PosZ, movePacket.PosInfo.Dir);
+        }
+
+        mc.UpdatePosition();
     }
 }

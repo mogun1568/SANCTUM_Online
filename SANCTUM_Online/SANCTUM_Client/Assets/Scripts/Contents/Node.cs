@@ -14,7 +14,7 @@ public class Node : MonoBehaviour
 
     BuildManager buildManager;
 
-    [HideInInspector] public bool enviroment;
+    [HideInInspector] public bool environment;
 
     void OnMouseDown()
     {
@@ -49,7 +49,7 @@ public class Node : MonoBehaviour
             return;
         }
 
-        if (enviroment)
+        if (environment)
         {
             return;
         }

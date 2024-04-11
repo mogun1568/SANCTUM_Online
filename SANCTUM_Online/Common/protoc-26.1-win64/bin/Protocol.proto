@@ -11,6 +11,8 @@ enum MsgId {
   S_DESPAWN = 3;
   C_CREATE_MAP = 4;
   S_CREATE_MAP = 5;
+  C_MOVE = 6;
+  S_MOVE = 7;
 }
 
 message S_EnterGame {
@@ -37,6 +39,17 @@ message S_CreateMap {
   repeated NodeInfo nodeInfo = 2;
 }
 
+message C_Move {
+  bool isStart = 1;
+  PositionInfo posInfo = 2;
+}
+
+message S_Move {
+  int32 playerId = 1;
+  bool isStart = 2;
+  PositionInfo posInfo = 3;
+}
+
 message PlayerInfo {
   int32 playerId = 1;
   string name = 2;
@@ -46,9 +59,11 @@ message PlayerInfo {
 message PositionInfo {
   int32 posX = 1;
   int32 posZ = 2;
+  int32 dir = 3;
 }
 
 message NodeInfo {
   string nodeType = 1;
   PositionInfo posInfo = 2;
+  bool haveEnvironment = 3;
 }

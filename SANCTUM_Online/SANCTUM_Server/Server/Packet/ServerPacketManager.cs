@@ -24,7 +24,9 @@ class PacketManager
 	public void Register()
 	{		
 		_onRecv.Add((ushort)MsgId.CCreateMap, MakePacket<C_CreateMap>);
-		_handler.Add((ushort)MsgId.CCreateMap, PacketHandler.C_CreateMapHandler);
+		_handler.Add((ushort)MsgId.CCreateMap, PacketHandler.C_CreateMapHandler);		
+		_onRecv.Add((ushort)MsgId.CMove, MakePacket<C_Move>);
+		_handler.Add((ushort)MsgId.CMove, PacketHandler.C_MoveHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
