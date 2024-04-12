@@ -103,4 +103,32 @@ class PacketHandler
 
         mc.UpdatePosition();
     }
+
+    public static void S_SpawnEnemyHandler(PacketSession session, IMessage packet)
+    {
+        S_SpawnEnemy spawnEnemyPacket = packet as S_SpawnEnemy;
+        ServerSession serverSession = session as ServerSession;
+
+        GameObject go = Managers.Object.FindById(spawnEnemyPacket.PlayerId);
+        if (go == null)
+        {
+            return;
+        }
+
+        if (spawnEnemyPacket.PlayerId == Managers.Object.MyMap.Id)
+        {
+            return;
+        }
+
+        NewMap mc = go.GetComponent<NewMap>();
+        if (mc == null)
+        {
+            return;
+        }
+
+        GameObject monster = Managers.Resource.Instantiate($"Monster/{spawnEnemyPacket.EnemyName}", mc.startObj.transform.position, mc.startObj.transform.rotation);
+        NewMap map = Managers.Object.FindById(spawnEnemyPacket.PlayerId).GetComponent<NewMap>();
+        monster.GetComponent<EnemyMovement>().nextRoad = map.roads.First.Next;
+        monster.GetComponent<EnemyMovement>().mapId = map.Id;
+    }
 }

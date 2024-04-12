@@ -15,6 +15,9 @@ public class MyMapController : NewMap
 
     public List<NodeInfo> nodes = new List<NodeInfo>();
 
+    // 임시방편
+    public bool startSpwanEnemy = false;
+
     protected override void Init()
     {
         base.Init();
@@ -51,6 +54,14 @@ public class MyMapController : NewMap
 
         CheckUpdatedMap();
         CheckUpdatedStartAndEndPoint();
+
+        startSpwanEnemy = true;
+
+        //foreach (GameObject go in Managers.Object._objects.Values)
+        //{
+        //    NewMap mc = go.GetComponent<NewMap>();
+        //    Debug.Log($"{mc.Id}, {mc.roads.Count}");
+        //}
     }
 
     // 1x1 맵 (이걸로 할 듯)

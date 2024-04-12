@@ -2255,6 +2255,7 @@ GameObject:
   - component: {fileID: 4455578421391197075}
   - component: {fileID: 89796981606611022}
   - component: {fileID: -2714625093346684137}
+  - component: {fileID: 5547021621726633086}
   m_Layer: 0
   m_Name: KnightDefault
   m_TagString: Enemy
@@ -2401,6 +2402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0263d29a8bf6aee40bab01246f4f5947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapId: 0
 --- !u!82 &89796981606611022
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2514,6 +2516,19 @@ MonoBehaviour:
     enemyName: 
   _stat: {fileID: 0}
   isAttack: 0
+--- !u!114 &5547021621726633086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5897127034648270951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0
 --- !u!1 &5897127034655499233
 GameObject:
   m_ObjectHideFlags: 0

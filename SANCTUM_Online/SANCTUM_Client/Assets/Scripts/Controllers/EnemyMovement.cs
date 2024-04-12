@@ -50,7 +50,7 @@ public class EnemyMovement : MonoBehaviour
     }*/
 
 
-    LinkedListNode<LocationInfo> nextRoad;
+    public LinkedListNode<LocationInfo> nextRoad;
 
     //private Vector3 target;
     //private LinkedListNode<Vector3> Mnode;
@@ -58,6 +58,9 @@ public class EnemyMovement : MonoBehaviour
     EnemyControl enemyControl;
 
     Animator anim;
+
+    // EnemyStat로 옮길 예정
+    public int mapId;
 
     public enum MonsterState
     {
@@ -145,7 +148,7 @@ public class EnemyMovement : MonoBehaviour
 
     void OnEnable() // pool 때문에 Start에서 OnEnable로 바꿈
     {
-        nextRoad = NewMap.roads.First.Next;
+        //nextRoad = map.roads.First.Next;
 
         //Mnode = Map.points.First;
         //target = Mnode.Value;
@@ -167,6 +170,11 @@ public class EnemyMovement : MonoBehaviour
         if (enemyControl == null)
         {
             Debug.Log("null");
+        }
+
+        if (nextRoad == null)
+        {
+            return;
         }
 
         if (enemyControl._stat.HP > 0 && !enemyControl.isAttack)
@@ -209,10 +217,13 @@ public class EnemyMovement : MonoBehaviour
 
     void EndPath()
     {
-        Managers.Sound.Play("Effects/Hit3", Define.Sound.Effect);
-        int lifeLost = (int)gameObject.GetComponent<EnemyStat>().LifeLost;
-        Managers.Game.Lives -= lifeLost;
-        //WaveSpawner.EnemiesAlive--;
+        if (mapId == Managers.Object.MyMap.Id)
+        {
+            Managers.Sound.Play("Effects/Hit3", Define.Sound.Effect);
+            int lifeLost = (int)gameObject.GetComponent<EnemyStat>().LifeLost;
+            Managers.Game.Lives -= lifeLost;
+            //WaveSpawner.EnemiesAlive--;
+        }
         Managers.Resource.Destroy(gameObject);
     }
 }

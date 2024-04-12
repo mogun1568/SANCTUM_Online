@@ -201,16 +201,19 @@ public class EnemyControl : MonoBehaviour
     {
         StopAllCoroutines();
 
-        Managers.Sound.Play("Effects/Monster_Die", Define.Sound.Effect);
-
-        if (enemyData.enemyType == "Boss")
+        if (gameObject.GetComponent<EnemyMovement>().mapId == Managers.Object.MyMap.Id)
         {
-            Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
+            Managers.Sound.Play("Effects/Monster_Die", Define.Sound.Effect);
+
+            if (enemyData.enemyType == "Boss")
+            {
+                Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
+            }
+
+            Debug.Log("Die");
+
+            Managers.Game.GetExp(_stat.Exp);
         }
-
-        Debug.Log("Die");
-
-        Managers.Game.GetExp(_stat.Exp);
 
         Invoke("InvokeDeath", 1f);
     }

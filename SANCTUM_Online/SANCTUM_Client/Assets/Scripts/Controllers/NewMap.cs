@@ -37,7 +37,7 @@ public class NewMap : CreatureController
 
     protected const int mapDefaultLength = 101;
 
-    public static LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
+    public LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
 
     public LocationInfo startPoint = new LocationInfo();
     public LocationInfo endPoint = new LocationInfo();
@@ -311,7 +311,7 @@ public class NewMap : CreatureController
         go.localScale = targetScale;
     }
 
-    public static void clear()
+    public void clear()
     {
         roads.Clear();
     }

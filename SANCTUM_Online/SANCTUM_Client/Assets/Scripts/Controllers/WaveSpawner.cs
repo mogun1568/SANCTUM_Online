@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
+using Google.Protobuf.Protocol;
 
 public class WaveSpawner : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class WaveSpawner : MonoBehaviour
 
     //private int waveIndex = 0;
 
-    [SerializeField] NewMap map;
+    MyMapController map;
 
     //int monsterType;
 
@@ -39,13 +40,11 @@ public class WaveSpawner : MonoBehaviour
         //otherScriptInstance = Managers.Game.map;
         //monsterType = GameManager.instance.pool.monsterPools.Length;
         //Managers.Scene.sceneFader.isFading = false;
+        map = GetComponent<MyMapController>();
         Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
         monsters = Resources.LoadAll<GameObject>("Prefabs/Monster");
-
-
     }
 
-    /*
     void Update()
     {
         if (!Managers.Game.isLive)
@@ -57,6 +56,11 @@ public class WaveSpawner : MonoBehaviour
         //{
         //    return;
         //}
+
+        if (!map.startSpwanEnemy)
+        {
+            return;
+        }
 
         if (countdown <= 0f)
         {
@@ -94,7 +98,6 @@ public class WaveSpawner : MonoBehaviour
             bossTime *= 2f;
         }
     }
-    */
 
     IEnumerator SpawnWave()
     {
@@ -153,7 +156,10 @@ public class WaveSpawner : MonoBehaviour
         }
         //Debug.Log(monsters[Random.Range(0, monsters.Length)].name);
         GameObject monster = Managers.Resource.Instantiate($"Monster/{monsters[idx].name}", map.startObj.transform.position, map.startObj.transform.rotation);
+        UpdateRoads(monster);
         //EnemiesAlive++;
+
+        CheckUpdatedSpawnEnemy(monsters[idx].name);
     }
 
     void SpawnBossEnemy()
@@ -161,6 +167,22 @@ public class WaveSpawner : MonoBehaviour
         //Debug.Log("spawnBoss");
         Managers.Sound.Play("Bgms/battle-of-the-dragons-8037", Define.Sound.Bgm);
         GameObject monster = Managers.Resource.Instantiate("Monster/SalarymanDefault", map.startObj.transform.position, map.startObj.transform.rotation);
+        UpdateRoads(monster);
+
+        CheckUpdatedSpawnEnemy("SalarymanDefault");
+    }
+
+    void UpdateRoads(GameObject go)
+    {
+        go.GetComponent<EnemyMovement>().nextRoad = Managers.Object.MyMap.roads.First.Next;
+        go.GetComponent<EnemyMovement>().mapId = Managers.Object.MyMap.Id;
+    }
+
+    void CheckUpdatedSpawnEnemy(string enemyName)
+    {
+        C_SpawnEnemy spawnEnemyPacket = new C_SpawnEnemy();
+        spawnEnemyPacket.EnemyName = enemyName;
+        Managers.Network.Send(spawnEnemyPacket);
     }
 }
 

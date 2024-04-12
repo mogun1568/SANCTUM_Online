@@ -614,6 +614,7 @@ GameObject:
   - component: {fileID: 7626164555974827655}
   - component: {fileID: 8647204198725966397}
   - component: {fileID: -3472270835776713508}
+  - component: {fileID: 4703331172441349207}
   m_Layer: 0
   m_Name: NinjaDefault
   m_TagString: Enemy
@@ -760,6 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0263d29a8bf6aee40bab01246f4f5947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapId: 0
 --- !u!82 &8647204198725966397
 AudioSource:
   m_ObjectHideFlags: 0
@@ -873,6 +875,19 @@ MonoBehaviour:
     enemyName: 
   _stat: {fileID: 0}
   isAttack: 0
+--- !u!114 &4703331172441349207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3025640061685235186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0
 --- !u!1 &3025640061704949175
 GameObject:
   m_ObjectHideFlags: 0

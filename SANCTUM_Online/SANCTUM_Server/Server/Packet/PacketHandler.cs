@@ -60,4 +60,28 @@ class PacketHandler
 
         clientSession.MyPlayer.Room.Broadcast(resMovePacket);
     }
+
+    public static void C_SpawnEnemyHandler(PacketSession session, IMessage packet)
+    {
+        C_SpawnEnemy spawnEnemyPacket = packet as C_SpawnEnemy;
+        ClientSession clientSession = session as ClientSession;
+
+        if (clientSession.MyPlayer == null)
+        {
+            return;
+        }
+        if (clientSession.MyPlayer.Room == null)
+        {
+            return;
+        }
+
+        // TODO : 검증
+
+        // 다른 플레이어한테도 알려준다
+        S_SpawnEnemy resSpawnEnemyPacket = new S_SpawnEnemy();
+        resSpawnEnemyPacket.PlayerId = clientSession.MyPlayer.Info.PlayerId;
+        resSpawnEnemyPacket.EnemyName = spawnEnemyPacket.EnemyName;
+
+        clientSession.MyPlayer.Room.Broadcast(resSpawnEnemyPacket);
+    }
 }
