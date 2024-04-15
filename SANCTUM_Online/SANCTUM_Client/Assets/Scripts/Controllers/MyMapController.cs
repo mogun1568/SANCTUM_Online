@@ -16,7 +16,7 @@ public class MyMapController : NewMap
     public List<NodeInfo> nodes = new List<NodeInfo>();
 
     // 임시방편
-    public bool startSpwanEnemy = false;
+    public bool startSpawnEnemy = false;
 
     protected override void Init()
     {
@@ -55,7 +55,7 @@ public class MyMapController : NewMap
         CheckUpdatedMap();
         CheckUpdatedStartAndEndPoint();
 
-        startSpwanEnemy = true;
+        startSpawnEnemy = true;
 
         //foreach (GameObject go in Managers.Object._objects.Values)
         //{

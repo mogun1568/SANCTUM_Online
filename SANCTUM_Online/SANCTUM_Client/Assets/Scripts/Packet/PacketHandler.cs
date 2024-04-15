@@ -91,13 +91,11 @@ class PacketHandler
 
         if (movePacket.IsStart)
         {
-            Debug.Log("start");
             // 자기 자신은 클라에서 이동시키므로 굳이 이렇게 콜백을 받을 필요는 없음
             mc.startPoint = new LocationInfo(movePacket.PosInfo.PosX, movePacket.PosInfo.PosZ, movePacket.PosInfo.Dir);
         }
         else
         {
-            Debug.Log("end");
             mc.endPoint = new LocationInfo(movePacket.PosInfo.PosX, movePacket.PosInfo.PosZ, movePacket.PosInfo.Dir);
         }
 
