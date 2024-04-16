@@ -104,6 +104,75 @@ namespace Server.Game
 			}
 		}
 
+        public void HandleCreateMap(Player player, C_CreateMap createMapPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                // TODO : 검증
+
+                // 다른 플레이어한테도 알려준다
+                S_CreateMap rescreateMapPacket = new S_CreateMap();
+                rescreateMapPacket.PlayerId = player.Info.PlayerId;
+                foreach (NodeInfo nodeInfo in createMapPacket.NodeInfo)
+                {
+                    rescreateMapPacket.NodeInfo.Add(nodeInfo);
+                }
+
+                player.Room.Broadcast(rescreateMapPacket);
+            }
+        }
+
+        public void HandleMove(Player player, C_Move movePacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                // TODO : 검증
+
+                // 일단 서버에서 좌표 이동
+                // C#의 클래스는 C++과 다르게 값 타입이 아니라 참조 타입임
+                PlayerInfo info = player.Info;
+                info.PosInfo = movePacket.PosInfo;
+
+                // 다른 플레이어한테도 알려준다
+                S_Move resMovePacket = new S_Move();
+                resMovePacket.PlayerId = info.PlayerId;
+                resMovePacket.IsStart = movePacket.IsStart;
+                resMovePacket.PosInfo = movePacket.PosInfo;
+
+                player.Room.Broadcast(resMovePacket);
+            }
+        }
+
+        public void HandleSpawnEnemy(Player player, C_SpawnEnemy spawnEnemyPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                // TODO : 검증
+
+                // 다른 플레이어한테도 알려준다
+                S_SpawnEnemy resSpawnEnemyPacket = new S_SpawnEnemy();
+                resSpawnEnemyPacket.PlayerId = player.Info.PlayerId;
+                resSpawnEnemyPacket.EnemyName = spawnEnemyPacket.EnemyName;
+
+                player.Room.Broadcast(resSpawnEnemyPacket);
+            }
+        }
+
         public void Broadcast(IMessage packet)
         {
             // 매번 lock을 거는 것은 멀티쓰레드의 의미가 희석됨

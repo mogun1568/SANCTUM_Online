@@ -40,7 +40,6 @@ class PacketHandler
     public static void S_CreateMapHandler(PacketSession session, IMessage packet)
     {
         S_CreateMap createPacket = packet as S_CreateMap;
-        ServerSession serverSession = session as ServerSession;
 
         GameObject go = Managers.Object.FindById(createPacket.PlayerId);
         if (go == null)
@@ -70,7 +69,6 @@ class PacketHandler
     public static void S_MoveHandler(PacketSession session, IMessage packet)
     {
         S_Move movePacket = packet as S_Move;
-        ServerSession serverSession = session as ServerSession;
 
         GameObject go = Managers.Object.FindById(movePacket.PlayerId);
         if (go == null)
@@ -105,7 +103,6 @@ class PacketHandler
     public static void S_SpawnEnemyHandler(PacketSession session, IMessage packet)
     {
         S_SpawnEnemy spawnEnemyPacket = packet as S_SpawnEnemy;
-        ServerSession serverSession = session as ServerSession;
 
         GameObject go = Managers.Object.FindById(spawnEnemyPacket.PlayerId);
         if (go == null)
