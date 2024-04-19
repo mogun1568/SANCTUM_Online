@@ -35,7 +35,7 @@ public class NewMap : CreatureController
 
     //GameObject enemyPrefab;
 
-    protected const int mapDefaultLength = 101;
+    protected const int mapDefaultLength = 31;
 
     public LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
 

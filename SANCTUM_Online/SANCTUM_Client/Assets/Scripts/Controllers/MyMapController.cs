@@ -1,6 +1,7 @@
 using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using UnityEngine;
 
@@ -22,7 +23,8 @@ public class MyMapController : NewMap
     {
         base.Init();
 
-        Camera.main.transform.position = Pos + new Vector3(178, 40, 178);
+        int cameraDefault = mapDefaultLength * 2 - 24;
+        Camera.main.transform.position = Pos + new Vector3(cameraDefault, 40, cameraDefault);
 
         CreateDefaultMap();
         //CreateDefaultMap1();
@@ -52,8 +54,8 @@ public class MyMapController : NewMap
             ExpendMap();
         }
 
-        CheckUpdatedMap();
-        CheckUpdatedStartAndEndPoint();
+        //CheckUpdatedMap();
+        //CheckUpdatedStartAndEndPoint();
 
         startSpawnEnemy = true;
 
@@ -63,6 +65,38 @@ public class MyMapController : NewMap
         //    Debug.Log($"{mc.Id}, {mc.roads.Count}");
         //}
     }
+
+#region MAP_EDITOR
+
+    void GenerateMap()
+    {
+        GenerateByPath("Assets/Resources/Map");
+        GenerateByPath("../Common/MapData");
+    }
+
+    void GenerateByPath(string pathPrefix)
+    {
+        using (var writer = File.CreateText($"{pathPrefix}/Map_{Id}.txt"))
+        {
+            writer.WriteLine(startPoint.R);
+            writer.WriteLine(startPoint.C);
+            writer.WriteLine(endPoint.R);
+            writer.WriteLine(endPoint.C);
+
+            writer.WriteLine(mapDefaultLength);
+
+            for (int i = 0; i < mapDefaultLength; i++)
+            {
+                for (int j = 0; j < mapDefaultLength; j++)
+                {
+                    writer.Write(map[i, j].ToString());
+                }
+                writer.WriteLine();
+            }
+        }
+    }
+
+#endregion
 
     // 1x1 맵 (이걸로 할 듯)
     protected void CreateDefaultMap()
@@ -151,7 +185,10 @@ public class MyMapController : NewMap
         CreateStartPath(startPoint);
         CreateEndPath(endPoint);
 
-        //CheckUpdatedFlag();
+        CheckUpdatedMap();
+        CheckUpdatedStartAndEndPoint();
+
+        GenerateMap();
 
         // 이거 렉 오짐
         //Print2DArray();
@@ -164,14 +201,6 @@ public class MyMapController : NewMap
 
     public override void CreateNode(string type, int r, int c, bool haveEnvironment = false)
     {
-        if (type == "Ground")
-        {
-            if (Random.Range(0, 10) == 1)
-            {
-                haveEnvironment = true;
-            }
-        }
-
         base.CreateNode(type, r, c, haveEnvironment);
 
         nodes.Add(new NodeInfo
@@ -424,7 +453,15 @@ public class MyMapController : NewMap
                 }
                 else
                 {
-                    CreateNode("Ground", currentR * NodeSize, currentC * NodeSize);
+                    bool haveEnvironment = false;
+
+                    if (Random.Range(0, 10) == 1)
+                    {
+                        haveEnvironment = true;
+                        map[currentR, currentC] = 3;
+                    }
+
+                    CreateNode("Ground", currentR * NodeSize, currentC * NodeSize, haveEnvironment);
                 }
             }
             visit[currentR, currentC] = true;
