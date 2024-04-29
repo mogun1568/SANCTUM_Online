@@ -23,12 +23,14 @@ class PacketManager
 
 	public void Register()
 	{		
+		_onRecv.Add((ushort)MsgId.CGameStart, MakePacket<C_GameStart>);
+		_handler.Add((ushort)MsgId.CGameStart, PacketHandler.C_GameStartHandler);		
 		_onRecv.Add((ushort)MsgId.CCreateMap, MakePacket<C_CreateMap>);
 		_handler.Add((ushort)MsgId.CCreateMap, PacketHandler.C_CreateMapHandler);		
-		_onRecv.Add((ushort)MsgId.CMove, MakePacket<C_Move>);
-		_handler.Add((ushort)MsgId.CMove, PacketHandler.C_MoveHandler);		
 		_onRecv.Add((ushort)MsgId.CSpawnEnemy, MakePacket<C_SpawnEnemy>);
-		_handler.Add((ushort)MsgId.CSpawnEnemy, PacketHandler.C_SpawnEnemyHandler);
+		_handler.Add((ushort)MsgId.CSpawnEnemy, PacketHandler.C_SpawnEnemyHandler);		
+		_onRecv.Add((ushort)MsgId.CCreateTurret, MakePacket<C_CreateTurret>);
+		_handler.Add((ushort)MsgId.CCreateTurret, PacketHandler.C_CreateTurretHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

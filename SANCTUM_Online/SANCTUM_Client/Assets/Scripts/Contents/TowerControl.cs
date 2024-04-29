@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class TowerControl : MonoBehaviour
+public class TowerControl : CreatureController
 {
 
     [HideInInspector] public TowerStat _stat;
@@ -53,8 +53,6 @@ public class TowerControl : MonoBehaviour
             firePoint = partToRotate;
         }
 
-        itemData = Managers.Select.getItemData();
-
         //gameObject.GetOrAddComponent<Poolable>();
         _stat = gameObject.GetOrAddComponent<TowerStat>();
 
@@ -65,14 +63,38 @@ public class TowerControl : MonoBehaviour
 
         target = null;
         isHealTower = false;
+        isFPM = false;
+        transform.GetComponentsInChildren<Camera>(true)[0].gameObject.SetActive(false);
+
+        //if (Id == Managers.Object.MyMap.Id)
+        //{
+        //    itemData = Managers.Select.getItemData();
+        //}
+        //bulletType = itemData.bulletType;
+        //if (itemData.itemName == "Water")
+        //{
+        //    isHealTower = true;
+        //}
+        //if (!isHealTower)
+        //{
+        //    InvokeRepeating("UpdateTarget", 0f, 0.5f);  // 0초 후에 0.5초 마다 실행
+        //}
+    }
+
+    bool check = false;
+    void itemDataCheck()
+    {
+        // Managers.Select.getItemData() 이 함수 어케 할지 고민 중
+        //if (Id == Managers.Object.MyMap.Id)
+        //{
+        //    itemData = Managers.Select.getItemData();
+        //}
+
+        bulletType = itemData.bulletType;
         if (itemData.itemName == "Water")
         {
             isHealTower = true;
         }
-        isFPM = false;
-        bulletType = itemData.bulletType;
-        transform.GetComponentsInChildren<Camera>(true)[0].gameObject.SetActive(false);
-
         if (!isHealTower)
         {
             InvokeRepeating("UpdateTarget", 0f, 0.5f);  // 0초 후에 0.5초 마다 실행
@@ -120,6 +142,16 @@ public class TowerControl : MonoBehaviour
         if (!Managers.Game.isLive)
         {
             return;
+        }
+
+        if (itemData == null)
+        {
+            return;
+        }
+        if (!check)
+        {
+            itemDataCheck();
+            check = true;
         }
 
         if (isFPM)

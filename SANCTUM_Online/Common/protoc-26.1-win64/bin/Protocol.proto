@@ -9,12 +9,14 @@ enum MsgId {
   S_LEAVE_GAME = 1;
   S_SPAWN = 2;
   S_DESPAWN = 3;
-  C_CREATE_MAP = 4;
-  S_CREATE_MAP = 5;
-  C_MOVE = 6;
-  S_MOVE = 7;
+  C_GAME_START = 4;
+  S_GAME_START = 5;
+  C_CREATE_MAP = 6;
+  S_CREATE_MAP = 7;
   C_SPAWN_ENEMY = 8;
   S_SPAWN_ENEMY = 9;
+  C_CREATE_TURRET = 10;
+  S_CREATE_TURRET = 11;
 }
 
 message S_EnterGame {
@@ -32,24 +34,20 @@ message S_Despawn {
   repeated int32 playerIds = 1;
 }
 
+message C_GameStart {
+}
+
+message S_GameStart {
+  int32 playerId = 1;
+}
+
 message C_CreateMap {
-  repeated NodeInfo nodeInfo = 1;
+  bool isStart = 1;
 }
 
 message S_CreateMap {
   int32 playerId = 1;
   repeated NodeInfo nodeInfo = 2;
-}
-
-message C_Move {
-  bool isStart = 1;
-  PositionInfo posInfo = 2;
-}
-
-message S_Move {
-  int32 playerId = 1;
-  bool isStart = 2;
-  PositionInfo posInfo = 3;
 }
 
 message C_SpawnEnemy {
@@ -59,6 +57,17 @@ message C_SpawnEnemy {
 message S_SpawnEnemy {
   int32 playerId = 1;
   string enemyName = 3;
+}
+
+message C_CreateTurret {
+  int32 nodeId = 1;
+  string itemName = 2;
+}
+
+message S_CreateTurret {
+  int32 playerId = 1;
+  int32 nodeId = 2;
+  string itemName = 3;
 }
 
 message PlayerInfo {
@@ -77,4 +86,5 @@ message NodeInfo {
   string nodeType = 1;
   PositionInfo posInfo = 2;
   bool haveEnvironment = 3;
+  int32 nodeId = 4;
 }

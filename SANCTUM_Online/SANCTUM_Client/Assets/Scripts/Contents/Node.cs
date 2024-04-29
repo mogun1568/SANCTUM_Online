@@ -1,10 +1,11 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-public class Node : MonoBehaviour
+public class Node : CreatureController
 {
     [HideInInspector] public GameObject turret;
 
@@ -61,7 +62,8 @@ public class Node : MonoBehaviour
             switch (itemData.itemType)
             {
                 case "Tower":
-                    BuildTurret();
+                    CheckUpdatedTurret(itemData.itemName);
+                    //BuildTurret();
                     break;
                 default:
                     Debug.Log("You don't use item!");
@@ -87,11 +89,25 @@ public class Node : MonoBehaviour
         countItem += itemData.returnExp;
     }
 
-    void BuildTurret()
+    void CheckUpdatedTurret(string name)
+    {
+        C_CreateTurret createTurretPacket = new C_CreateTurret();
+        createTurretPacket.NodeId = Id;
+        createTurretPacket.ItemName = name;
+
+        Managers.Network.Send(createTurretPacket);
+
+        Managers.Select.itemUITextDecrease();
+    }
+
+    public void BuildTurret(int playerId, string itemName)
     {
         Managers.Sound.Play("Effects/Build", Define.Sound.Effect);
         GameObject _turret = Managers.Resource.Instantiate("Tower/Prefab/BallistaTowerlvl02", GetBuildPosition(), Quaternion.identity);
         turret = _turret;
+
+        _turret.GetComponent<CreatureController>().Id = playerId;
+        _turret.GetComponent<TowerControl>().itemData = Managers.Data.ItemDict[itemName];
 
         PracticeEffect("Launch Smoke");
 
@@ -99,7 +115,11 @@ public class Node : MonoBehaviour
         upgradedNum = 0;
 
         Debug.Log("Turret build!");
-        Managers.Select.itemUITextDecrease();
+
+        //if (playerId == Managers.Object.MyMap.Id)
+        //{
+        //    Managers.Select.itemUITextDecrease();
+        //}
     }
 
     void ApplicateElement(Data.Item itemData)

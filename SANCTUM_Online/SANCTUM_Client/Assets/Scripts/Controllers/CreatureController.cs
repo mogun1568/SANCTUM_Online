@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CreatureController : MonoBehaviour
 {
+    [SerializeField]
     public int Id { get; set; }
 
     PositionInfo _positionInfo = new PositionInfo();

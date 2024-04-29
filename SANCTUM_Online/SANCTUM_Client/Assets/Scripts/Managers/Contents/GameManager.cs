@@ -12,6 +12,7 @@ public class GameManager
     public bool isFPM;
     public float gameTime;
     public bool GameIsOver;
+    public bool GameStartFlag;
 
     [Header("# Player Info")]
     public int Lives;

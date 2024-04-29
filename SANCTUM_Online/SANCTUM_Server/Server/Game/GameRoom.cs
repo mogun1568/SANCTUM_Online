@@ -71,7 +71,9 @@ namespace Server.Game
 							p.Session.Send(spawnPacket);
 					}
 				}
-			}
+
+                newPlayer.Init(newPlayer.Info.PlayerId);
+            }
 		}
 
 		public void LeaveGame(int playerId)
@@ -105,6 +107,24 @@ namespace Server.Game
 			}
 		}
 
+        public void HandleGameStart(Player player, C_GameStart gameStartPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                // TODO : 검증
+
+                // 다른 플레이어한테도 알려준다
+                S_GameStart resGameStartPacket = new S_GameStart();
+                resGameStartPacket.PlayerId = player.Info.PlayerId;
+                player.Room.Broadcast(resGameStartPacket);
+            }
+        }
+
         public void HandleCreateMap(Player player, C_CreateMap createMapPacket)
         {
             if (player == null)
@@ -117,40 +137,32 @@ namespace Server.Game
                 // TODO : 검증
 
                 // 다른 플레이어한테도 알려준다
-                S_CreateMap rescreateMapPacket = new S_CreateMap();
-                rescreateMapPacket.PlayerId = player.Info.PlayerId;
-                foreach (NodeInfo nodeInfo in createMapPacket.NodeInfo)
+                if (createMapPacket.IsStart)
                 {
-                    rescreateMapPacket.NodeInfo.Add(nodeInfo);
+                    foreach (Player p in _players.Values)
+                    {
+                        S_CreateMap rescreateMapPacket = new S_CreateMap();
+                        rescreateMapPacket.PlayerId = p.Info.PlayerId;
+                        foreach (NodeInfo nodeInfo in p.nodeInfos())
+                        {
+                            rescreateMapPacket.NodeInfo.Add(nodeInfo);
+                        }
+
+                        p.Room.Broadcast(rescreateMapPacket);
+                    }
                 }
+                else
+                {
+                    player.ExpendMap();
+                    S_CreateMap rescreateMapPacket = new S_CreateMap();
+                    rescreateMapPacket.PlayerId = player.Info.PlayerId;
+                    foreach (NodeInfo nodeInfo in player.nodeInfos())
+                    {
+                        rescreateMapPacket.NodeInfo.Add(nodeInfo);
+                    }
 
-                player.Room.Broadcast(rescreateMapPacket);
-            }
-        }
-
-        public void HandleMove(Player player, C_Move movePacket)
-        {
-            if (player == null)
-            {
-                return;
-            }
-
-            lock (_lock)
-            {
-                // TODO : 검증
-
-                // 일단 서버에서 좌표 이동
-                // C#의 클래스는 C++과 다르게 값 타입이 아니라 참조 타입임
-                PlayerInfo info = player.Info;
-                info.PosInfo = movePacket.PosInfo;
-
-                // 다른 플레이어한테도 알려준다
-                S_Move resMovePacket = new S_Move();
-                resMovePacket.PlayerId = info.PlayerId;
-                resMovePacket.IsStart = movePacket.IsStart;
-                resMovePacket.PosInfo = movePacket.PosInfo;
-
-                player.Room.Broadcast(resMovePacket);
+                    player.Room.Broadcast(rescreateMapPacket);
+                }
             }
         }
 
@@ -171,6 +183,28 @@ namespace Server.Game
                 resSpawnEnemyPacket.EnemyName = spawnEnemyPacket.EnemyName;
 
                 player.Room.Broadcast(resSpawnEnemyPacket);
+            }
+        }
+
+        
+        public void HandleCreateTurret(Player player, C_CreateTurret createTurretPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                // TODO : 검증
+
+                // 다른 플레이어한테도 알려준다
+                S_CreateTurret rescreateTurretPacket = new S_CreateTurret();
+                rescreateTurretPacket.PlayerId = player.Info.PlayerId;
+                rescreateTurretPacket.NodeId = createTurretPacket.NodeId;
+                rescreateTurretPacket.ItemName = createTurretPacket.ItemName;
+
+                player.Room.Broadcast(rescreateTurretPacket);
             }
         }
 

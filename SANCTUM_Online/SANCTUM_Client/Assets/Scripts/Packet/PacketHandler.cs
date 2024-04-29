@@ -37,21 +37,34 @@ class PacketHandler
         }
     }
 
-    public static void S_CreateMapHandler(PacketSession session, IMessage packet)
+    public static void S_GameStartHandler(PacketSession session, IMessage packet)
     {
-        S_CreateMap createPacket = packet as S_CreateMap;
+        S_GameStart gameStartPacket = packet as S_GameStart;
 
-        GameObject go = Managers.Object.FindById(createPacket.PlayerId);
+        GameObject go = Managers.Object.FindById(gameStartPacket.PlayerId);
         if (go == null)
         {
             return;
         }
 
-        if (createPacket.PlayerId == Managers.Object.MyMap.Id)
+        NewMap mc = go.GetComponent<NewMap>();
+        if (mc == null)
         {
             return;
         }
 
+        Managers.Game.GameStartFlag = true;
+    }
+
+    public static void S_CreateMapHandler(PacketSession session, IMessage packet)
+    {
+        S_CreateMap createMapPacket = packet as S_CreateMap;
+
+        GameObject go = Managers.Object.FindById(createMapPacket.PlayerId);
+        if (go == null)
+        {
+            return;
+        }
 
         NewMap mc = go.GetComponent<NewMap>();
         if (mc == null)
@@ -60,42 +73,21 @@ class PacketHandler
         }
 
         // 자기 자신은 클라에서 이동시키므로 굳이 이렇게 콜백을 받을 필요는 없음
-        foreach (NodeInfo nodeInfo in createPacket.NodeInfo)
+        mc.LoadMap(createMapPacket.PlayerId);
+        foreach (NodeInfo nodeInfo in createMapPacket.NodeInfo)
         {
-            mc.CreateNode(nodeInfo.NodeType, nodeInfo.PosInfo.PosX, nodeInfo.PosInfo.PosZ, nodeInfo.HaveEnvironment);
-        }
-    }
-
-    public static void S_MoveHandler(PacketSession session, IMessage packet)
-    {
-        S_Move movePacket = packet as S_Move;
-
-        GameObject go = Managers.Object.FindById(movePacket.PlayerId);
-        if (go == null)
-        {
-            return;
+            mc.CreateNode(nodeInfo);
         }
 
-        if (movePacket.PlayerId == Managers.Object.MyMap.Id)
-        {
-            return;
-        }
-
-        NewMap mc = go.GetComponent<NewMap>();
-        if (mc == null)
-        {
-            return;
-        }
-
-        if (movePacket.IsStart)
-        {
-            // 자기 자신은 클라에서 이동시키므로 굳이 이렇게 콜백을 받을 필요는 없음
-            mc.startPoint = new LocationInfo(movePacket.PosInfo.PosX, movePacket.PosInfo.PosZ, movePacket.PosInfo.Dir);
-        }
-        else
-        {
-            mc.endPoint = new LocationInfo(movePacket.PosInfo.PosX, movePacket.PosInfo.PosZ, movePacket.PosInfo.Dir);
-        }
+        //if (createMapPacket.PlayerId == Managers.Object.MyMap.Id)
+        //{
+        //    Debug.Log("me");
+        //    foreach (int key in Managers.Object._grounds.Keys)
+        //    {
+        //        //GameObject value = Managers.Object._grounds[key];
+        //        Debug.Log($"Key: {key}");
+        //    }
+        //}
 
         mc.UpdatePosition();
     }
@@ -125,5 +117,24 @@ class PacketHandler
         NewMap map = Managers.Object.FindById(spawnEnemyPacket.PlayerId).GetComponent<NewMap>();
         monster.GetComponent<EnemyMovement>().nextRoad = map.roads.First.Next;
         monster.GetComponent<EnemyMovement>().mapId = map.Id;
+    }
+
+    public static void S_CreateTurretHandler(PacketSession session, IMessage packet)
+    {
+        S_CreateTurret createTurretPacket = packet as S_CreateTurret;
+
+        GameObject go = Managers.Object.FindByNodeId(createTurretPacket.NodeId);
+        if (go == null)
+        {
+            return;
+        }
+
+        Node n = go.GetComponent<Node>();
+        if (n == null)
+        {
+            return;
+        }
+
+        n.GetComponent<Node>().BuildTurret(createTurretPacket.PlayerId, createTurretPacket.ItemName);
     }
 }

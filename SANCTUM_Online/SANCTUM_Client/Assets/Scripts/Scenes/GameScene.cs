@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,8 +11,6 @@ using static Cinemachine.DocumentationSortingAttribute;
 public class GameScene : BaseScene
 {
     //Coroutine co;
-
-    bool check = false;
 
     void Start()
     {
@@ -55,11 +54,23 @@ public class GameScene : BaseScene
     void Update()
     {
         // 확인용 (나중에 고쳐야됨 문제 많음)
-        if (Managers.Object._objects.Count >= 2 && !check)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Managers.Object.MyMap.GameStart();
-            check = true;
+            if (Managers.Object._objects.Count >= 2 && !Managers.Game.GameStartFlag)
+            {
+                C_CreateMap createMapPacket = new C_CreateMap();
+                createMapPacket.IsStart = true;
+                Managers.Network.Send(createMapPacket);
+
+                C_GameStart gameStartPacket = new C_GameStart();
+                Managers.Network.Send(gameStartPacket);
+            }
         }
+        if (!Managers.Game.GameStartFlag)
+        {
+            return;
+        }
+
         //if (Input.GetKeyDown(KeyCode.Z))
         //{
         //    if (Managers.Object._objects.Count >= 2 && !check)
@@ -72,7 +83,7 @@ public class GameScene : BaseScene
         //        Debug.Log("No more than 1 player.");
         //    }
         //}
-        
+
 
         if (Managers.Game.GameIsOver)
         {

@@ -1,6 +1,7 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.IO;
 using UnityEngine;
 
 public class LocationInfo
@@ -33,84 +34,56 @@ public class NewMap : CreatureController
     [HideInInspector] public GameObject startObj;
     GameObject endObj;
 
-    //GameObject enemyPrefab;
-
-    protected const int mapDefaultLength = 31;
-
     public LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
 
-    public LocationInfo startPoint = new LocationInfo();
-    public LocationInfo endPoint = new LocationInfo();
-
-    protected int mapLength = 3;
-    protected int NodeSize = 4;
-
     int startdirR, startdirC;
-    //int interval = 100;
+
+    public int StartPointR { get; set; }
+    public int StartPointC { get; set; }
+    public int StartPointDir { get; set; }
+    public int EndPointR { get; set; }
+    public int EndPointC { get; set; }
+    public int EndPointDir { get; set; }
+
+    public int MapDefaultSize { get; set; }
+    public int NodeSize { get; set; }
+
+    int[,] _map;
+
+    public void LoadMap(int mapId, string pathPrefix = "Assets/Resources/Map")
+    {
+        string mapName = "Map_" + mapId.ToString();
+
+        // Collision 관련 파일
+        string text = File.ReadAllText($"{pathPrefix}/{mapName}.txt");
+        StringReader reader = new StringReader(text);
+
+        StartPointR = int.Parse(reader.ReadLine());
+        StartPointC = int.Parse(reader.ReadLine());
+        StartPointDir = int.Parse(reader.ReadLine());
+        EndPointR = int.Parse(reader.ReadLine());
+        EndPointC = int.Parse(reader.ReadLine());
+        EndPointDir = int.Parse(reader.ReadLine());
+
+        MapDefaultSize = int.Parse(reader.ReadLine());
+        NodeSize = int.Parse(reader.ReadLine());
+
+        _map = new int[MapDefaultSize, MapDefaultSize];
+
+        for (int i = 0; i < MapDefaultSize; i++)
+        {
+            string line = reader.ReadLine();
+            for (int j = 0; j < MapDefaultSize; j++)
+            {
+                _map[i, j] = line[j] - '0';
+            }
+        }
+    }
 
     void Start()
     {
         Init();
     }
-
-    //void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        if (mapLength > mapDefaultLength / 2 - 1)
-    //        {
-    //            return;
-    //        }
-
-    //        ExpendMap();
-
-    //        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    //    }
-
-    //    if (Input.GetKeyDown(KeyCode.A))
-    //    {
-    //        Instantiate(enemyPrefab);
-    //    }
-    //}
-
-
-    /*void Print2DArray()
-    {
-        string s = "(" + startPoint.R + ", " + startPoint.C + "), (" + endPoint.R + ", " + endPoint.C + ")";
-        Debug.Log(s);
-
-        string patternString = "";
-
-        for (int i = 0; i < mapDefaultLength; i++)
-        {
-            for (int j = 0; j < mapDefaultLength; j++)
-            {
-                patternString += map[i, j].ToString();
-            }
-            patternString += "\n"; // 한 행 출력 후 줄 바꿈
-        }
-
-        Debug.Log(patternString);
-
-        //string boolString = "";
-
-        //for (int i = 0; i < mapDefaultLength; i++)
-        //{
-        //    for (int j = 0; j < mapDefaultLength; j++)
-        //    {
-        //        if (visit[i, j])
-        //        {
-        //            boolString += 1;
-        //        } else
-        //        {
-        //            boolString += 0;
-        //        }
-        //    }
-        //    boolString += "\n"; // 한 행 출력 후 줄 바꿈
-        //}
-
-        //Debug.Log(boolString);
-    }*/
 
     protected virtual void Init()
     {
@@ -127,34 +100,33 @@ public class NewMap : CreatureController
 
         startObj = Managers.Resource.Instantiate("Map/Start", default, default, transform);
         endObj = Managers.Resource.Instantiate("Map/End", default, default, transform);
+
+        LoadMap(Id);
     }  
 
     // protected로 바꿀지도
     public virtual void ExpendMap()
     {
-        // 이거 렉 오짐
-        //Print2DArray();
 
-        //foreach (var node in roads)
-        //{
-        //    Debug.Log($"Node Values: R={node.R}, C={node.C}");
-        //}
     }
 
     public void UpdatePosition()
     {
-        startObj.transform.position = new Vector3(startPoint.R * NodeSize + startdirR, 1, startPoint.C * NodeSize + startdirC);
-        startObj.transform.rotation = Quaternion.Euler(0, startPoint.Direction * 90, 0);
+        startObj.transform.position = new Vector3(StartPointR * NodeSize + startdirR, 1, StartPointC * NodeSize + startdirC);
+        startObj.transform.rotation = Quaternion.Euler(0, StartPointDir * 90, 0);
         StartCoroutine(SetScaleCoroutine(startObj.transform, 1));
-        endObj.transform.position = new Vector3(endPoint.R * NodeSize + startdirR, 1, endPoint.C * NodeSize + startdirC);
-        endObj.transform.rotation = Quaternion.Euler(0, endPoint.Direction * 90 + 180, 0);
+        endObj.transform.position = new Vector3(EndPointR * NodeSize + startdirR, 1, EndPointC * NodeSize + startdirC);
+        endObj.transform.rotation = Quaternion.Euler(0, EndPointDir * 90 + 180, 0);
         StartCoroutine(SetScaleCoroutine(endObj.transform, 0.003f));
     }
 
-    public virtual void CreateNode(string type, int r, int c, bool haveEnvironment = false)
+    //public virtual void CreateNode(string type, int r, int c, bool haveEnvironment = false)
+    public virtual void CreateNode(NodeInfo nodeInfo)
     {
-        r += startdirR;
-        c += startdirC;
+        int r = nodeInfo.PosInfo.PosX + startdirR;
+        int c = nodeInfo.PosInfo.PosZ + startdirC;
+        //r += startdirR;
+        //c += startdirC;
 
         GameObject node;
 
@@ -163,12 +135,12 @@ public class NewMap : CreatureController
             Debug.Log("null");
         }
 
-        if (type == "RoadS")
+        if (nodeInfo.NodeType == "RoadS")
         {
             node = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
             //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
             roads.AddFirst(new LocationInfo(r, c));
-        } else if (type == "RoadE") 
+        } else if (nodeInfo.NodeType == "RoadE") 
         {
             node = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
             //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
@@ -177,13 +149,16 @@ public class NewMap : CreatureController
         {
             float y = Random.Range(-0.25f, 0.25f);
             node = Managers.Resource.Instantiate($"Map/ForestGround01", new Vector3(r, y, c), Quaternion.identity, GroundParent.transform);
+            node.GetComponent<Node>().Id = nodeInfo.NodeId;
             //Instantiate(groundPrefab, new Vector3(r, y, c), Quaternion.identity, parent.transform);
             SetChildCount(node.transform);
-            if (haveEnvironment)
+            if (nodeInfo.HaveEnvironment)
             {
                 node.GetComponent<Node>().environment = true;
                 CreateEnvironment(r, y, c);
             }
+
+            Managers.Object.AddGround(nodeInfo.NodeId, node);
         }
 
         StartCoroutine(MoveObjectCoroutine(node.transform));

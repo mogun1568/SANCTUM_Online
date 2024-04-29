@@ -57,7 +57,7 @@ public class WaveSpawner : MonoBehaviour
         //    return;
         //}
 
-        if (!map.startSpawnEnemy)
+        if (!Managers.Game.GameStartFlag)
         {
             return;
         }

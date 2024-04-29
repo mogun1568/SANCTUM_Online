@@ -1,10 +1,7 @@
 ﻿using Google.Protobuf.Protocol;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Net;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -90,7 +87,7 @@ namespace Server.Game
 
         Random random = new Random();
 
-        List<NodeInfo> nodes = new List<NodeInfo>();
+        public List<NodeInfo> nodes = new List<NodeInfo>();
 
         int _mapId;
 
@@ -101,16 +98,18 @@ namespace Server.Game
             CreateDefaultMap();
             for (int i = mapLength - 2; i < 6; i++)
             {
-                ExpendMap();
+                CreateStartPath(startPoint);
+                CreateEndPath(endPoint);
             }
+            GenerateMap();
         }
 
         #region MAP_EDITOR
 
         void GenerateMap()
         {     
-            GenerateByPath("../Common/MapData");
-            GenerateByPath("../SANCTUM_Client/Assets/Resources/Map");
+            GenerateByPath("../../../../../Common/MapData");
+            GenerateByPath("../../../../../SANCTUM_Client/Assets/Resources/Map");
         }
 
         void GenerateByPath(string pathPrefix)
@@ -119,16 +118,19 @@ namespace Server.Game
             {
                 writer.WriteLine(startPoint.R);
                 writer.WriteLine(startPoint.C);
+                writer.WriteLine(startPoint.Direction);
                 writer.WriteLine(endPoint.R);
                 writer.WriteLine(endPoint.C);
+                writer.WriteLine(endPoint.Direction);
 
                 writer.WriteLine(mapDefaultLength);
+                writer.WriteLine(NodeSize);
 
                 for (int i = 0; i < mapDefaultLength; i++)
                 {
                     for (int j = 0; j < mapDefaultLength; j++)
                     {
-                        writer.Write(map[i, j].ToString());
+                        writer.Write(map[i, j]);
                     }
                     writer.WriteLine();
                 }
@@ -221,19 +223,24 @@ namespace Server.Game
 
         public void ExpendMap()
         {
+            nodes.Clear();
+
             CreateStartPath(startPoint);
             CreateEndPath(endPoint);
 
             GenerateMap();
         }
 
+        int _nodeId = 1; // TODO
         void CreateNode(string type, int r, int c, bool haveEnvironment = false)
         {
             nodes.Add(new NodeInfo
             {
                 NodeType = type,
                 PosInfo = new PositionInfo { PosX = r, PosZ = c },
-                HaveEnvironment = haveEnvironment
+                HaveEnvironment = haveEnvironment,
+                NodeId = 1000 * _mapId + _nodeId++
+
             });
         }
 

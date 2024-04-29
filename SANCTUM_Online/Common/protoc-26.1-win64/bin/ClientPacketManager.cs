@@ -31,12 +31,14 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SSpawn, PacketHandler.S_SpawnHandler);		
 		_onRecv.Add((ushort)MsgId.SDespawn, MakePacket<S_Despawn>);
 		_handler.Add((ushort)MsgId.SDespawn, PacketHandler.S_DespawnHandler);		
+		_onRecv.Add((ushort)MsgId.SGameStart, MakePacket<S_GameStart>);
+		_handler.Add((ushort)MsgId.SGameStart, PacketHandler.S_GameStartHandler);		
 		_onRecv.Add((ushort)MsgId.SCreateMap, MakePacket<S_CreateMap>);
 		_handler.Add((ushort)MsgId.SCreateMap, PacketHandler.S_CreateMapHandler);		
-		_onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
-		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);		
 		_onRecv.Add((ushort)MsgId.SSpawnEnemy, MakePacket<S_SpawnEnemy>);
-		_handler.Add((ushort)MsgId.SSpawnEnemy, PacketHandler.S_SpawnEnemyHandler);
+		_handler.Add((ushort)MsgId.SSpawnEnemy, PacketHandler.S_SpawnEnemyHandler);		
+		_onRecv.Add((ushort)MsgId.SCreateTurret, MakePacket<S_CreateTurret>);
+		_handler.Add((ushort)MsgId.SCreateTurret, PacketHandler.S_CreateTurretHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

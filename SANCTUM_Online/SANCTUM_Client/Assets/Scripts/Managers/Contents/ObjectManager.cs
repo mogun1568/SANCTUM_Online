@@ -8,8 +8,9 @@ public class ObjectManager
 {
 	public MyMapController MyMap { get; set; }
 	public Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
+	public Dictionary<int, GameObject> _grounds = new Dictionary<int, GameObject>();
 
-	public void Add(PlayerInfo info, bool myMap = false)
+    public void Add(PlayerInfo info, bool myMap = false)
 	{
         if (myMap)
 		{
@@ -33,7 +34,12 @@ public class ObjectManager
         }
 	}
 
-	public void Remove(int id)
+    public void AddGround(int id, GameObject go)
+	{
+        _grounds.Add(id, go);
+	}
+
+    public void Remove(int id)
 	{
         GameObject go = FindById(id);
         if (go == null)
@@ -60,6 +66,12 @@ public class ObjectManager
     {
         GameObject go = null;
         _objects.TryGetValue(id, out go);
+        return go;
+    }
+    public GameObject FindByNodeId(int id)
+    {
+        GameObject go = null;
+        _grounds.TryGetValue(id, out go);
         return go;
     }
 

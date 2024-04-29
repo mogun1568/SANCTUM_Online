@@ -22,5 +22,15 @@ namespace Server.Game
         {
             _map.ExpendMap();
         }
+
+		public List<NodeInfo> nodeInfos()
+		{
+			return _map.nodes;
+		}
+
+		public void ClearNodes()
+		{
+			_map.nodes.Clear();
+		}
     }
 }
