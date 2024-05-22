@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-public class Node : CreatureController
+public class Node : BaseController
 {
     [HideInInspector] public GameObject turret;
 
@@ -91,9 +91,12 @@ public class Node : CreatureController
 
     void CheckUpdatedTurret(string name)
     {
-        C_CreateTurret createTurretPacket = new C_CreateTurret();
+        C_CreateTurret createTurretPacket = new C_CreateTurret() { PosInfo = new PositionInfo() };
         createTurretPacket.NodeId = Id;
         createTurretPacket.ItemName = name;
+        createTurretPacket.PosInfo.PosX = transform.position.x;
+        createTurretPacket.PosInfo.PosY = transform.position.y + transform.localScale.y;
+        createTurretPacket.PosInfo.PosZ = transform.position.z;
 
         Managers.Network.Send(createTurretPacket);
 
@@ -106,7 +109,7 @@ public class Node : CreatureController
         GameObject _turret = Managers.Resource.Instantiate("Tower/Prefab/BallistaTowerlvl02", GetBuildPosition(), Quaternion.identity);
         turret = _turret;
 
-        _turret.GetComponent<CreatureController>().Id = playerId;
+        _turret.GetComponent<BaseController>().Id = playerId;
         _turret.GetComponent<TowerControl>().itemData = Managers.Data.ItemDict[itemName];
 
         PracticeEffect("Launch Smoke");

@@ -11,27 +11,45 @@ enum MsgId {
   S_DESPAWN = 3;
   C_GAME_START = 4;
   S_GAME_START = 5;
-  C_CREATE_MAP = 6;
-  S_CREATE_MAP = 7;
-  C_SPAWN_ENEMY = 8;
-  S_SPAWN_ENEMY = 9;
+  S_CREATE_MAP = 6;
+  S_LOOK = 7;
+  C_MOVE = 8;
+  S_MOVE = 9;
   C_CREATE_TURRET = 10;
   S_CREATE_TURRET = 11;
+  S_CHANGE_HP = 12;
+  S_DIE = 13;
+}
+
+enum CreatureState {
+  IDLE = 0;
+  MOVING = 1;
+  ATTACKING = 2;
+  DIE = 3;
+}
+
+enum GameObjectType {
+  NONE = 0;
+  PLAYER = 1;
+  NODE = 2;
+  TURRET = 3;
+  ENEMY = 4;
+  PROJECTILE = 5;
 }
 
 message S_EnterGame {
-  PlayerInfo player = 1;
+  ObjectInfo player = 1;
 }
 
 message S_LeaveGame {
 }
 
 message S_Spawn {
-  repeated PlayerInfo players = 1;
+  repeated ObjectInfo objects = 1;
 }
 
 message S_Despawn {
-  repeated int32 playerIds = 1;
+  repeated int32 objectIds = 1;
 }
 
 message C_GameStart {
@@ -41,50 +59,77 @@ message S_GameStart {
   int32 playerId = 1;
 }
 
-message C_CreateMap {
-  bool isStart = 1;
-}
-
 message S_CreateMap {
   int32 playerId = 1;
-  repeated NodeInfo nodeInfo = 2;
 }
 
-message C_SpawnEnemy {
-  string enemyName = 2;
+message S_Look {
+  int32 objectId = 1;
+  PositionInfo targetPosinfo = 2;
 }
 
-message S_SpawnEnemy {
-  int32 playerId = 1;
-  string enemyName = 3;
+message C_Move {
+  PositionInfo posInfo = 1;
+}
+
+message S_Move {
+  int32 objectId = 1;
+  PositionInfo posInfo = 2;
 }
 
 message C_CreateTurret {
   int32 nodeId = 1;
   string itemName = 2;
+  PositionInfo posInfo = 3;
 }
 
 message S_CreateTurret {
   int32 playerId = 1;
   int32 nodeId = 2;
   string itemName = 3;
+  PositionInfo posInfo = 4;
 }
 
-message PlayerInfo {
-  int32 playerId = 1;
+message S_ChangeHp {
+  int32 objectId = 1;
+  int32 hp = 2;
+}
+
+message S_Die {
+  int32 objectId = 1;
+  int32 attackerId = 2;
+}
+
+message ObjectInfo {
+  int32 objectId = 1;
   string name = 2;
   PositionInfo posInfo = 3;
+  StatInfo statInfo = 4;
+  int32 ownerId = 5;
 }
 
 message PositionInfo {
-  int32 posX = 1;
-  int32 posZ = 2;
-  int32 dir = 3;
+  float posX = 1;
+  float posY = 2;
+  float posZ = 3;
+  float dirX = 4;
+  float dirY = 5;
+  float dirZ = 6;
+  CreatureState state = 7;
 }
 
-message NodeInfo {
-  string nodeType = 1;
-  PositionInfo posInfo = 2;
+message StatInfo {
+  string name = 1;
+  string type = 2;
   bool haveEnvironment = 3;
-  int32 nodeId = 4;
+  int32 level = 4;
+  int32 maxHp = 5;
+  int32 hp = 6;
+  int32 attack = 7;
+  float startSpeed = 8;
+  float speed = 9;
+  float range = 10;
+  float fireRate = 11;
+  int32 exp = 12;
+  int32 totalExp = 13;
 }

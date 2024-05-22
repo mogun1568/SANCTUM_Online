@@ -149,40 +149,40 @@ public class WaveSpawner : MonoBehaviour
     void SpawnEnemy()
     {
         // 몬스터 원점이 발임
-        int idx = Random.Range(0, monsters.Length);
-        while (monsters[idx].name == "SalarymanDefault")
-        {
-            idx = Random.Range(0, monsters.Length);
-        }
-        //Debug.Log(monsters[Random.Range(0, monsters.Length)].name);
-        GameObject monster = Managers.Resource.Instantiate($"Monster/{monsters[idx].name}", map.startObj.transform.position, map.startObj.transform.rotation);
-        UpdateRoads(monster);
+        //int idx = Random.Range(0, monsters.Length);
+        //while (monsters[idx].name == "SalarymanDefault")
+        //{
+        //    idx = Random.Range(0, monsters.Length);
+        //}
+        ////Debug.Log(monsters[Random.Range(0, monsters.Length)].name);
+        //GameObject monster = Managers.Resource.Instantiate($"Monster/{monsters[idx].name}", map.startObj.transform.position, map.startObj.transform.rotation);
+        //UpdateRoads(monster);
         //EnemiesAlive++;
 
-        CheckUpdatedSpawnEnemy(monsters[idx].name);
+        //CheckUpdatedSpawnEnemy("monsters[idx].name");
     }
 
     void SpawnBossEnemy()
     {
         //Debug.Log("spawnBoss");
         Managers.Sound.Play("Bgms/battle-of-the-dragons-8037", Define.Sound.Bgm);
-        GameObject monster = Managers.Resource.Instantiate("Monster/SalarymanDefault", map.startObj.transform.position, map.startObj.transform.rotation);
-        UpdateRoads(monster);
+        //GameObject monster = Managers.Resource.Instantiate("Monster/SalarymanDefault", map.startObj.transform.position, map.startObj.transform.rotation);
+        //UpdateRoads(monster);
 
-        CheckUpdatedSpawnEnemy("SalarymanDefault");
+        //CheckUpdatedSpawnEnemy("SalarymanDefault");
     }
 
     void UpdateRoads(GameObject go)
     {
-        go.GetComponent<EnemyMovement>().nextRoad = Managers.Object.MyMap.roads.First.Next;
-        go.GetComponent<EnemyMovement>().mapId = Managers.Object.MyMap.Id;
+        //go.GetComponent<EnemyMovement>().nextRoad = Managers.Object.MyMap.roads.First.Next;
+        //go.GetComponent<EnemyMovement>().mapId = Managers.Object.MyMap.Id;
     }
 
-    void CheckUpdatedSpawnEnemy(string enemyName)
-    {
-        C_SpawnEnemy spawnEnemyPacket = new C_SpawnEnemy();
-        spawnEnemyPacket.EnemyName = enemyName;
-        Managers.Network.Send(spawnEnemyPacket);
-    }
+    //void CheckUpdatedSpawnEnemy(string enemyName)
+    //{
+    //    C_SpawnEnemy spawnEnemyPacket = new C_SpawnEnemy();
+    //    spawnEnemyPacket.EnemyName = enemyName;
+    //    Managers.Network.Send(spawnEnemyPacket);
+    //}
 }
 

@@ -35,10 +35,16 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SGameStart, PacketHandler.S_GameStartHandler);		
 		_onRecv.Add((ushort)MsgId.SCreateMap, MakePacket<S_CreateMap>);
 		_handler.Add((ushort)MsgId.SCreateMap, PacketHandler.S_CreateMapHandler);		
-		_onRecv.Add((ushort)MsgId.SSpawnEnemy, MakePacket<S_SpawnEnemy>);
-		_handler.Add((ushort)MsgId.SSpawnEnemy, PacketHandler.S_SpawnEnemyHandler);		
+		_onRecv.Add((ushort)MsgId.SLook, MakePacket<S_Look>);
+		_handler.Add((ushort)MsgId.SLook, PacketHandler.S_LookHandler);		
+		_onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
+		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);		
 		_onRecv.Add((ushort)MsgId.SCreateTurret, MakePacket<S_CreateTurret>);
-		_handler.Add((ushort)MsgId.SCreateTurret, PacketHandler.S_CreateTurretHandler);
+		_handler.Add((ushort)MsgId.SCreateTurret, PacketHandler.S_CreateTurretHandler);		
+		_onRecv.Add((ushort)MsgId.SChangeHp, MakePacket<S_ChangeHp>);
+		_handler.Add((ushort)MsgId.SChangeHp, PacketHandler.S_ChangeHpHandler);		
+		_onRecv.Add((ushort)MsgId.SDie, MakePacket<S_Die>);
+		_handler.Add((ushort)MsgId.SDie, PacketHandler.S_DieHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

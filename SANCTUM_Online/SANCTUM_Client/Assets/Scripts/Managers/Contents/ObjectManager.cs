@@ -8,35 +8,121 @@ public class ObjectManager
 {
 	public MyMapController MyMap { get; set; }
 	public Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
-	public Dictionary<int, GameObject> _grounds = new Dictionary<int, GameObject>();
 
-    public void Add(PlayerInfo info, bool myMap = false)
+    public static GameObjectType GetObjectTypeById(int id)
+    {
+        int type = (id >> 24) & 0x7F;
+        return (GameObjectType)type;
+    }
+
+    public void Add(ObjectInfo info, bool myMap = false)
 	{
-        if (myMap)
+        GameObjectType objectType = GetObjectTypeById(info.ObjectId);
+        if (objectType == GameObjectType.Player)
 		{
-			GameObject go = Managers.Resource.Instantiate("Map/MyMap");
-			go.name = info.Name;
-			_objects.Add(info.PlayerId, go);
+            if (myMap)
+            {
+                GameObject go = Managers.Resource.Instantiate("Map/MyMap");
+                go.name = info.Name;
+                _objects.Add(info.ObjectId, go);
 
-			MyMap = go.GetComponent<MyMapController>();
-			MyMap.Id = info.PlayerId;
-			MyMap.PosInfo = info.PosInfo;
-		}
-		else
-		{
-			GameObject go = Managers.Resource.Instantiate("Map/Map");
-			go.name = info.Name;
-			_objects.Add(info.PlayerId, go);
+                MyMap = go.GetComponent<MyMapController>();
+                MyMap.Id = info.ObjectId;
+                MyMap.PosInfo = info.PosInfo;
+                MyMap.Stat = info.StatInfo;
+            }
+            else
+            {
+                GameObject go = Managers.Resource.Instantiate("Map/Map");
+                go.name = info.Name;
+                _objects.Add(info.ObjectId, go);
 
-			NewMap mc = go.GetComponent<NewMap>();
-            mc.Id = info.PlayerId;
-			mc.PosInfo = info.PosInfo;
+                NewMap mc = go.GetComponent<NewMap>();
+                mc.Id = info.ObjectId;
+                mc.PosInfo = info.PosInfo;
+                mc.Stat = info.StatInfo;
+            }
         }
-	}
+		else if (objectType == GameObjectType.Node)
+		{
+            GameObject go = Managers.Object.FindById(info.OwnerId);
+            if (go == null)
+            {
+                return;
+            }
 
-    public void AddGround(int id, GameObject go)
-	{
-        _grounds.Add(id, go);
+            NewMap mc = go.GetComponent<NewMap>();
+            if (mc == null)
+            {
+                return;
+            }
+
+            mc.CreateNode(info);
+        }
+        else if (objectType == GameObjectType.Turret)
+        {
+            Managers.Sound.Play("Effects/Build", Define.Sound.Effect);
+            Vector3 pos = new Vector3(info.PosInfo.PosX, info.PosInfo.PosY, info.PosInfo.PosZ);
+            GameObject go = Managers.Resource.Instantiate("Tower/Prefab/BallistaTowerlvl02", pos, Quaternion.identity);
+
+            go.name = info.Name;
+            _objects.Add(info.ObjectId, go);
+
+            Turret tc = go.GetComponent<Turret>();
+            tc.Id = info.ObjectId;
+            tc.PosInfo = info.PosInfo;
+            Debug.Log("Turret build!");
+        }
+        else if (objectType == GameObjectType.Enemy)
+        {
+            Vector3 pos = new Vector3(info.PosInfo.PosX, 1, info.PosInfo.PosZ);
+            Vector3 dir = new Vector3(0, info.PosInfo.DirY, 0);
+            GameObject go = Managers.Resource.Instantiate($"Monster/{info.Name}", pos, Quaternion.Euler(dir));
+            go.name = info.Name;
+            _objects.Add(info.ObjectId, go);
+
+            Enemy ec = go.GetComponent<Enemy>();
+            ec.Id = info.ObjectId;
+            ec.PosInfo = info.PosInfo;
+            ec.Stat = info.StatInfo;
+            //ec.SyncPos(new Vector3(0, 1, 0));
+
+            /*GameObject monster = Managers.Resource.Instantiate($"Monster/{info.Name}", 
+                new Vector3(info.PosInfo.PosX, 1, info.PosInfo.PosZ), 
+                Quaternion.Euler(0, info.PosInfo.Dir, 0));
+
+            EnemyControl ec = monster.GetComponent<EnemyControl>();
+            ec.Stat = info.StatInfo;
+
+            // 맵 생성 전에 몬스터가 생기는 버그가 있음 (확인해봐야 함)
+            GameObject owner = Managers.Object.FindById(info.OwnerId);
+            if (owner == null)
+            {
+                Debug.Log("No owner");
+            }
+            NewMap map = Managers.Object.FindById(info.OwnerId).GetComponent<NewMap>();
+            if (map == null)
+            {
+                Debug.Log("No map");
+            }
+            monster.GetComponent<EnemyMovement>().nextRoad = map.roads.First.Next;
+            monster.GetComponent<EnemyMovement>().mapId = map.Id;*/
+        }
+        else if (objectType == GameObjectType.Projectile)
+        {
+            Managers.Sound.Play("Effects/Arrow", Define.Sound.Effect);
+            Vector3 pos = new Vector3(info.PosInfo.PosX, info.PosInfo.PosY, info.PosInfo.PosZ);
+            Vector3 dir = new Vector3(info.PosInfo.DirX, info.PosInfo.DirY, info.PosInfo.DirZ);
+            GameObject go = Managers.Resource.Instantiate($"Tower/Prefab/Bullet/{info.Name}", pos, Quaternion.LookRotation(dir));
+
+            go.name = info.Name;
+            _objects.Add(info.ObjectId, go);
+
+            Projectile pc = go.GetComponent<Projectile>();
+            pc.Id = info.ObjectId;
+            pc.PosInfo = info.PosInfo;
+            pc.Stat = info.StatInfo;
+        }
 	}
 
     public void Remove(int id)
@@ -51,31 +137,14 @@ public class ObjectManager
         Managers.Resource.Destroy(go);
     }
 
-	public void RemoveMyPlayer()
-	{
-		if (MyMap == null)
-		{
-			return;
-		}
-
-		Remove(MyMap.Id);
-		MyMap = null;
-	}
-
     public GameObject FindById(int id)
     {
         GameObject go = null;
         _objects.TryGetValue(id, out go);
         return go;
     }
-    public GameObject FindByNodeId(int id)
-    {
-        GameObject go = null;
-        _grounds.TryGetValue(id, out go);
-        return go;
-    }
 
-    public GameObject Find(Vector3 Pos)
+    public GameObject FindCreature(Vector3 Pos)
 	{
 		foreach (GameObject obj in _objects.Values)
 		{
@@ -108,5 +177,6 @@ public class ObjectManager
             Managers.Resource.Destroy(obj);
         }
         _objects.Clear();
+        MyMap = null;
     }
 }

@@ -9,6 +9,8 @@ using System.Net;
 using Google.Protobuf.Protocol;
 using Google.Protobuf;
 using Server.Game;
+using System.Numerics;
+using Server.Data;
 
 namespace Server
 {
@@ -35,11 +37,16 @@ namespace Server
 
             // 원래는 서버에서 패킷을 보내고 클라에서 준비됐다는 패킷을 보내면 입장시킴
             // 지금은 그냥 강제 입장시키는 방식으로 진행
-            MyPlayer = PlayerManager.Instance.Add();
+            MyPlayer = ObjectManager.Instance.Add<Player>();
             {
-                MyPlayer.Info.Name = $"Player_{MyPlayer.Info.PlayerId}";
+                MyPlayer.Info.Name = $"Player_{MyPlayer.Info.ObjectId}";
                 MyPlayer.Info.PosInfo.PosX = 0;
+                MyPlayer.Info.PosInfo.PosY = 0;
                 MyPlayer.Info.PosInfo.PosZ = 0;
+
+                StatInfo stat = null;
+                //DataManager.StatDict.TryGetValue(1, out stat);
+                //MyPlayer.Stat.MergeFrom(stat);
 
                 MyPlayer.Session = this;
             }
@@ -54,7 +61,7 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
-            RoomManager.Instance.Find(1).LeaveGame(MyPlayer.Info.PlayerId);
+            RoomManager.Instance.Find(1).LeaveGame(MyPlayer.Info.ObjectId);
 
             SessionManager.Instance.Remove(this);
 

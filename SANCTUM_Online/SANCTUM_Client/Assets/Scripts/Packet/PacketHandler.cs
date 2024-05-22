@@ -16,22 +16,22 @@ class PacketHandler
     public static void S_LeaveGameHandler(PacketSession session, IMessage packet)
     {
         S_LeaveGame leaveGamePacket = packet as S_LeaveGame;
-        Managers.Object.RemoveMyPlayer();
+        Managers.Object.Clear();
     }
 
     public static void S_SpawnHandler(PacketSession session, IMessage packet)
     {
         S_Spawn spawnPacket = packet as S_Spawn;
-        foreach (PlayerInfo player in spawnPacket.Players)
+        foreach (ObjectInfo obj in spawnPacket.Objects)
         {
-            Managers.Object.Add(player, myMap: false);
+            Managers.Object.Add(obj, myMap: false);
         }
     }
 
     public static void S_DespawnHandler(PacketSession session, IMessage packet)
     {
         S_Despawn despawnPacket = packet as S_Despawn;
-        foreach (int id in despawnPacket.PlayerIds)
+        foreach (int id in despawnPacket.ObjectIds)
         {
             Managers.Object.Remove(id);
         }
@@ -74,56 +74,54 @@ class PacketHandler
 
         // 자기 자신은 클라에서 이동시키므로 굳이 이렇게 콜백을 받을 필요는 없음
         mc.LoadMap(createMapPacket.PlayerId);
-        foreach (NodeInfo nodeInfo in createMapPacket.NodeInfo)
-        {
-            mc.CreateNode(nodeInfo);
-        }
-
-        //if (createMapPacket.PlayerId == Managers.Object.MyMap.Id)
-        //{
-        //    Debug.Log("me");
-        //    foreach (int key in Managers.Object._grounds.Keys)
-        //    {
-        //        //GameObject value = Managers.Object._grounds[key];
-        //        Debug.Log($"Key: {key}");
-        //    }
-        //}
-
         mc.UpdatePosition();
     }
 
-    public static void S_SpawnEnemyHandler(PacketSession session, IMessage packet)
+    public static void S_LookHandler(PacketSession session, IMessage packet)
     {
-        S_SpawnEnemy spawnEnemyPacket = packet as S_SpawnEnemy;
+        S_Look lookPacket = packet as S_Look;
 
-        GameObject go = Managers.Object.FindById(spawnEnemyPacket.PlayerId);
+        GameObject go = Managers.Object.FindById(lookPacket.ObjectId);
         if (go == null)
         {
             return;
         }
 
-        if (spawnEnemyPacket.PlayerId == Managers.Object.MyMap.Id)
+        BaseController bc = go.GetComponent<BaseController>();
+        if (bc == null)
         {
             return;
         }
 
-        NewMap mc = go.GetComponent<NewMap>();
-        if (mc == null)
+        bc._targetPos = lookPacket.TargetPosinfo;
+        bc.State = CreatureState.Attacking;
+    }
+
+    public static void S_MoveHandler(PacketSession session, IMessage packet)
+    {
+        S_Move movePacket = packet as S_Move;
+
+        GameObject go = Managers.Object.FindById(movePacket.ObjectId);
+        if (go == null)
         {
             return;
         }
 
-        GameObject monster = Managers.Resource.Instantiate($"Monster/{spawnEnemyPacket.EnemyName}", mc.startObj.transform.position, mc.startObj.transform.rotation);
-        NewMap map = Managers.Object.FindById(spawnEnemyPacket.PlayerId).GetComponent<NewMap>();
-        monster.GetComponent<EnemyMovement>().nextRoad = map.roads.First.Next;
-        monster.GetComponent<EnemyMovement>().mapId = map.Id;
+        BaseController bc = go.GetComponent<BaseController>();
+        if (bc == null)
+        {
+            return;
+        }
+
+        bc.PosInfo = movePacket.PosInfo;
+        bc.State = CreatureState.Moving;
     }
 
     public static void S_CreateTurretHandler(PacketSession session, IMessage packet)
     {
         S_CreateTurret createTurretPacket = packet as S_CreateTurret;
 
-        GameObject go = Managers.Object.FindByNodeId(createTurretPacket.NodeId);
+        GameObject go = Managers.Object.FindById(createTurretPacket.NodeId);
         if (go == null)
         {
             return;
@@ -136,5 +134,41 @@ class PacketHandler
         }
 
         n.GetComponent<Node>().BuildTurret(createTurretPacket.PlayerId, createTurretPacket.ItemName);
+    }
+
+    public static void S_ChangeHpHandler(PacketSession session, IMessage packet)
+    {
+        S_ChangeHp changePacket = packet as S_ChangeHp;
+
+        GameObject go = Managers.Object.FindById(changePacket.ObjectId);
+        if (go == null)
+            return;
+
+        BaseController bc = go.GetComponent<BaseController>();
+        if (bc == null)
+        {
+            return;
+        }
+
+        bc.Hp = changePacket.Hp;
+        Debug.Log(bc.Hp);
+    }
+
+    public static void S_DieHandler(PacketSession session, IMessage packet)
+    {
+        S_Die diePacket = packet as S_Die;
+
+        GameObject go = Managers.Object.FindById(diePacket.ObjectId);
+        if (go == null)
+            return;
+
+        BaseController bc = go.GetComponent<BaseController>();
+        if (bc == null)
+        {
+            return;
+        }
+
+        bc.Hp = 0;
+        bc.OnDead();
     }
 }

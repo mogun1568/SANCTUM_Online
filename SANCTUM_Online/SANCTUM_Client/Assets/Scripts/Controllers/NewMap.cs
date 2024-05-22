@@ -25,7 +25,7 @@ public class LocationInfo
     }
 }
 
-public class NewMap : CreatureController
+public class NewMap : BaseController
 {
     GameObject roadParent;
     GameObject GroundParent;
@@ -36,7 +36,7 @@ public class NewMap : CreatureController
 
     public LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
 
-    int startdirR, startdirC;
+    int startR, startC;
 
     public int StartPointR { get; set; }
     public int StartPointC { get; set; }
@@ -88,8 +88,8 @@ public class NewMap : CreatureController
     protected virtual void Init()
     {
         transform.position = Pos;
-        startdirR = Pos.x;
-        startdirC = Pos.z;
+        startR = (int)Pos.x;
+        startC = (int)Pos.z;
 
         roadParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
         roadParent.name = "" + "Roads";
@@ -112,57 +112,58 @@ public class NewMap : CreatureController
 
     public void UpdatePosition()
     {
-        startObj.transform.position = new Vector3(StartPointR * NodeSize + startdirR, 1, StartPointC * NodeSize + startdirC);
+        startObj.transform.position = new Vector3(StartPointR * NodeSize + startR, 1, StartPointC * NodeSize + startC);
         startObj.transform.rotation = Quaternion.Euler(0, StartPointDir * 90, 0);
         StartCoroutine(SetScaleCoroutine(startObj.transform, 1));
-        endObj.transform.position = new Vector3(EndPointR * NodeSize + startdirR, 1, EndPointC * NodeSize + startdirC);
+        endObj.transform.position = new Vector3(EndPointR * NodeSize + startR, 1, EndPointC * NodeSize + startC);
         endObj.transform.rotation = Quaternion.Euler(0, EndPointDir * 90 + 180, 0);
         StartCoroutine(SetScaleCoroutine(endObj.transform, 0.003f));
     }
 
     //public virtual void CreateNode(string type, int r, int c, bool haveEnvironment = false)
-    public virtual void CreateNode(NodeInfo nodeInfo)
+    public virtual void CreateNode(ObjectInfo objInfo)
     {
-        int r = nodeInfo.PosInfo.PosX + startdirR;
-        int c = nodeInfo.PosInfo.PosZ + startdirC;
+        int r = (int)objInfo.PosInfo.PosX * NodeSize + startR;
+        int c = (int)objInfo.PosInfo.PosZ * NodeSize + startC;
         //r += startdirR;
         //c += startdirC;
 
-        GameObject node;
+        GameObject go;
 
         if (roadParent == null)
         {
             Debug.Log("null");
         }
 
-        if (nodeInfo.NodeType == "RoadS")
+        if (objInfo.Name == "RoadS")
         {
-            node = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
+            go = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
             //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
             roads.AddFirst(new LocationInfo(r, c));
-        } else if (nodeInfo.NodeType == "RoadE") 
+        } else if (objInfo.Name == "RoadE") 
         {
-            node = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
+            go = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
             //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
             roads.AddLast(new LocationInfo(r, c));
         } else
         {
             float y = Random.Range(-0.25f, 0.25f);
-            node = Managers.Resource.Instantiate($"Map/ForestGround01", new Vector3(r, y, c), Quaternion.identity, GroundParent.transform);
-            node.GetComponent<Node>().Id = nodeInfo.NodeId;
+            go = Managers.Resource.Instantiate($"Map/ForestGround01", new Vector3(r, y, c), Quaternion.identity, GroundParent.transform);
+            go.GetComponent<Node>().Id = objInfo.ObjectId;
             //Instantiate(groundPrefab, new Vector3(r, y, c), Quaternion.identity, parent.transform);
-            SetChildCount(node.transform);
-            if (nodeInfo.HaveEnvironment)
+            SetChildCount(go.transform);
+            if (objInfo.StatInfo.HaveEnvironment)
             {
-                node.GetComponent<Node>().environment = true;
+                go.GetComponent<Node>().environment = true;
                 CreateEnvironment(r, y, c);
             }
-
-            Managers.Object.AddGround(nodeInfo.NodeId, node);
         }
 
-        StartCoroutine(MoveObjectCoroutine(node.transform));
-        SetTransparency(node);
+        //go.name = objInfo.Name;
+        Managers.Object._objects.Add(objInfo.ObjectId, go);
+
+        StartCoroutine(MoveObjectCoroutine(go.transform));
+        SetTransparency(go);
     }
 
     protected void CreateEnvironment(int r, float y, int c)

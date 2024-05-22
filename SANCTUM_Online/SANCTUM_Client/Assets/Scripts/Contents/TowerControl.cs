@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class TowerControl : CreatureController
+public class TowerControl : BaseController
 {
 
     [HideInInspector] public TowerStat _stat;
@@ -341,9 +341,9 @@ public class TowerControl : CreatureController
         Managers.Resource.Destroy(effect);
     }
 
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _stat.Range);
-    }
+    //void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, _stat.Range);
+    //}
 }

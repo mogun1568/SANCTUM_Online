@@ -14,16 +14,4 @@ public class MyMapController : NewMap
         int cameraDefault = MapDefaultSize * 2 - 24;
         Camera.main.transform.position = Pos + new Vector3(cameraDefault, 40, cameraDefault);
     }
-
-    public override void ExpendMap()
-    {
-        CheckUpdatedMap();
-    }
-
-    void CheckUpdatedMap()
-    {
-        C_CreateMap createMapPacket = new C_CreateMap();
-
-        Managers.Network.Send(createMapPacket);
-    }
 }

@@ -2,57 +2,86 @@ using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static EnemyMovement;
 
-public class CreatureController : MonoBehaviour
+public class CreatureController : BaseController
 {
-    [SerializeField]
-    public int Id { get; set; }
+    protected Animator _animator;
 
-    PositionInfo _positionInfo = new PositionInfo();
-    public PositionInfo PosInfo
+    public override CreatureState State
     {
-        get { return _positionInfo; }
-        set
+        get { return base.State; }
+        set { base.State = value; UpdateAnimation(); }
+    }
+
+    public override void Update()
+    {
+        UpdateController();
+    }
+
+    protected override void Init()
+    {
+        base.Init();
+
+        _animator = GetComponent<Animator>();
+        //transform.position += new Vector3(0, 0, 0);
+
+        State = CreatureState.Moving;
+        UpdateAnimation();
+    }
+
+    protected virtual void UpdateController()
+    {
+        switch (State)
         {
-            if (_positionInfo.Equals(value))
-            {
-                return;
-            }
-
-            Pos = new Vector3Int(value.PosX, 0, value.PosZ);
-            Dir = value.Dir;
-
+            case CreatureState.Idle:
+                UpdateIdle();
+                break;
+            case CreatureState.Moving:
+                UpdateMoving();
+                break;
+            case CreatureState.Attacking:
+                UpdateAttacking();
+                break;
+            case CreatureState.Die:
+                UpdateDead();
+                break;
         }
     }
 
-    public Vector3Int Pos
+    protected virtual void UpdateAnimation()
     {
-        get
+        switch (State)
         {
-            return new Vector3Int(PosInfo.PosX, 0, PosInfo.PosZ);
-        }
-
-        set
-        {
-            if (PosInfo.PosX == value.x && PosInfo.PosZ == value.z)
-            {
-                return;
-            }
-
-            PosInfo.PosX = value.x;
-            PosInfo.PosZ = value.z;
+            case CreatureState.Moving:
+                _animator.Play("Run");
+                break;
+            case CreatureState.Attacking:
+                _animator.Play("Attack");
+                break;
+            case CreatureState.Die:
+                _animator.Play("Die");
+                break;
         }
     }
 
-    public int Dir
+    protected virtual void UpdateIdle()
     {
-        get { return PosInfo.Dir; }
-        set
-        {
-            if (PosInfo.Dir == value)
-                return;
 
-            PosInfo.Dir = value;
-        }
+    }
+
+    protected override void UpdateMoving()
+    {
+        base.UpdateMoving();
+    }
+
+    protected virtual void UpdateAttacking()
+    {
+
+    }
+
+    protected virtual void UpdateDead()
+    {
+        Debug.Log($"Die {Id}");
     }
 }

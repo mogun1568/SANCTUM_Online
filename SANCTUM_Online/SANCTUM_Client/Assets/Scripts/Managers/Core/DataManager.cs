@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ public interface ILoader<Key, Value>
 public class DataManager
 {
     public Dictionary<string, Data.Item> ItemDict { get; private set; } = new Dictionary<string, Data.Item>();
-    public Dictionary<string, Data.Enemy> EnemyDict { get; private set; } = new Dictionary<string, Data.Enemy>();
+    public Dictionary<string, StatInfo> EnemyDict { get; private set; } = new Dictionary<string, StatInfo>();
 
     public void Init()
     {
         ItemDict = LoadJson<Data.ItemData, string, Data.Item>("ItemData").MakeDict();
-        EnemyDict = LoadJson<Data.EnemyData, string, Data.Enemy>("EnemyData").MakeDict();
+        EnemyDict = LoadJson<Data.EnemyData, string, StatInfo>("EnemyData").MakeDict();
     }
 
     // 이 부분 잘 모르겠음

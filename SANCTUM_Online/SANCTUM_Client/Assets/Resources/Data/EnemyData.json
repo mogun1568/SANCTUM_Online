@@ -1,44 +1,106 @@
 {
 	"enemys": [
 		{
-			"enemyType": "General",
-			"enemyName": "AlienDefault"
+			"type": "General",
+			"name": "AlienDefault",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "General",
-			"enemyName": "ChemicalmanDefault"
+			"type": "General",
+			"name": "ChemicalmanDefault",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "General",
-			"enemyName": "Enemy_Bear"
+			"type": "General",
+			"name": "Enemy_Bear",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "General",
-			"enemyName": "Enemy_Chicken"
+			"type": "General",
+			"name": "Enemy_Chicken",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "General",
-			"enemyName": "Enemy_Jester"
+			"type": "General",
+			"name": "Enemy_Jester",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "General",
-			"enemyName": "NinjaDefault"
+			"type": "General",
+			"name": "NinjaDefault",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "General",
-			"enemyName": "RobotDefault"
+			"type": "General",
+			"name": "RobotDefault",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "General",
-			"enemyName": "SpacemanDefault"
+			"type": "General",
+			"name": "SpacemanDefault",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "10",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "Attack",
-			"enemyName": "KnightDefault"
+			"type": "Attack",
+			"name": "KnightDefault",
+			"maxHp": "100",
+			"Hp": "100",
+			"attack": "20",
+			"startSpped": "10.0",
+			"speed": "10.0",
+			"range": "12.0",
+			"exp": "1"
 		},
 		{
-			"enemyType": "Boss",
-			"enemyName": "SalarymanDefault"
+			"type": "Boss",
+			"name": "SalarymanDefault",
+			"maxHp": "500",
+			"Hp": "500",
+			"attack": "50",
+			"startSpped": "8.0",
+			"speed": "8.0",
+			"range": "12.0",
+			"exp": "3"
 		}
 	]
 }

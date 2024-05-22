@@ -56,12 +56,8 @@ public class GameScene : BaseScene
         // 확인용 (나중에 고쳐야됨 문제 많음)
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Managers.Object._objects.Count >= 2 && !Managers.Game.GameStartFlag)
+            if (Managers.Object._objects.Count >= 1 && !Managers.Game.GameStartFlag)
             {
-                C_CreateMap createMapPacket = new C_CreateMap();
-                createMapPacket.IsStart = true;
-                Managers.Network.Send(createMapPacket);
-
                 C_GameStart gameStartPacket = new C_GameStart();
                 Managers.Network.Send(gameStartPacket);
             }

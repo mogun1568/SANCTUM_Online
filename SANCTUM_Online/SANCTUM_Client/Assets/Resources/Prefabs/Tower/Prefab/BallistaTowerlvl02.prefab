@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &450018311923651980
 Transform:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6612769996681829384}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ebf3efe6da98ad45b41885e9620a19b, type: 3}
   m_Name: 
@@ -401,7 +401,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8699166899354025471}
   - component: {fileID: 7786509790425237251}
-  - component: {fileID: 9096904943224682191}
+  - component: {fileID: -514319202192571596}
   m_Layer: 0
   m_Name: BallistaTowerlvl02
   m_TagString: Tower
@@ -440,7 +440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsUsing: 0
---- !u!114 &9096904943224682191
+--- !u!114 &-514319202192571596
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -449,21 +449,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8699166899353854431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 372ba95640510ee46a11d198a4ba4964, type: 3}
+  m_Script: {fileID: 11500000, guid: ca862809ac5d3a449b627c81a3b0bc55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stat: {fileID: 0}
-  itemData:
-    itemType: 
-    itemName: 
-    itemIcon: 
-    bulletType: 
-    upgradeAmount: 0
-    returnExp: 0
-  enemyTag: Enemy
-  towerTag: Tower
-  partToRotate: {fileID: 8699166899354025465}
-  turnSpeed: 10
-  firePoint: {fileID: 4253167733792877752}
-  isFPM: 0
-  isHealTower: 0
+  _turnSpeed: 10

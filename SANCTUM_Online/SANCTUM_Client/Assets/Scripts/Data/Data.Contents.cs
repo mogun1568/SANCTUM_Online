@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,23 +37,16 @@ namespace Data
 
     #region Enemy
     [Serializable]
-    public class Enemy
+    public class EnemyData : ILoader<string, StatInfo>
     {
-        public string enemyType;
-        public string enemyName;
-    }
+        public List<StatInfo> enemys = new List<StatInfo>();
 
-    [Serializable]
-    public class EnemyData : ILoader<string, Enemy>
-    {
-        public List<Enemy> enemys = new List<Enemy>();
-
-        public Dictionary<string, Enemy> MakeDict()
+        public Dictionary<string, StatInfo> MakeDict()
         {
-            Dictionary<string, Enemy> dict = new Dictionary<string, Enemy>();
-            foreach (Enemy enemy in enemys)
+            Dictionary<string, StatInfo> dict = new Dictionary<string, StatInfo>();
+            foreach (StatInfo enemy in enemys)
             {
-                dict.Add(enemy.enemyName, enemy);
+                dict.Add(enemy.Name, enemy);
             }
             return dict;
         }

@@ -131,11 +131,12 @@ public class DragItem : UI_Base
         transform.localScale = normal_size;
         if (hit.transform.name == "ForestGround01")
         {
-            if ((hit.transform.GetComponent<Node>().turret != null || !hit.transform.GetComponent<Node>().turret))
-            {
+            //if ((hit.transform.GetComponent<Node>().turret != null || !hit.transform.GetComponent<Node>().turret))
+            //{
                 hit.transform.GetComponent<Node>().UseItem();
-            }
+            //}
         }
+
         Managers.Select.Clear();
         Destroy(SilhouetteItem);
         SilhouetteItem = null;

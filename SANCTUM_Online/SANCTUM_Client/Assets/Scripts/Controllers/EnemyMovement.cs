@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -50,7 +51,7 @@ public class EnemyMovement : MonoBehaviour
     }*/
 
 
-    public LinkedListNode<LocationInfo> nextRoad;
+    /*public LinkedListNode<LocationInfo> nextRoad;
 
     //private Vector3 target;
     //private LinkedListNode<Vector3> Mnode;
@@ -71,11 +72,13 @@ public class EnemyMovement : MonoBehaviour
 
     MonsterState _state;
 
-    Vector3 targetPosition;
+    public Vector3 targetPosition;
     Vector3 direction;
 
     void UpdateMoving()
     {
+        return;
+
         if (enemyControl._stat.HP <= 0)
         {
             _state = MonsterState.Die;
@@ -86,25 +89,36 @@ public class EnemyMovement : MonoBehaviour
             _state = MonsterState.Attacking;
         }
 
+        if (targetPosition == null)
+        {
+            return;
+        }
+
         //targetPosition = new Vector3(nextRoad.Value.R, 1, nextRoad.Value.C);
         direction = (targetPosition - transform.position).normalized;
 
         // Translate 메서드를 사용하여 오브젝트를 이동
-        transform.Translate(enemyControl._stat.Speed * Time.deltaTime * direction, Space.World);
+        transform.Translate(enemyControl.Stat.Speed * Time.deltaTime * direction, Space.World);
+        enemyControl.Pos = transform.position;
 
         // 현재 타겟 위치에 도달하면 다음 타겟으로 변경
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
             // 다음 타겟 설정
-            GetNextWatpoint();
+            //GetNextWatpoint();
+
+            // TODO : 모든 플레이어가 보낸다는 문제있음
+            C_Move movePacket = new C_Move();
+            movePacket.PosInfo = enemyControl.PosInfo;
+            Managers.Network.Send(movePacket);
         }
 
-        if (nextRoad == null)
-        {
-            return;
-        }
+        //if (nextRoad == null)
+        //{
+        //    return;
+        //}
 
-        targetPosition = new Vector3(nextRoad.Value.R, 1, nextRoad.Value.C);
+        //targetPosition = new Vector3(nextRoad.Value.R, 1, nextRoad.Value.C);
         direction = (targetPosition - transform.position).normalized;
 
         //if (Mnode == null)
@@ -225,5 +239,5 @@ public class EnemyMovement : MonoBehaviour
             //WaveSpawner.EnemiesAlive--;
         }
         Managers.Resource.Destroy(gameObject);
-    }
+    }*/
 }

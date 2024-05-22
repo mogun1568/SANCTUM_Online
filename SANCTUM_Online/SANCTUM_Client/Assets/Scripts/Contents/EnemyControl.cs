@@ -1,10 +1,11 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyControl : MonoBehaviour
+public class EnemyControl : CreatureController
 {
-    [HideInInspector] public Data.Enemy enemyData;
+    //[HideInInspector] public StatInfo enemyData;
 
     [HideInInspector] public EnemyStat _stat;
 
@@ -21,6 +22,8 @@ public class EnemyControl : MonoBehaviour
 
     void OnEnable() // pool 때문에 Start에서 OnEnable로 바꿈
     {
+        Debug.Log($"{transform.position.x}, {transform.position.z}");
+
         int index = gameObject.name.IndexOf("(Clone)");
         string enemyName;
         if (index > 0)
@@ -30,28 +33,33 @@ public class EnemyControl : MonoBehaviour
         {
             enemyName = gameObject.name;
         }
-        enemyData = Managers.Data.EnemyDict[enemyName];
+        //enemyData = Managers.Data.EnemyDict[enemyName];
+
+        //if (enemyData == null)
+        //{
+        //    Debug.Log("enemyNull");
+        //}
 
         gameObject.GetOrAddComponent<EnemyMovement>();
         //gameObject.GetOrAddComponent<Poolable>();
         _stat = gameObject.GetOrAddComponent<EnemyStat>();
-        if (enemyData.enemyType == "Attack")
-        {
-            _stat.IsAttack();
-        }
-        if (enemyData.enemyType == "Boss")
-        {
-            _stat.IsBoss();
-        }
+        //if (enemyData.Type == "Attack")
+        //{
+        //    _stat.IsAttack();
+        //}
+        //if (enemyData.Type == "Boss")
+        //{
+        //    _stat.IsBoss();
+        //}
 
         isDie = false;
         target = null;
         isAttack = false;
 
-        if (enemyData.enemyType != "General")
-        {
-            InvokeRepeating("UpdateTarget", 0f, 0.5f);  // 0초 후에 0.5초 마다 실행
-        }
+        //if (enemyData.Type != "General")
+        //{
+        //    InvokeRepeating("UpdateTarget", 0f, 0.5f);  // 0초 후에 0.5초 마다 실행
+        //}
     }
 
     void UpdateTarget()
@@ -101,10 +109,12 @@ public class EnemyControl : MonoBehaviour
 
     void Update()
     {
-        if (enemyData.enemyType == "General")
-        {
-            return;
-        }
+        return;
+
+        //if (enemyData.Type == "General")
+        //{
+        //    return;
+        //}
 
         if (!Managers.Game.isLive)
         {
@@ -199,23 +209,23 @@ public class EnemyControl : MonoBehaviour
 
     void Die()
     {
-        StopAllCoroutines();
+        //StopAllCoroutines();
 
-        if (gameObject.GetComponent<EnemyMovement>().mapId == Managers.Object.MyMap.Id)
-        {
-            Managers.Sound.Play("Effects/Monster_Die", Define.Sound.Effect);
+        //if (gameObject.GetComponent<EnemyMovement>().mapId == Managers.Object.MyMap.Id)
+        //{
+        //    Managers.Sound.Play("Effects/Monster_Die", Define.Sound.Effect);
 
-            if (enemyData.enemyType == "Boss")
-            {
-                Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
-            }
+        //    //if (enemyData.Type == "Boss")
+        //    //{
+        //    //    Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
+        //    //}
 
-            Debug.Log("Die");
+        //    Debug.Log("Die");
 
-            Managers.Game.GetExp(_stat.Exp);
-        }
+        //    Managers.Game.GetExp(_stat.Exp);
+        //}
 
-        Invoke("InvokeDeath", 1f);
+        //Invoke("InvokeDeath", 1f);
     }
 
     void InvokeDeath()
