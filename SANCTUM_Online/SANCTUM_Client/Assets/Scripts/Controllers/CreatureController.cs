@@ -26,7 +26,6 @@ public class CreatureController : BaseController
         _animator = GetComponent<Animator>();
         //transform.position += new Vector3(0, 0, 0);
 
-        State = CreatureState.Moving;
         UpdateAnimation();
     }
 
@@ -51,6 +50,9 @@ public class CreatureController : BaseController
 
     protected virtual void UpdateAnimation()
     {
+        if (_animator == null)
+            return;
+
         switch (State)
         {
             case CreatureState.Moving:

@@ -123,8 +123,7 @@ public class BaseController : MonoBehaviour
 
     protected virtual void Init()
     {
-        //transform.position = Pos;
-        State = CreatureState.Idle;
+        
     }
 
     // 스르륵 이동하는 것을 처리
