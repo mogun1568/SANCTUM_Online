@@ -39,7 +39,7 @@ namespace Server.Game
                 _target.OnDamaged(Owner.Owner, Stat.Attack);
 
                 // 소멸
-                Room.LeaveGame(Id);
+                Room.Push(Room.LeaveGame, Id);
                 return;
             }
 
@@ -48,7 +48,7 @@ namespace Server.Game
             if (dist > Owner.Range)
             {
                 // 소멸
-                Room.LeaveGame(Id);
+                Room.Push(Room.LeaveGame, Id);
                 return;
             }
 

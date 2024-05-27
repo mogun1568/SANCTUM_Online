@@ -24,7 +24,7 @@ namespace Server.Game
         {
             if (Owner.Room == null)
             {
-                Room.LeaveGame(Id);
+                Room.Push(Room.LeaveGame, Id);
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace Server.Game
         {
             // TODO : 플레어서 life 감소
 
-            Room.LeaveGame(Id);
+            Room.Push(Room.LeaveGame, Id);
         }
 
         long _nextAttackTick = 0;
@@ -146,7 +146,7 @@ namespace Server.Game
 
         protected virtual void UpdateDie()
         {
-            Room.LeaveGame(Id);
+            Room.Push(Room.LeaveGame, Id);
         }
     }
 }

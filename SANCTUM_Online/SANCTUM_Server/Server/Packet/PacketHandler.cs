@@ -27,7 +27,7 @@ class PacketHandler
             return;
         }
 
-        room.HandleGameStart(player, gameStartPacket);
+        room.Push(room.HandleGameStart, player, gameStartPacket);
     }
 
     public static void C_MoveHandler(PacketSession session, IMessage packet)
@@ -47,7 +47,7 @@ class PacketHandler
             return;
         }
 
-        room.HandleMove(player, movePacket);
+        room.Push(room.HandleMove, player, movePacket);
     }
 
     public static void C_CreateTurretHandler(PacketSession session, IMessage packet)
@@ -67,6 +67,6 @@ class PacketHandler
             return;
         }
 
-        room.HandleCreateTurret(player, createTurretPacket);
+        room.Push(room.HandleCreateTurret, player, createTurretPacket);
     }
 }

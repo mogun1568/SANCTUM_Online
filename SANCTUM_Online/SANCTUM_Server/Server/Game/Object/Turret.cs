@@ -34,7 +34,7 @@ namespace Server.Game
         {
             if (Owner.Owner.Room == null)
             {
-                Room.LeaveGame(Id);
+                Room.Push(Room.LeaveGame, Id);
                 return;
             }
 
@@ -138,7 +138,7 @@ namespace Server.Game
             arrow.Owner = this;
             arrow._target = _target;
 
-            Room.EnterGame(arrow);
+            Room.Push(Room.EnterGame, arrow);
         }
     }
 }

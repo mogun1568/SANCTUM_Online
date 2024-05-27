@@ -97,7 +97,7 @@ namespace Server.Game
                     foreach (Node node in player.nodeInfos())
                     {
                         node.Owner = player;
-                        Room.EnterGame(node);
+                        Room.Push(Room.EnterGame, node);
                     }
                     S_CreateMap rescreateMapPacket = new S_CreateMap();
                     rescreateMapPacket.PlayerId = player.Id;
@@ -175,7 +175,7 @@ namespace Server.Game
             enemy.Owner = player;
             enemy.nextRoad = player.Map.roads.First;
 
-            Room.EnterGame(enemy);
+            Room.Push(Room.EnterGame, enemy);
         }
     }
 }
