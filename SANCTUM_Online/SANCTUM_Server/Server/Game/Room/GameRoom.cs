@@ -29,12 +29,15 @@ namespace Server.Game
             Wave.Room = this;
         }
 
+        // 누군가가 주기적으로 호출해줘야 한다
         public void Update()
         {
             //if (_players.Count < 1)
             //{
             //    return;
             //}
+
+            Flush();
 
             if (!isStart)
             {

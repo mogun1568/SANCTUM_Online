@@ -107,6 +107,9 @@ class PacketHandler
             return;
         }
 
+        //if (Managers.Object.MyMap.Id == movePacket.ObjectId)
+        //    return;
+
         BaseController bc = go.GetComponent<BaseController>();
         if (bc == null)
         {
