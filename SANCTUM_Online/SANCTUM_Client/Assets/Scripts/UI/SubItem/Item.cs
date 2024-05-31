@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using Google.Protobuf.Protocol;
 
 public class Item : UI_Base
 {
@@ -29,7 +30,11 @@ public class Item : UI_Base
 
     public void ItemClick()
     {
-        Managers.UI.SelectItem.AddItem(itemData.itemName);
+        C_InvenUpdate invenUpdatePacket = new C_InvenUpdate() { PosInfo = new PositionInfo() };
+        invenUpdatePacket.ItemName = gameObject.name;
+        invenUpdatePacket.IsAdd = true;
+        Managers.Network.Send(invenUpdatePacket);
+
         GetComponentInParent<LevelUp>().ClosePopupUI();
         Managers.Game.Resume();
         Managers.Game.isHide = true;

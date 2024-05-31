@@ -91,16 +91,15 @@ public class Node : BaseController
 
     void CheckUpdatedTurret(string name)
     {
-        C_CreateTurret createTurretPacket = new C_CreateTurret() { PosInfo = new PositionInfo() };
-        createTurretPacket.NodeId = Id;
-        createTurretPacket.ItemName = name;
-        createTurretPacket.PosInfo.PosX = transform.position.x;
-        createTurretPacket.PosInfo.PosY = transform.position.y + transform.localScale.y;
-        createTurretPacket.PosInfo.PosZ = transform.position.z;
+        C_InvenUpdate invenUpdatePacket = new C_InvenUpdate() { PosInfo = new PositionInfo() };
+        invenUpdatePacket.ItemName = name;
+        invenUpdatePacket.IsAdd = false;
+        invenUpdatePacket.NodeId = Id;
+        invenUpdatePacket.PosInfo.PosX = transform.position.x;
+        invenUpdatePacket.PosInfo.PosY = transform.position.y + transform.localScale.y;
+        invenUpdatePacket.PosInfo.PosZ = transform.position.z;
 
-        Managers.Network.Send(createTurretPacket);
-
-        Managers.Select.itemUITextDecrease();
+        Managers.Network.Send(invenUpdatePacket);
     }
 
     public void BuildTurret(int playerId, string itemName)
@@ -112,7 +111,7 @@ public class Node : BaseController
         _turret.GetComponent<BaseController>().Id = playerId;
         _turret.GetComponent<TowerControl>().itemData = Managers.Data.ItemDict[itemName];
 
-        PracticeEffect("Launch Smoke");
+        PracticeEffect("Launch Smoke"); 
 
         element = "null";
         upgradedNum = 0;

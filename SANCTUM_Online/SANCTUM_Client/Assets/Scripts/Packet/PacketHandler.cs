@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,6 +55,7 @@ class PacketHandler
         }
 
         Managers.Game.GameStartFlag = true;
+        Managers.UI.SelectItem.LoadInventory(gameStartPacket.PlayerId);
     }
 
     public static void S_CreateMapHandler(PacketSession session, IMessage packet)
@@ -120,25 +122,6 @@ class PacketHandler
         bc.State = CreatureState.Moving;
     }
 
-    public static void S_CreateTurretHandler(PacketSession session, IMessage packet)
-    {
-        S_CreateTurret createTurretPacket = packet as S_CreateTurret;
-
-        GameObject go = Managers.Object.FindById(createTurretPacket.NodeId);
-        if (go == null)
-        {
-            return;
-        }
-
-        Node n = go.GetComponent<Node>();
-        if (n == null)
-        {
-            return;
-        }
-
-        n.GetComponent<Node>().BuildTurret(createTurretPacket.PlayerId, createTurretPacket.ItemName);
-    }
-
     public static void S_ChangeHpHandler(PacketSession session, IMessage packet)
     {
         S_ChangeHp changePacket = packet as S_ChangeHp;
@@ -173,5 +156,15 @@ class PacketHandler
 
         bc.Hp = 0;
         bc.OnDead();
+    }
+
+    public static void S_InvenUpdateHandler(PacketSession session, IMessage packet)
+    {
+        S_InvenUpdate invenUpdatePacket = packet as S_InvenUpdate;
+
+        if (invenUpdatePacket.PlayerId != Managers.Object.MyMap.Id)
+            return;
+
+        Managers.UI.SelectItem.LoadInventory(invenUpdatePacket.PlayerId);
     }
 }

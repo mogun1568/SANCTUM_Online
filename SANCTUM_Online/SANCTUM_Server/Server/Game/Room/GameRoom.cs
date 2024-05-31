@@ -287,7 +287,7 @@ namespace Server.Game
             // 다른 플레이어한테도 알려준다
         }
 
-        public void HandleCreateTurret(Player player, C_CreateTurret createTurretPacket)
+        public void HandleInvenUpdate(Player player, C_InvenUpdate invenUpdatePacket)
         {
             if (player == null)
             {
@@ -296,24 +296,18 @@ namespace Server.Game
 
             // TODO : 검증
 
-            Map map = player.Map;
-            if (!map.ApplyBuild(createTurretPacket.PosInfo))
+            if (invenUpdatePacket.IsAdd)
             {
-                Console.WriteLine("Can't Build");
-                return;
+                player.Inventory.AddItem(invenUpdatePacket.ItemName);
             }
-            Console.WriteLine("Can Build");
+            else
+            {
+                player.Inventory.UseItem(invenUpdatePacket.ItemName, invenUpdatePacket.NodeId, invenUpdatePacket.PosInfo);
+            }
 
-            Turret turret = ObjectManager.Instance.Add<Turret>();
-            if (turret == null)
-                return;
-
-            turret.Info.Name = createTurretPacket.ItemName;
-            turret.Owner = Find<Node>(createTurretPacket.NodeId);
-            turret.PosInfo.PosX = createTurretPacket.PosInfo.PosX;
-            turret.PosInfo.PosY = createTurretPacket.PosInfo.PosY;
-            turret.PosInfo.PosZ = createTurretPacket.PosInfo.PosZ;
-            Push(EnterGame, turret);
+            S_InvenUpdate resInvenUpdatePacket = new S_InvenUpdate();
+            resInvenUpdatePacket.PlayerId = player.Id;
+            player.Session.Send(resInvenUpdatePacket);
         }
 
         public T Find<T>(int objectId) where T : class

@@ -50,9 +50,9 @@ class PacketHandler
         room.Push(room.HandleMove, player, movePacket);
     }
 
-    public static void C_CreateTurretHandler(PacketSession session, IMessage packet)
+    public static void C_InvenUpdateHandler(PacketSession session, IMessage packet)
     {
-        C_CreateTurret createTurretPacket = packet as C_CreateTurret;
+        C_InvenUpdate invenUpdatePacket = packet as C_InvenUpdate;
         ClientSession clientSession = session as ClientSession;
 
         Player player = clientSession.MyPlayer;
@@ -67,6 +67,6 @@ class PacketHandler
             return;
         }
 
-        room.Push(room.HandleCreateTurret, player, createTurretPacket);
+        room.Push(room.HandleInvenUpdate, player, invenUpdatePacket);
     }
 }

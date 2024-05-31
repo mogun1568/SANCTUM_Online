@@ -16,11 +16,13 @@ namespace Server.Game
         }
 
         public Map Map { get; private set; } = new Map();
+        public Inventory Inventory { get; private set; } = new Inventory();
 
         public void Init(int mapid)
 		{
             SetMapStartPoint();
-            Map.Init(this);		
+            Map.Init(this);
+            Inventory.Init(Id, Room);
         }
 
         public void SetMapStartPoint()

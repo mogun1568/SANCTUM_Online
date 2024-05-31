@@ -78,7 +78,7 @@ public class SelectMananger
     public void itemUITextDecrease()
     {
         //Managers.Inven.useItem(itemData.itemName);
-        itemUI.GetComponentInParent<SelectItem>().useItem(itemData.itemName);
+        //itemUI.GetComponentInParent<SelectItem>().useItem(itemData.itemName);
         //selectItem.GetComponent<SelectItem>().useItem(data.itemId);
         Clear();
     }
