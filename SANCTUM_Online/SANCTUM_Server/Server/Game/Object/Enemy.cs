@@ -141,7 +141,7 @@ namespace Server.Game
             Room.Broadcast(lookPacket);
 
             // 피격
-            _target.OnDamaged(Owner, Stat.Attack);
+            _target.OnDamaged(Owner, (int)Stat.Attack);
         }
 
         protected virtual void UpdateDie()

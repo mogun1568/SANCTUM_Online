@@ -49,7 +49,7 @@ namespace Google.Protobuf.Protocol {
             "cmVhdHVyZVN0YXRlItwBCghTdGF0SW5mbxIMCgRuYW1lGAEgASgJEgwKBHR5",
             "cGUYAiABKAkSFwoPaGF2ZUVudmlyb25tZW50GAMgASgIEg0KBWxldmVsGAQg",
             "ASgFEg0KBW1heEhwGAUgASgFEgoKAmhwGAYgASgFEg4KBmF0dGFjaxgHIAEo",
-            "BRISCgpzdGFydFNwZWVkGAggASgCEg0KBXNwZWVkGAkgASgCEg0KBXJhbmdl",
+            "AhISCgpzdGFydFNwZWVkGAggASgCEg0KBXNwZWVkGAkgASgCEg0KBXJhbmdl",
             "GAogASgCEhAKCGZpcmVSYXRlGAsgASgCEgsKA2V4cBgMIAEoBRIQCgh0b3Rh",
             "bEV4cBgNIAEoBSJ+CghJdGVtSW5mbxIQCghpdGVtVHlwZRgBIAEoCRIQCghp",
             "dGVtTmFtZRgCIAEoCRIQCghpdGVtSWNvbhgDIAEoCRISCgpidWxsZXRUeXBl",
@@ -3896,10 +3896,10 @@ namespace Google.Protobuf.Protocol {
 
     /// <summary>Field number for the "attack" field.</summary>
     public const int AttackFieldNumber = 7;
-    private int attack_;
+    private float attack_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int Attack {
+    public float Attack {
       get { return attack_; }
       set {
         attack_ = value;
@@ -3999,7 +3999,7 @@ namespace Google.Protobuf.Protocol {
       if (Level != other.Level) return false;
       if (MaxHp != other.MaxHp) return false;
       if (Hp != other.Hp) return false;
-      if (Attack != other.Attack) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Attack, other.Attack)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(StartSpeed, other.StartSpeed)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Speed, other.Speed)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Range, other.Range)) return false;
@@ -4019,7 +4019,7 @@ namespace Google.Protobuf.Protocol {
       if (Level != 0) hash ^= Level.GetHashCode();
       if (MaxHp != 0) hash ^= MaxHp.GetHashCode();
       if (Hp != 0) hash ^= Hp.GetHashCode();
-      if (Attack != 0) hash ^= Attack.GetHashCode();
+      if (Attack != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Attack);
       if (StartSpeed != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(StartSpeed);
       if (Speed != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Speed);
       if (Range != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Range);
@@ -4068,9 +4068,9 @@ namespace Google.Protobuf.Protocol {
         output.WriteRawTag(48);
         output.WriteInt32(Hp);
       }
-      if (Attack != 0) {
-        output.WriteRawTag(56);
-        output.WriteInt32(Attack);
+      if (Attack != 0F) {
+        output.WriteRawTag(61);
+        output.WriteFloat(Attack);
       }
       if (StartSpeed != 0F) {
         output.WriteRawTag(69);
@@ -4130,9 +4130,9 @@ namespace Google.Protobuf.Protocol {
         output.WriteRawTag(48);
         output.WriteInt32(Hp);
       }
-      if (Attack != 0) {
-        output.WriteRawTag(56);
-        output.WriteInt32(Attack);
+      if (Attack != 0F) {
+        output.WriteRawTag(61);
+        output.WriteFloat(Attack);
       }
       if (StartSpeed != 0F) {
         output.WriteRawTag(69);
@@ -4186,8 +4186,8 @@ namespace Google.Protobuf.Protocol {
       if (Hp != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Hp);
       }
-      if (Attack != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Attack);
+      if (Attack != 0F) {
+        size += 1 + 4;
       }
       if (StartSpeed != 0F) {
         size += 1 + 4;
@@ -4237,7 +4237,7 @@ namespace Google.Protobuf.Protocol {
       if (other.Hp != 0) {
         Hp = other.Hp;
       }
-      if (other.Attack != 0) {
+      if (other.Attack != 0F) {
         Attack = other.Attack;
       }
       if (other.StartSpeed != 0F) {
@@ -4297,8 +4297,8 @@ namespace Google.Protobuf.Protocol {
             Hp = input.ReadInt32();
             break;
           }
-          case 56: {
-            Attack = input.ReadInt32();
+          case 61: {
+            Attack = input.ReadFloat();
             break;
           }
           case 69: {
@@ -4364,8 +4364,8 @@ namespace Google.Protobuf.Protocol {
             Hp = input.ReadInt32();
             break;
           }
-          case 56: {
-            Attack = input.ReadInt32();
+          case 61: {
+            Attack = input.ReadFloat();
             break;
           }
           case 69: {

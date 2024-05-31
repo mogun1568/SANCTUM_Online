@@ -49,6 +49,8 @@ namespace Server.Game
             for (int i = 0; i < 5; i++)
             {
                 AddItem("StandardTower");
+                AddItem("Fire");
+                AddItem("DamageUp");
             }
 
             GenerateInventory();

@@ -3,6 +3,7 @@ using Server.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -119,9 +120,15 @@ namespace Server.Game
 
                 if (_BossTime > 2)
                 {
-                    _BossTime = 0;
-                    tasks.Add(SpawnBoss(player));
+                    tasks.Add(SpawnBoss(player, _BossCount));
                 }
+            }
+
+            if (_BossTime > 2)
+            {
+                _BossTime = 0;
+                if (_BossCount < 2)
+                    _BossCount++;
             }
         }
 
@@ -135,17 +142,12 @@ namespace Server.Game
             }
         }
 
-        public async Task SpawnBoss(Player player)
+        public async Task SpawnBoss(Player player, int bossCount)
         {
-            for (int i = 0; i < _BossCount; i++)
+            for (int i = 0; i < bossCount; i++)
             {
                 SpawnEnemy(player, "SalarymanDefault");
                 await Task.Delay(500);
-            }
-
-            if (_BossCount < 2)
-            {
-                _BossCount++;
             }
         }
 

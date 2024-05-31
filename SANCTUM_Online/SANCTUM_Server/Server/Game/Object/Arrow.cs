@@ -36,7 +36,7 @@ namespace Server.Game
             if (dist < 1f)
             {
                 // 피격
-                _target.OnDamaged(Owner.Owner, Stat.Attack);
+                _target.OnDamaged(Owner.Owner, (int)(Stat.Attack * Owner.Stat.Attack));
 
                 // 소멸
                 Room.Push(Room.LeaveGame, Id);

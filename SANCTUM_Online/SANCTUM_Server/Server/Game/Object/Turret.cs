@@ -22,7 +22,7 @@ namespace Server.Game
             Stat.Level = 1;
             Stat.MaxHp = 100;
             Stat.Hp = 100;
-            Stat.Attack = 0;
+            Stat.Attack = 1f;
             Stat.Range = 15f;
             Stat.FireRate = 1f;
 

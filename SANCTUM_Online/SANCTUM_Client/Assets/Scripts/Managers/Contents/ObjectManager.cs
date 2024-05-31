@@ -1,8 +1,10 @@
-﻿using Google.Protobuf.Protocol;
+﻿using Data;
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class ObjectManager
 {
@@ -62,8 +64,9 @@ public class ObjectManager
         else if (objectType == GameObjectType.Turret)
         {
             Managers.Sound.Play("Effects/Build", Define.Sound.Effect);
+            string towerName = info.Name.Substring(0, info.Name.Length - 5);
             Vector3 pos = new Vector3(info.PosInfo.PosX, info.PosInfo.PosY, info.PosInfo.PosZ);
-            GameObject go = Managers.Resource.Instantiate("Tower/Prefab/BallistaTowerlvl02", pos, Quaternion.identity);
+            GameObject go = Managers.Resource.Instantiate($"Tower/Prefab/{towerName}/{info.Name}", pos, Quaternion.identity);
 
             go.name = info.Name;
             _objects.Add(info.ObjectId, go);

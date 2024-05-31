@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 7786509790425237251}
   - component: {fileID: -514319202192571596}
   m_Layer: 0
-  m_Name: BallistaTowerlvl02
+  m_Name: StandardTowerlvl00
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

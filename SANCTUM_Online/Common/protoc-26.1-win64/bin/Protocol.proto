@@ -123,7 +123,7 @@ message StatInfo {
   int32 level = 4;
   int32 maxHp = 5;
   int32 hp = 6;
-  int32 attack = 7;
+  float attack = 7;
   float startSpeed = 8;
   float speed = 9;
   float range = 10;

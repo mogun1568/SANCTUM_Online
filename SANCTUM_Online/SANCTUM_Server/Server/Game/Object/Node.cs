@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Server.Game
 {
@@ -42,12 +43,12 @@ namespace Server.Game
                 case "Element":
                     if (_turret == null)
                         return false;
-                    ApplicateElement();
+                    ApplicateElement(itemName, pos);
                     break;
                 case "TowerOnlyItem":
                     if (_turret == null)
                         return false;
-                    UseTowerOnlyItem();
+                    UseTowerOnlyItem(itemName, itemInfo);
                     break;
                 case "WorldOnlyItem":
                     UseWolrdOnlyItem();
@@ -68,7 +69,7 @@ namespace Server.Game
             if (turret == null)
                 return;
 
-            turret.Info.Name = itemName;
+            turret.Info.Name = $"{itemName}lvl0{_upgradedNum}";
             turret.Owner = this;
             turret.PosInfo.PosX = pos.PosX;
             turret.PosInfo.PosY = pos.PosY;
@@ -77,21 +78,86 @@ namespace Server.Game
             _turret = turret;
 
             Room.Push(Room.EnterGame, turret);
+
+            //{
+            //    Console.WriteLine(_turret.Stat.Name);
+            //    Console.WriteLine(_turret.Stat.Level);
+            //    Console.WriteLine(_turret.Stat.MaxHp);
+            //    Console.WriteLine(_turret.Stat.Hp);
+            //    Console.WriteLine(_turret.Stat.Attack);
+            //    Console.WriteLine(_turret.Stat.Range);
+            //    Console.WriteLine(_turret.Stat.FireRate);
+            //}
         }
 
-        void ApplicateElement()
+        void ApplicateElement(string itemName, PositionInfo pos)
         {
-            
+            if (_upgradedNum > 0 && _element != itemName)
+            {
+                Console.WriteLine("already ues element!");
+                return;
+            }
+            _element = itemName;
+
+            if (_upgradedNum >= 3)
+            {
+                Console.WriteLine("Upgrade Done!");
+                return;
+            }
+
+            Console.WriteLine($"{itemName} Upgrade {_upgradedNum} -> {_upgradedNum + 1}");
+            _upgradedNum++;
+
+            // 원소 타워 생성
+            Turret turret = ObjectManager.Instance.Add<Turret>();
+            if (turret == null)
+                return;
+
+            turret.Info.Name = $"{itemName}Towerlvl0{_upgradedNum}";
+            turret.Owner = this;
+            turret.PosInfo.PosX = pos.PosX;
+            turret.PosInfo.PosY = pos.PosY;
+            turret.PosInfo.PosZ = pos.PosZ;
+            turret.Stat = _turret.Stat;
+            turret.Stat.Name = itemName;
+
+            Room.Push(Room.LeaveGame, _turret.Id);
+            Room.Push(Room.EnterGame, turret);
+            _turret = turret;
         }
 
-        void UseTowerOnlyItem()
+        void UseTowerOnlyItem(string itemName, ItemInfo itemInfo)
         {
-            
+            switch (itemName)
+            {
+                case "DamageUp":
+                    Console.WriteLine($"Damage Up {_turret.Stat.Attack} -> {_turret.Stat.Attack * itemInfo.UpgradeAmount}");
+                    _turret.Stat.Attack *= itemInfo.UpgradeAmount;
+                    break;
+                case "RangeUp":
+                    Console.WriteLine($"Range Up {_turret.Stat.Range} -> {_turret.Stat.Range * itemInfo.UpgradeAmount}");
+                    _turret.Stat.Range *= itemInfo.UpgradeAmount;
+                    break;
+                case "FireRateUp":
+                    Console.WriteLine($"Range Up {_turret.Stat.FireRate} -> {_turret.Stat.FireRate * itemInfo.UpgradeAmount}");
+                    _turret.Stat.FireRate *= itemInfo.UpgradeAmount;
+                    break;
+            }
         }
 
         void UseWolrdOnlyItem()
         {
 
+        }
+
+        void DestroyTurret()
+        {
+            _turret = null;
+            _haveEnvironment = false;
+            _element = null;
+            _upgradedNum = 0;
+            _countItem = 0;
+            Room.Push(Room.LeaveGame, _turret.Id);
         }
     }
 }

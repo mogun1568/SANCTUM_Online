@@ -57,7 +57,26 @@ public class Node : BaseController
 
         Data.Item itemData = Managers.Select.getItemData();
 
-        if (turret == null)
+        switch (itemData.itemType)
+        {
+            case "Tower":
+                CheckUpdatedInven(itemData.itemName);
+                //BuildTurret();
+                break;
+            case "Element":
+                CheckUpdatedInven(itemData.itemName);
+                //ApplicateElement(itemData);
+                break;
+            case "TowerOnlyItem":
+                CheckUpdatedInven(itemData.itemName);
+                //UseTowerOnlyItem(itemData);
+                break;
+            default:
+                Debug.Log("You don't use item!");
+                break;
+        }
+
+        /*if (turret == null)
         {
             switch (itemData.itemType)
             {
@@ -65,6 +84,7 @@ public class Node : BaseController
                     CheckUpdatedTurret(itemData.itemName);
                     //BuildTurret();
                     break;
+
                 default:
                     Debug.Log("You don't use item!");
                     break;
@@ -86,10 +106,10 @@ public class Node : BaseController
             }
         }
 
-        countItem += itemData.returnExp;
+        countItem += itemData.returnExp;*/
     }
 
-    void CheckUpdatedTurret(string name)
+    void CheckUpdatedInven(string name)
     {
         C_InvenUpdate invenUpdatePacket = new C_InvenUpdate() { PosInfo = new PositionInfo() };
         invenUpdatePacket.ItemName = name;
