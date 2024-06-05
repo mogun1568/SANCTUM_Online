@@ -25,6 +25,11 @@ public class HUD : MonoBehaviour
             return;
         }
 
+        if (Managers.Object.MyMap == null)
+        {
+            return;
+        }
+
         switch (type)
         {
             case InfoType.Time:
@@ -38,8 +43,8 @@ public class HUD : MonoBehaviour
                 myText.text = live.ToString();
                 break;
             case InfoType.Exp:
-                float curExp = Managers.Game.exp;
-                float maxExp = Managers.Game.nextExp;
+                float curExp = Managers.Object.MyMap._exp;
+                float maxExp = Managers.Object.MyMap._nextExp;
                 mySlider.value = curExp / maxExp;
                 break;
             case InfoType.Round:

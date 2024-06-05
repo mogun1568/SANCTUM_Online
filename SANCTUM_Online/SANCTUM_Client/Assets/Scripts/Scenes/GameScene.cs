@@ -112,14 +112,20 @@ public class GameScene : BaseScene
             Debug.Log(Managers.Game.countLevelUp);
         }*/
 
-        if (Managers.Game.countLevelUp > 0 && !Managers.Game.isFPM)
-        {
-            StartCoroutine(Managers.Game.WaitForItemSelection());
-        }
+        //Debug.Log($"{Managers.Object.MyMap._countLevelUp}, {Managers.Game.isFPM}");
+        //if (Managers.Object.MyMap._countLevelUp > 0 && !Managers.Game.isFPM && !Managers.Game.isPractice)
+        //{
+        //    Managers.Game.isPractice = true;
+        //    Debug.Log(Managers.Object.MyMap._countLevelUp);
+        //    StartCoroutine(Managers.Game.WaitForItemSelection(Managers.Object.MyMap._countLevelUp));
+        //    Managers.Object.MyMap._countLevelUp = 0;
+        //}
          
         
 
         Managers.Game.gameTime += Time.deltaTime;
+
+
     }
 
     public override void Clear()

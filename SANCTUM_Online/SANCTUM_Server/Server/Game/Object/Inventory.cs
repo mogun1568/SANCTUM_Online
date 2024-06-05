@@ -15,6 +15,7 @@ namespace Server.Game
         public GameRoom Room { get; set; }
 
         Dictionary<string, int> _invenDict = new Dictionary<string, int>();
+        List<string> _items = new List<string>();
         int _ownerId;
 
         #region INVENTORY_EDITOR
@@ -31,10 +32,10 @@ namespace Server.Game
             {
                 writer.WriteLine(_invenDict.Count);
 
-                foreach (string key in _invenDict.Keys)
+                foreach (string item in _items)
                 {
-                    writer.WriteLine(key);
-                    writer.WriteLine(_invenDict[key]);
+                    writer.WriteLine(item);
+                    writer.WriteLine(_invenDict[item]);
                 }
             }
         }
@@ -67,6 +68,7 @@ namespace Server.Game
             {
                 // 새로운 아이템을 획득한 경우
                 _invenDict.Add(itemName, 1); // 아이템을 딕셔너리에 추가하고 개수를 1로 초기화함
+                _items.Add(itemName);
             }
 
             GenerateInventory();
@@ -89,6 +91,7 @@ namespace Server.Game
             if (_invenDict[itemName] == 0)
             {
                 _invenDict.Remove(itemName);
+                _items.Remove(itemName);
             }
 
             GenerateInventory();

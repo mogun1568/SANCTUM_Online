@@ -36,7 +36,7 @@ public class FirstPersonCamera : MonoBehaviour
         {
             // 코루틴을 다른 스크립트에서 쓸때도 StartCoroutine() 써줘야 함
             ExitFirstPersonMode();
-            StartCoroutine(Managers.Game.WaitForItemSelection());
+            //StartCoroutine(Managers.Game.WaitForItemSelection());
         }
 
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivitiy * Time.deltaTime;

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace Server.Game
 {
@@ -308,6 +309,26 @@ namespace Server.Game
             S_InvenUpdate resInvenUpdatePacket = new S_InvenUpdate();
             resInvenUpdatePacket.PlayerId = player.Id;
             player.Session.Send(resInvenUpdatePacket);
+        }
+
+        public void HandleTurretUI(Player player, C_TurretUI turretUIPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            // TODO : 검증
+
+            Node node = Find<Node>(turretUIPacket.NodeId);
+            if (node._turret == null)
+                return;
+
+            S_TurretUI resturretUIPacket = new S_TurretUI();
+            resturretUIPacket.PlayerId = player.Id;
+            resturretUIPacket.NodeId = turretUIPacket.NodeId;
+            resturretUIPacket.StatInfo = node._turret.Stat;
+            player.Session.Send(resturretUIPacket);
         }
 
         public T Find<T>(int objectId) where T : class

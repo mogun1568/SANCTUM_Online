@@ -8,7 +8,7 @@ using UnityEngine.Windows;
 
 public class ObjectManager
 {
-	public MyMapController MyMap { get; set; }
+    public MyMapController MyMap { get; set; }
 	public Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
 
     public static GameObjectType GetObjectTypeById(int id)

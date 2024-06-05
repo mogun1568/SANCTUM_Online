@@ -140,5 +140,13 @@ namespace Server.Game
 
             Room.Push(Room.EnterGame, arrow);
         }
+
+        public override void OnDead(GameObject attacker)
+        {
+            base.OnDead(attacker);
+
+            Node node = Owner as Node;
+            node.DestroyTurret();
+        }
     }
 }

@@ -141,12 +141,23 @@ namespace Server.Game
             Room.Broadcast(lookPacket);
 
             // 피격
-            _target.OnDamaged(Owner, (int)Stat.Attack);
+            _target.OnDamaged(Owner, (int)Attack);
         }
 
         protected virtual void UpdateDie()
         {
             Room.Push(Room.LeaveGame, Id);
+        }
+
+        public override void OnDead(GameObject attacker)
+        {
+            base.OnDead(attacker);
+
+            if (ObjectManager.GetObjectTypeById(Id) == GameObjectType.Enemy)
+            {
+                Player player = Owner as Player;
+                player.GetExp(Exp);
+            }
         }
     }
 }

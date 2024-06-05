@@ -20,7 +20,7 @@ public class LevelUp : UI_Popup
     public void Show()
     {
         Next();
-        Managers.Game.Stop();
+        //Managers.Game.Stop();
         Managers.Sound.Play("Effects/LevelUpLong", Define.Sound.Effect);
     }
 

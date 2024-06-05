@@ -4,6 +4,7 @@ using ServerCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 class PacketHandler
@@ -137,7 +138,7 @@ class PacketHandler
         }
 
         bc.Hp = changePacket.Hp;
-        Debug.Log(bc.Hp);
+        //Debug.Log(bc.Hp);
     }
 
     public static void S_DieHandler(PacketSession session, IMessage packet)
@@ -166,5 +167,32 @@ class PacketHandler
             return;
 
         Managers.UI.SelectItem.LoadInventory(invenUpdatePacket.PlayerId);
+    }
+
+    public static void S_ExpUpdateHandler(PacketSession session, IMessage packet)
+    {
+        S_ExpUpdate expUpdatePacket = packet as S_ExpUpdate;
+
+        MyMapController myMap = Managers.Object.MyMap;
+        if (expUpdatePacket.PlayerId != myMap.Id)
+            return;
+
+        myMap._exp = expUpdatePacket.Exp;
+        myMap._nextExp = expUpdatePacket.TotalExp;
+        myMap._countLevelUp = expUpdatePacket.CountLevelUp;
+    }
+
+    public static void S_TurretUIHandler(PacketSession session, IMessage packet)
+    {
+        S_TurretUI turretUIPacket = packet as S_TurretUI;
+
+        if (turretUIPacket.PlayerId != Managers.Object.MyMap.Id)
+            return;
+
+        GameObject node = Managers.Object.FindById(turretUIPacket.NodeId);
+        Node nc = node.GetComponent<Node>();
+
+        NodeUI nodeUI = Managers.UI.ShowPopupUI<NodeUI>("NodeUI");
+        nodeUI.SetTarget(nc);
     }
 }

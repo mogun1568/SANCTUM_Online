@@ -23,6 +23,12 @@ namespace Server.Game
         public PositionInfo PosInfo { get; set; } = new PositionInfo();
         public StatInfo Stat { get; set; } = new StatInfo();
 
+        public float Attack
+        {
+            get { return Stat.Attack; }
+            set { Stat.Attack = value; }
+        }
+
         public float Speed
         {
             get { return Stat.Speed; }
@@ -39,6 +45,12 @@ namespace Server.Game
         {
             get { return Stat.FireRate; }
             set { Stat.FireRate = value; }
+        }
+
+        public int Exp
+        {
+            get { return Stat.Exp; }
+            set { Stat.Exp = value; }
         }
 
         public CreatureState State

@@ -102,7 +102,8 @@ public class GameManager
         }*/
     }
 
-    public IEnumerator WaitForItemSelection()
+    public bool isPractice = false;
+    public IEnumerator WaitForItemSelection(int countLevelUp)
     {
         while (countLevelUp > 0)
         {
@@ -118,6 +119,8 @@ public class GameManager
             isHide = false;
             yield return new WaitUntil(() => isHide);
         }
+
+        isPractice = false;
     }
 
     public bool isPopup = false, isSettingUI = false;

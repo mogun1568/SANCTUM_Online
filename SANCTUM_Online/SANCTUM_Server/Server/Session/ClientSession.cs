@@ -44,7 +44,13 @@ namespace Server
                 MyPlayer.Info.PosInfo.PosY = 0;
                 MyPlayer.Info.PosInfo.PosZ = 0;
 
-                StatInfo stat = null;
+                MyPlayer.Stat.MaxHp = 10;
+                MyPlayer.Stat.Hp = 10;
+                MyPlayer.Stat.Exp = 0;
+                MyPlayer.Stat.TotalExp = 3;
+
+                // TODO
+                //StatInfo stat = null;
                 //DataManager.StatDict.TryGetValue(1, out stat);
                 //MyPlayer.Stat.MergeFrom(stat);
 

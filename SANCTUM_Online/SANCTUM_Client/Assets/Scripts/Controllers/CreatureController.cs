@@ -84,6 +84,6 @@ public class CreatureController : BaseController
 
     protected virtual void UpdateDead()
     {
-        Debug.Log($"Die {Id}");
+        //Debug.Log($"Die {Id}");
     }
 }

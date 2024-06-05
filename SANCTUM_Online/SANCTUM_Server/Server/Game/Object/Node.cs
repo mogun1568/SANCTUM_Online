@@ -131,16 +131,16 @@ namespace Server.Game
             switch (itemName)
             {
                 case "DamageUp":
-                    Console.WriteLine($"Damage Up {_turret.Stat.Attack} -> {_turret.Stat.Attack * itemInfo.UpgradeAmount}");
-                    _turret.Stat.Attack *= itemInfo.UpgradeAmount;
+                    Console.WriteLine($"Damage Up {_turret.Attack} -> {_turret.Attack * itemInfo.UpgradeAmount}");
+                    _turret.Attack *= itemInfo.UpgradeAmount;
                     break;
                 case "RangeUp":
-                    Console.WriteLine($"Range Up {_turret.Stat.Range} -> {_turret.Stat.Range * itemInfo.UpgradeAmount}");
-                    _turret.Stat.Range *= itemInfo.UpgradeAmount;
+                    Console.WriteLine($"Range Up {_turret.Range} -> {_turret.Range * itemInfo.UpgradeAmount}");
+                    _turret.Range *= itemInfo.UpgradeAmount;
                     break;
                 case "FireRateUp":
-                    Console.WriteLine($"Range Up {_turret.Stat.FireRate} -> {_turret.Stat.FireRate * itemInfo.UpgradeAmount}");
-                    _turret.Stat.FireRate *= itemInfo.UpgradeAmount;
+                    Console.WriteLine($"Range Up {_turret.FireRate} -> {_turret.FireRate * itemInfo.UpgradeAmount}");
+                    _turret.FireRate *= itemInfo.UpgradeAmount;
                     break;
             }
         }
@@ -150,14 +150,12 @@ namespace Server.Game
 
         }
 
-        void DestroyTurret()
+        public void DestroyTurret()
         {
             _turret = null;
-            _haveEnvironment = false;
             _element = null;
             _upgradedNum = 0;
             _countItem = 0;
-            Room.Push(Room.LeaveGame, _turret.Id);
         }
     }
 }

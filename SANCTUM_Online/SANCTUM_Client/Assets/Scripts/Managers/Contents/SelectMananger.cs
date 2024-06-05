@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -22,7 +23,7 @@ public class SelectMananger
 
     public void SelectNode(Node node, GameObject turret)
     {
-        if (selectedNode == node || turret == null)   // 선택한 노드를 또 선택하거나 타워가 없는 노드를 선택하면
+        if (selectedNode == node)   // 선택한 노드를 또 선택하거나 타워가 없는 노드를 선택하면
         {
             DeselectNode();
             return;
@@ -33,8 +34,14 @@ public class SelectMananger
         selectedNode = node;
         //itemUI = null;
 
-        NodeUI nodeUI = Managers.UI.ShowPopupUI<NodeUI>("NodeUI");
-        nodeUI.SetTarget(node);
+        C_TurretUI turretUIPacket = new C_TurretUI();
+        turretUIPacket.PlayerId = Managers.Object.MyMap.Id;
+        turretUIPacket.NodeId = node.Id;
+
+        Managers.Network.Send(turretUIPacket);
+
+        //NodeUI nodeUI = Managers.UI.ShowPopupUI<NodeUI>("NodeUI");
+        //nodeUI.SetTarget(node);
     }
 
     // node 선택 해제 함수

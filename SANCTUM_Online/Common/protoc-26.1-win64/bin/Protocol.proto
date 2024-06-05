@@ -19,6 +19,9 @@ enum MsgId {
   S_DIE = 11;
   C_INVEN_UPDATE = 12;
   S_INVEN_UPDATE = 13;
+  S_EXP_UPDATE = 14;
+  C_TURRET_U_I = 15;
+  S_TURRET_U_I = 16;
 }
 
 enum CreatureState {
@@ -96,6 +99,24 @@ message C_InvenUpdate {
 
 message S_InvenUpdate {
   int32 playerId = 1;
+}
+
+message S_ExpUpdate {
+  int32 playerId = 1;
+  int32 exp = 2;
+  int32 totalExp = 3;
+  int32 countLevelUp = 4;
+}
+
+message C_TurretUI {
+  int32 playerId = 1;
+  int32 nodeId = 2;
+}
+
+message S_TurretUI {
+  int32 playerId = 1;
+  int32 nodeId = 2;
+  StatInfo statInfo = 4;
 }
 
 message ObjectInfo {
