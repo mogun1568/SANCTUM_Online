@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class DragItem : UI_Base
     GameObject SilhouetteItem;
 
     //Map map;
-    Data.Item itemData;
+    ItemInfo itemInfo;
 
     private RaycastHit hit;
     private Vector3 normal_position;
@@ -27,11 +28,11 @@ public class DragItem : UI_Base
 
     public override void Init()
     {
-        itemData = Managers.Data.ItemDict[gameObject.name];
+        itemInfo = Managers.Data.ItemDict[gameObject.name];
         icon = GetComponentsInChildren<Image>()[6];
-        icon.sprite = Managers.Resource.Load<Sprite>($"Icon/{itemData.itemIcon}");
+        icon.sprite = Managers.Resource.Load<Sprite>($"Icon/{itemInfo.ItemIcon}");
 
-        if (itemData.itemType != "WorldOnlyItem") {
+        if (itemInfo.ItemType != "WorldOnlyItem") {
             BindEvent(gameObject, (PointerEventData data) => { OnBeginDrag(); }, Define.UIEvent.BeginDrag);
             BindEvent(gameObject, (PointerEventData data) => { OnDrag(data); }, Define.UIEvent.Drag);
             BindEvent(gameObject, (PointerEventData data) => { OnEndDrag(); }, Define.UIEvent.EndDrag);
@@ -45,8 +46,8 @@ public class DragItem : UI_Base
     {
         normal_position = transform.position;
         normal_size = transform.localScale;
-        Managers.Select.SelectItemToUse(gameObject, itemData);
-        if (itemData.itemType == "Tower")
+        Managers.Select.SelectItemToUse(gameObject, itemInfo);
+        if (itemInfo.ItemType == "Tower")
         {
             SilhouetteItem = Managers.Resource.Instantiate("ItemE_Tower");
         } else
@@ -84,7 +85,7 @@ public class DragItem : UI_Base
         Physics.Raycast(ray, out hit);
         if (hit.transform.name == "ForestGround01")
         {
-            if (itemData.itemType == "Tower")
+            if (itemInfo.ItemType == "Tower")
             {
                 if ((hit.transform.GetComponent<Node>().turret != null || !hit.transform.GetComponent<Node>().turret) && !hit.transform.GetComponent<Node>().environment)
                 {
@@ -107,7 +108,7 @@ public class DragItem : UI_Base
         }
         else if (hit.transform.name == "Plane")
         {
-            if (itemData.itemType == "Tower")
+            if (itemInfo.ItemType == "Tower")
             {
                 foreach (Renderer mat in SilhouetteItem.GetComponentsInChildren<Renderer>())
                     mat.material.SetColor("_Color", new Color(1, 1, 1));
@@ -116,7 +117,7 @@ public class DragItem : UI_Base
         }
         else
         {
-            if (itemData.itemType == "Tower")
+            if (itemInfo.ItemType == "Tower")
             {
                 foreach (Renderer mat in SilhouetteItem.GetComponentsInChildren<Renderer>())
                     mat.material.color = new Color(1, 0.01f, 0, 0);
@@ -144,10 +145,10 @@ public class DragItem : UI_Base
 
     public void Onclick()
     {
-        if (itemData.itemType == "WorldOnlyItem")
+        if (itemInfo.ItemType == "WorldOnlyItem")
         {
             Managers.Sound.Play("Effects/userLife", Define.Sound.Effect);
-            Managers.Select.SelectItemToUse(gameObject, itemData);
+            Managers.Select.SelectItemToUse(gameObject, itemInfo);
             Managers.Game.Lives++;
             Managers.Select.DestroyItemUI();
         }

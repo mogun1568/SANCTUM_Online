@@ -116,6 +116,13 @@ namespace Server.Game
         void EndPath()
         {
             // TODO : 플레어서 life 감소
+            Player owner = Owner as Player;
+            owner.Stat.Hp--;
+
+            S_ChangeStat changeStatPacket = new S_ChangeStat();
+            changeStatPacket.ObjectId = owner.Id;
+            changeStatPacket.StatInfo = owner.Stat;
+            owner.Session.Send(changeStatPacket);
 
             Room.Push(Room.LeaveGame, Id);
         }

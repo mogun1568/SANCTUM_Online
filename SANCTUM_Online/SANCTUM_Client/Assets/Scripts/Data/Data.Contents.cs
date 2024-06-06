@@ -8,45 +8,34 @@ namespace Data
 {
     #region Item
     [Serializable]
-    public class Item
+    public class ItemData : ILoader<string, ItemInfo>
     {
-        public string itemType;
-        public string itemName;
-        public string itemIcon;
-        public string bulletType;
-        public float upgradeAmount;
-        public int returnExp;
-    }
+        public List<ItemInfo> items = new List<ItemInfo>();
 
-    [Serializable]
-    public class ItemData : ILoader<string, Item>
-    {
-        public List<Item> items = new List<Item>();
-
-        public Dictionary<string, Item> MakeDict()
+        public Dictionary<string, ItemInfo> MakeDict()
         {
-            Dictionary<string, Item> dict = new Dictionary<string, Item>();
-            foreach (Item item in items)
+            Dictionary<string, ItemInfo> dict = new Dictionary<string, ItemInfo>();
+            foreach (ItemInfo item in items)
             {
-                dict.Add(item.itemName, item);
+                dict.Add(item.ItemName, item);
             }
             return dict;
         }
     }
     #endregion
 
-    #region Enemy
+    #region Projectile
     [Serializable]
-    public class EnemyData : ILoader<string, StatInfo>
+    public class ProjectileData : ILoader<string, StatInfo>
     {
-        public List<StatInfo> enemys = new List<StatInfo>();
+        public List<StatInfo> projectiles = new List<StatInfo>();
 
         public Dictionary<string, StatInfo> MakeDict()
         {
             Dictionary<string, StatInfo> dict = new Dictionary<string, StatInfo>();
-            foreach (StatInfo enemy in enemys)
+            foreach (StatInfo projectile in projectiles)
             {
-                dict.Add(enemy.Name, enemy);
+                dict.Add(projectile.Name, projectile);
             }
             return dict;
         }

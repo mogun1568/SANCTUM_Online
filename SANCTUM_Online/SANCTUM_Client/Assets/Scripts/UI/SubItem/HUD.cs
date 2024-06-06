@@ -39,16 +39,16 @@ public class HUD : MonoBehaviour
                 myText.text = string.Format("{0:D2}:{1:D2}", min, sec);
                 break;
             case InfoType.Live:
-                int live = Managers.Game.Lives;
+                int live = Managers.Object.MyMap.Hp;
                 myText.text = live.ToString();
                 break;
             case InfoType.Exp:
-                float curExp = Managers.Object.MyMap._exp;
-                float maxExp = Managers.Object.MyMap._nextExp;
+                float curExp = Managers.Object.MyMap.Stat.Exp;
+                float maxExp = Managers.Object.MyMap.Stat.TotalExp;
                 mySlider.value = curExp / maxExp;
                 break;
             case InfoType.Round:
-                int RoundCount = Managers.Game.Rounds;
+                int RoundCount = Managers.Object.MyMap.Stat.Level;
                 myText.text = RoundCount.ToString();
                 break;
 

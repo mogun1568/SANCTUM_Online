@@ -143,11 +143,27 @@ namespace Server.Game
                     _turret.FireRate *= itemInfo.UpgradeAmount;
                     break;
             }
+
+            S_ChangeStat changeStatPacket = new S_ChangeStat();
+            changeStatPacket.ObjectId = _turret.Id;
+            changeStatPacket.StatInfo = _turret.Stat;
+            Room.Broadcast(changeStatPacket);
+
+            Console.WriteLine(_turret.Stat);
         }
 
         void UseWolrdOnlyItem()
         {
 
+        }
+
+        public void DemoliteTurret()
+        {
+            Player player = Owner as Player;
+            player.GetExp((int)(_countItem * 1.5));
+
+            Room.Push(Room.LeaveGame, _turret.Id);
+            DestroyTurret();
         }
 
         public void DestroyTurret()

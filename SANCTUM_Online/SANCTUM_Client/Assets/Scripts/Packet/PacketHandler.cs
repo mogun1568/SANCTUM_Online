@@ -123,11 +123,11 @@ class PacketHandler
         bc.State = CreatureState.Moving;
     }
 
-    public static void S_ChangeHpHandler(PacketSession session, IMessage packet)
+    public static void S_ChangeStatHandler(PacketSession session, IMessage packet)
     {
-        S_ChangeHp changePacket = packet as S_ChangeHp;
+        S_ChangeStat changeStatPacket = packet as S_ChangeStat;
 
-        GameObject go = Managers.Object.FindById(changePacket.ObjectId);
+        GameObject go = Managers.Object.FindById(changeStatPacket.ObjectId);
         if (go == null)
             return;
 
@@ -137,7 +137,7 @@ class PacketHandler
             return;
         }
 
-        bc.Hp = changePacket.Hp;
+        bc.Stat = changeStatPacket.StatInfo;
         //Debug.Log(bc.Hp);
     }
 
@@ -177,8 +177,8 @@ class PacketHandler
         if (expUpdatePacket.PlayerId != myMap.Id)
             return;
 
-        myMap._exp = expUpdatePacket.Exp;
-        myMap._nextExp = expUpdatePacket.TotalExp;
+        myMap.Stat.Exp = expUpdatePacket.Exp;
+        myMap.Stat.TotalExp = expUpdatePacket.TotalExp;
         myMap._countLevelUp = expUpdatePacket.CountLevelUp;
     }
 
@@ -192,7 +192,10 @@ class PacketHandler
         GameObject node = Managers.Object.FindById(turretUIPacket.NodeId);
         Node nc = node.GetComponent<Node>();
 
+        GameObject turret = Managers.Object.FindById(turretUIPacket.TurretId);
+        Turret tc = turret.GetComponent<Turret>();
+
         NodeUI nodeUI = Managers.UI.ShowPopupUI<NodeUI>("NodeUI");
-        nodeUI.SetTarget(nc);
+        nodeUI.SetTarget(nc, tc);
     }
 }

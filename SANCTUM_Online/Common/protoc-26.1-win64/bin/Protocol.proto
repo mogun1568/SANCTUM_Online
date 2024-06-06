@@ -15,13 +15,14 @@ enum MsgId {
   S_LOOK = 7;
   C_MOVE = 8;
   S_MOVE = 9;
-  S_CHANGE_HP = 10;
+  S_CHANGE_STAT = 10;
   S_DIE = 11;
   C_INVEN_UPDATE = 12;
   S_INVEN_UPDATE = 13;
   S_EXP_UPDATE = 14;
   C_TURRET_U_I = 15;
   S_TURRET_U_I = 16;
+  C_TURRET_DEMOLITE = 17;
 }
 
 enum CreatureState {
@@ -80,9 +81,9 @@ message S_Move {
   PositionInfo posInfo = 2;
 }
 
-message S_ChangeHp {
+message S_ChangeStat {
   int32 objectId = 1;
-  int32 hp = 2;
+  StatInfo statInfo = 2;
 }
 
 message S_Die {
@@ -109,14 +110,17 @@ message S_ExpUpdate {
 }
 
 message C_TurretUI {
-  int32 playerId = 1;
-  int32 nodeId = 2;
+  int32 nodeId = 1;
 }
 
 message S_TurretUI {
   int32 playerId = 1;
   int32 nodeId = 2;
-  StatInfo statInfo = 4;
+  int32 turretId = 3;
+}
+
+message C_TurretDemolite {
+  int32 nodeId = 1;
 }
 
 message ObjectInfo {

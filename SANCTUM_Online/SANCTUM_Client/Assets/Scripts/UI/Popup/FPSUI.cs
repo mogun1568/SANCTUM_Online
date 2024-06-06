@@ -28,7 +28,7 @@ public class FPSUI : UI_Popup
         Bind<TextMeshProUGUI>(typeof(Texts));
         Bind<Image>(typeof(Images));
  
-        GetImage((int)Images.Icon).sprite = Managers.Resource.Load<Sprite>($"Icon/{towerControl.itemData.itemIcon}");
+        //GetImage((int)Images.Icon).sprite = Managers.Resource.Load<Sprite>($"Icon/{towerControl.itemData.itemIcon}");
     }
 
     void Update()
@@ -46,11 +46,11 @@ public class FPSUI : UI_Popup
 
     void ChangeInfo()
     {
-        float curHP = towerControl._stat.HP;
-        float maxHP = towerControl._stat.MaxHp;
+        //float curHP = towerControl._stat.HP;
+        //float maxHP = towerControl._stat.MaxHp;
 
-        GetObject((int)GameObjects.HpBar).GetComponent<Slider>().value = curHP / maxHP;
-        GetText((int)Texts.HP).text = towerControl._stat.HP.ToString("F0") + "/100";
+        //GetObject((int)GameObjects.HpBar).GetComponent<Slider>().value = curHP / maxHP;
+        //GetText((int)Texts.HP).text = towerControl._stat.HP.ToString("F0") + "/100";
     }
 
     static public void GetTower(TowerControl _tower)

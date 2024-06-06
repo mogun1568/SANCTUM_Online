@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyControl : CreatureController
 {
+    /*
     //[HideInInspector] public StatInfo enemyData;
 
     [HideInInspector] public EnemyStat _stat;
@@ -248,4 +249,5 @@ public class EnemyControl : CreatureController
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, 5);
     }
+    */
 }

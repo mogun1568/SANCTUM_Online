@@ -13,6 +13,8 @@ namespace Server.Game
 {
     public class Turret : GameObject
     {
+        public StatInfo _projectileInfo;
+
         public Turret()
         {
             ObjectType = GameObjectType.Turret;
@@ -27,6 +29,12 @@ namespace Server.Game
             Stat.FireRate = 1f;
 
             State = CreatureState.Idle;
+
+            _projectileInfo = null;
+            if (DataManager.ProjectileDict.TryGetValue("StandardBullet", out _projectileInfo) == false)
+            {
+                return;
+            }
         }
 
         // FSM (Finite State Machine)
@@ -104,8 +112,8 @@ namespace Server.Game
             lookPacket.TargetPosinfo = _target.PosInfo;
             Room.Broadcast(lookPacket);
 
-            // TODO : 화살 발사
             Console.WriteLine($"Shoot {_target.Id}!");
+            // TODO
             Shoot("StandardBullet");
         }
 
@@ -118,12 +126,6 @@ namespace Server.Game
         {
             Arrow arrow = ObjectManager.Instance.Add<Arrow>();
 
-            StatInfo projectileInfo = null;
-            if (DataManager.ProjectileDict.TryGetValue(name, out projectileInfo) == false)
-            {
-                return;
-            }
-
             arrow.Info.Name = name;
             arrow.PosInfo.PosX = PosInfo.PosX;
             arrow.PosInfo.PosY = PosInfo.PosY + 5;
@@ -134,7 +136,7 @@ namespace Server.Game
             arrow.PosInfo.DirY = dir.y;
             arrow.PosInfo.DirZ = dir.z;
 
-            arrow.Stat.MergeFrom(projectileInfo);
+            arrow.Stat.MergeFrom(_projectileInfo);
             arrow.Owner = this;
             arrow._target = _target;
 

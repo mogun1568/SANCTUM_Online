@@ -55,20 +55,20 @@ public class Node : BaseController
             return;
         }
 
-        Data.Item itemData = Managers.Select.getItemData();
+        ItemInfo itemInfo = Managers.Select.getItemData();
 
-        switch (itemData.itemType)
+        switch (itemInfo.ItemType)
         {
             case "Tower":
-                CheckUpdatedInven(itemData.itemName);
+                CheckUpdatedInven(itemInfo.ItemName);
                 //BuildTurret();
                 break;
             case "Element":
-                CheckUpdatedInven(itemData.itemName);
+                CheckUpdatedInven(itemInfo.ItemName);
                 //ApplicateElement(itemData);
                 break;
             case "TowerOnlyItem":
-                CheckUpdatedInven(itemData.itemName);
+                CheckUpdatedInven(itemInfo.ItemName);
                 //UseTowerOnlyItem(itemData);
                 break;
             default:
@@ -122,6 +122,7 @@ public class Node : BaseController
         Managers.Network.Send(invenUpdatePacket);
     }
 
+    /*
     public void BuildTurret(int playerId, string itemName)
     {
         Managers.Sound.Play("Effects/Build", Define.Sound.Effect);
@@ -274,6 +275,7 @@ public class Node : BaseController
 
         Debug.Log("Demolite Tower");
     }
+    */
 
     void PracticeEffect(string name)
     {

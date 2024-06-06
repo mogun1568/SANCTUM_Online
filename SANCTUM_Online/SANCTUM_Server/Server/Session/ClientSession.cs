@@ -44,6 +44,7 @@ namespace Server
                 MyPlayer.Info.PosInfo.PosY = 0;
                 MyPlayer.Info.PosInfo.PosZ = 0;
 
+                MyPlayer.Stat.Level = 1;
                 MyPlayer.Stat.MaxHp = 10;
                 MyPlayer.Stat.Hp = 10;
                 MyPlayer.Stat.Exp = 0;

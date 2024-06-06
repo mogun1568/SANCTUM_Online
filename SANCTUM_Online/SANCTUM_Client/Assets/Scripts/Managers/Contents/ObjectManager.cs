@@ -74,6 +74,7 @@ public class ObjectManager
             Turret tc = go.GetComponent<Turret>();
             tc.Id = info.ObjectId;
             tc.PosInfo = info.PosInfo;
+            tc.Stat = info.StatInfo;
             Debug.Log("Turret build!");
         }
         else if (objectType == GameObjectType.Enemy)

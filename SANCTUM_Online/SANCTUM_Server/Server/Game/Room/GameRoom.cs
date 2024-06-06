@@ -327,8 +327,27 @@ namespace Server.Game
             S_TurretUI resturretUIPacket = new S_TurretUI();
             resturretUIPacket.PlayerId = player.Id;
             resturretUIPacket.NodeId = turretUIPacket.NodeId;
-            resturretUIPacket.StatInfo = node._turret.Stat;
+            resturretUIPacket.TurretId = node._turret.Id;
             player.Session.Send(resturretUIPacket);
+        }
+
+        public void HandleTurretDemolite(Player player, C_TurretDemolite turretDemolitePacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            // TODO : 검증
+
+            Node node = Find<Node>(turretDemolitePacket.NodeId);
+            if (node._turret == null)
+                return;
+
+            if (node.Owner.Id != player.Id)
+                return;
+
+            node.DemoliteTurret();
         }
 
         public T Find<T>(int objectId) where T : class

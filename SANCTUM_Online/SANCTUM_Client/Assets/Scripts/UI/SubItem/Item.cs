@@ -9,7 +9,7 @@ using Google.Protobuf.Protocol;
 public class Item : UI_Base
 {
     public ItemData data;
-    Data.Item itemData;
+    ItemInfo _itemInfo;
 
     Image icon;
     //TextMeshProUGUI textName;
@@ -21,9 +21,9 @@ public class Item : UI_Base
 
     public override void Init()
     {
-        itemData = Managers.Data.ItemDict[gameObject.name];
+        _itemInfo = Managers.Data.ItemDict[gameObject.name];
         icon = GetComponentsInChildren<Image>()[2];
-        icon.sprite = Managers.Resource.Load<Sprite>($"Icon/{itemData.itemIcon}");
+        icon.sprite = Managers.Resource.Load<Sprite>($"Icon/{_itemInfo.ItemIcon}");
 
         BindEvent(gameObject, (PointerEventData data) => { ItemClick(); });
     }

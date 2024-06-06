@@ -89,4 +89,24 @@ class PacketHandler
 
         room.Push(room.HandleTurretUI, player, turretUIPacket);
     }
+
+    public static void C_TurretDemoliteHandler(PacketSession session, IMessage packet)
+    {
+        C_TurretDemolite turretDemolitePacket = packet as C_TurretDemolite;
+        ClientSession clientSession = session as ClientSession;
+
+        Player player = clientSession.MyPlayer;
+        if (player == null)
+        {
+            return;
+        }
+
+        GameRoom room = player.Room;
+        if (room == null)
+        {
+            return;
+        }
+
+        room.Push(room.HandleTurretDemolite, player, turretDemolitePacket);
+    }
 }

@@ -39,8 +39,8 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SLook, PacketHandler.S_LookHandler);		
 		_onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
 		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);		
-		_onRecv.Add((ushort)MsgId.SChangeHp, MakePacket<S_ChangeHp>);
-		_handler.Add((ushort)MsgId.SChangeHp, PacketHandler.S_ChangeHpHandler);		
+		_onRecv.Add((ushort)MsgId.SChangeStat, MakePacket<S_ChangeStat>);
+		_handler.Add((ushort)MsgId.SChangeStat, PacketHandler.S_ChangeStatHandler);		
 		_onRecv.Add((ushort)MsgId.SDie, MakePacket<S_Die>);
 		_handler.Add((ushort)MsgId.SDie, PacketHandler.S_DieHandler);		
 		_onRecv.Add((ushort)MsgId.SInvenUpdate, MakePacket<S_InvenUpdate>);

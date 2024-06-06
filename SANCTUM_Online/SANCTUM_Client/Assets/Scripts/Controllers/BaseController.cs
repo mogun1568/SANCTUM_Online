@@ -32,10 +32,7 @@ public class BaseController : MonoBehaviour
     public virtual int Hp
     {
         get { return Stat.Hp; }
-        set
-        {
-            Stat.Hp = value;
-        }
+        set { Stat.Hp = value; }
     }
 
     PositionInfo _positionInfo = new PositionInfo();

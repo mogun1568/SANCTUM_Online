@@ -73,6 +73,7 @@ namespace Server.Game
     {
         public GameRoom Room { get; set; }
 
+        int _round = 0;
         int _waveCount = 5;
         int _expandCount = 0;
         int _BossTime = -1;
@@ -109,8 +110,18 @@ namespace Server.Game
                     _waveCount = Math.Min(_waveCount, 10);
                 }
             }
+            _round++;
             _expandCount++;
             _BossTime++;
+
+            foreach (Player player in Room._players.Values)
+            {
+                S_ChangeStat changeStatPacket = new S_ChangeStat();
+                changeStatPacket.ObjectId = player.Id;
+                changeStatPacket.StatInfo = player.Stat;
+                changeStatPacket.StatInfo.Level = _round;
+                player.Session.Send(changeStatPacket);
+            }
 
             List<Task> tasks = new List<Task>();
 

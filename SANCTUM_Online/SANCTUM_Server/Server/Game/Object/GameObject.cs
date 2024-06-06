@@ -122,10 +122,10 @@ namespace Server.Game
             Stat.Hp = Math.Max(Stat.Hp - damage, 0);
             Console.WriteLine($"Hit ! {Id}, {Stat.Hp}");
 
-            S_ChangeHp changePacket = new S_ChangeHp();
-            changePacket.ObjectId = Id;
-            changePacket.Hp = Stat.Hp;
-            Room.Broadcast(changePacket);
+            S_ChangeStat changeStatPacket = new S_ChangeStat();
+            changeStatPacket.ObjectId = Id;
+            changeStatPacket.StatInfo = Stat;
+            Room.Broadcast(changeStatPacket);
 
             if (Stat.Hp <= 0)
             {

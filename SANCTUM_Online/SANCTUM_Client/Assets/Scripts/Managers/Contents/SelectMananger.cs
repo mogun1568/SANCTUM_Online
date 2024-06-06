@@ -13,7 +13,7 @@ public class SelectMananger
 
     [HideInInspector] public Node selectedNode;
 
-    Data.Item itemData;
+    ItemInfo _itemInfo;
 
     //ItemData data;
 
@@ -35,7 +35,6 @@ public class SelectMananger
         //itemUI = null;
 
         C_TurretUI turretUIPacket = new C_TurretUI();
-        turretUIPacket.PlayerId = Managers.Object.MyMap.Id;
         turretUIPacket.NodeId = node.Id;
 
         Managers.Network.Send(turretUIPacket);
@@ -56,7 +55,7 @@ public class SelectMananger
         //nodeUI.Hide();
     }
 
-    public void SelectItemToUse(GameObject item, Data.Item _itemData)
+    public void SelectItemToUse(GameObject item, ItemInfo itemInfo)
     {
         /*if (itemUI == item)   // 선택한 아이템을 또 선택하면
         {
@@ -66,9 +65,9 @@ public class SelectMananger
         }*/
 
         Clear();
-        itemData = _itemData;
+        _itemInfo = itemInfo;
 
-        Debug.Log($"{itemData.itemName} Selected");
+        Debug.Log($"{_itemInfo.ItemName} Selected");
         itemUI = item;
 
         if (Managers.UI.getPopStackTop()?.name == "NodeUI")
@@ -77,9 +76,9 @@ public class SelectMananger
         }
     }
 
-    public Data.Item getItemData()
+    public ItemInfo getItemData()
     {
-        return itemData;
+        return _itemInfo;
     }
 
     public void itemUITextDecrease()
@@ -102,6 +101,6 @@ public class SelectMananger
     public void Clear()
     {
         itemUI = null;
-        itemData = null;
+        _itemInfo = null;
     }
 }

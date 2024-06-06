@@ -8,8 +8,6 @@ using UnityEngine;
 
 public class MyMapController : NewMap
 {
-    public int _exp;
-    public int _nextExp;
     public int _countLevelUp;
     bool isPractice;
     public bool isHide, isFPM;
@@ -18,8 +16,6 @@ public class MyMapController : NewMap
     {
         base.Init();
 
-        _exp = 0;
-        _nextExp = 3;
         _countLevelUp = 0;
 
         int cameraDefault = MapDefaultSize * 2 - 24;

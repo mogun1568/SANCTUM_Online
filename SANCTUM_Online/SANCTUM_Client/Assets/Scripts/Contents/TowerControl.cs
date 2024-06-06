@@ -6,7 +6,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class TowerControl : BaseController
 {
-
+    /*
     [HideInInspector] public TowerStat _stat;
 
     private Transform target;
@@ -346,4 +346,5 @@ public class TowerControl : BaseController
     //    Gizmos.color = Color.red;
     //    Gizmos.DrawWireSphere(transform.position, _stat.Range);
     //}
+    */
 }
