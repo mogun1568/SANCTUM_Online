@@ -146,8 +146,14 @@ public class NodeUI : UI_Popup
     public void FirstPersonMode()
     {
         Managers.Select.DeselectNode();
-        //FPSUI.GetTower(towerControl);
-        //_node.FirstPersonMode();
+
+        C_FirstPersonMode firstPersonModePacket = new C_FirstPersonMode();
+        firstPersonModePacket.IsFPM = true;
+        firstPersonModePacket.TurretId = _turret.Id;
+        Managers.Network.Send(firstPersonModePacket);
+
+        FPSUI.GetTower(_turret);
+        _node.FirstPersonMode(_turret);
     }
 
     public void Demolite()

@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,6 @@ public class FirstPersonCamera : MonoBehaviour
     float xRotation = 0f;
 
     //Turret turretData;
-    TowerControl towerControl;
 
     GameObject mainCamera;
 
@@ -21,7 +21,6 @@ public class FirstPersonCamera : MonoBehaviour
         mainCamera = Camera.main.gameObject;
         mainCamera.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
-        towerControl = GetComponentInParent<TowerControl>();
 
     }
 
@@ -76,21 +75,23 @@ public class FirstPersonCamera : MonoBehaviour
 
     public void ExitFirstPersonMode()
     {
-        //towerControl.isFPM = false;
+        /* (Managers.UI.getPopStackTop().name == "FPSUI")
+        {
+            return;
+        }*/
 
-        ///* (Managers.UI.getPopStackTop().name == "FPSUI")
-        //{
-        //    return;
-        //}*/
+        Managers.Game.isFPM = false;
 
-        //Managers.Game.isFPM = false;
+        Managers.UI.ClosePopupUI();
+        Managers.Game.invenUI.SetActive(true);
+        //Managers.UI.ShowPopupUI<UI_Inven>("InvenUI");
 
-        //Managers.UI.ClosePopupUI();
-        //Managers.Game.invenUI.SetActive(true);
-        ////Managers.UI.ShowPopupUI<UI_Inven>("InvenUI");
+        Cursor.lockState = CursorLockMode.None;
+        mainCamera.SetActive(true);
+        gameObject.SetActive(false);
 
-        //Cursor.lockState = CursorLockMode.None;
-        //mainCamera.SetActive(true);
-        //gameObject.SetActive(false);
+        C_FirstPersonMode firstPersonModePacket = new C_FirstPersonMode();
+        firstPersonModePacket.IsFPM = false;
+        Managers.Network.Send(firstPersonModePacket);
     }
 }

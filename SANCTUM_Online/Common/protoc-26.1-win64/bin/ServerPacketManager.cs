@@ -32,7 +32,9 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.CTurretUI, MakePacket<C_TurretUI>);
 		_handler.Add((ushort)MsgId.CTurretUI, PacketHandler.C_TurretUIHandler);		
 		_onRecv.Add((ushort)MsgId.CTurretDemolite, MakePacket<C_TurretDemolite>);
-		_handler.Add((ushort)MsgId.CTurretDemolite, PacketHandler.C_TurretDemoliteHandler);
+		_handler.Add((ushort)MsgId.CTurretDemolite, PacketHandler.C_TurretDemoliteHandler);		
+		_onRecv.Add((ushort)MsgId.CFirstPersonMode, MakePacket<C_FirstPersonMode>);
+		_handler.Add((ushort)MsgId.CFirstPersonMode, PacketHandler.C_FirstPersonModeHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

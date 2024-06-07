@@ -59,6 +59,20 @@ namespace Server.Game
             set { PosInfo.State = value; }
         }
 
+        private GameObject master;
+        public GameObject Master
+        {
+            get { return master; }
+            set
+            {
+                master = value;
+                if (owner == null)
+                {
+                    Owner = master;
+                }
+            }
+        }
+
         private GameObject owner;
         public GameObject Owner
         {

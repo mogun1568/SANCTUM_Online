@@ -71,6 +71,7 @@ namespace Server.Game
 
             turret.Info.Name = $"{itemName}lvl0{_upgradedNum}";
             turret.Owner = this;
+            turret.Master = Master;
             turret.PosInfo.PosX = pos.PosX;
             turret.PosInfo.PosY = pos.PosY;
             turret.PosInfo.PosZ = pos.PosZ;
@@ -115,6 +116,7 @@ namespace Server.Game
 
             turret.Info.Name = $"{itemName}Towerlvl0{_upgradedNum}";
             turret.Owner = this;
+            turret.Master = Master;
             turret.PosInfo.PosX = pos.PosX;
             turret.PosInfo.PosY = pos.PosY;
             turret.PosInfo.PosZ = pos.PosZ;

@@ -23,6 +23,7 @@ enum MsgId {
   C_TURRET_U_I = 15;
   S_TURRET_U_I = 16;
   C_TURRET_DEMOLITE = 17;
+  C_FIRST_PERSON_MODE = 18;
 }
 
 enum CreatureState {
@@ -121,6 +122,11 @@ message S_TurretUI {
 
 message C_TurretDemolite {
   int32 nodeId = 1;
+}
+
+message C_FirstPersonMode {
+  bool isFPM = 1;
+  int32 turretId = 2;
 }
 
 message ObjectInfo {

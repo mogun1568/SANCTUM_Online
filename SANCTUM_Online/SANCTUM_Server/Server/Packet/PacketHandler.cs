@@ -109,4 +109,24 @@ class PacketHandler
 
         room.Push(room.HandleTurretDemolite, player, turretDemolitePacket);
     }
+
+    public static void C_FirstPersonModeHandler(PacketSession session, IMessage packet)
+    {
+        C_FirstPersonMode firstPersonModePacket = packet as C_FirstPersonMode;
+        ClientSession clientSession = session as ClientSession;
+
+        Player player = clientSession.MyPlayer;
+        if (player == null)
+        {
+            return;
+        }
+
+        GameRoom room = player.Room;
+        if (room == null)
+        {
+            return;
+        }
+
+        room.Push(room.HandleFirstPersonMode, player, firstPersonModePacket);
+    }
 }

@@ -98,7 +98,7 @@ namespace Server.Game
                     player.Map.ExpendMap();
                     foreach (Node node in player.nodeInfos())
                     {
-                        node.Owner = player;
+                        node.Master = player;
                         Room.Push(Room.EnterGame, node);
                     }
                     S_CreateMap rescreateMapPacket = new S_CreateMap();
@@ -185,7 +185,7 @@ namespace Server.Game
             enemy.PosInfo.PosZ = map.startPoint.PosZ * map.GetNodeSize() + map.startC;
             enemy.PosInfo.DirY = map.startPoint.DirY * 90;
             enemy.Stat.MergeFrom(EnemyInfo);
-            enemy.Owner = player;
+            enemy.Master = player;
             enemy.nextRoad = player.Map.roads.First;
 
             Room.Push(Room.EnterGame, enemy);

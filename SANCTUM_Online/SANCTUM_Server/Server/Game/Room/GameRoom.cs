@@ -259,7 +259,7 @@ namespace Server.Game
             {
                 foreach (Node node in p.nodeInfos())
                 {
-                    node.Owner = p;
+                    node.Master = p;
                     Push(EnterGame, node);
                 }
 
@@ -348,6 +348,25 @@ namespace Server.Game
                 return;
 
             node.DemoliteTurret();
+        }
+
+        public void HandleFirstPersonMode(Player player, C_FirstPersonMode firstPersonModePacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            // TODO : 검증
+
+            if (firstPersonModePacket.IsFPM)
+            {
+                player.isFPM = firstPersonModePacket.TurretId;
+            }
+            else
+            {
+                player.isFPM = default;
+            }
         }
 
         public T Find<T>(int objectId) where T : class

@@ -40,9 +40,16 @@ namespace Server.Game
         // FSM (Finite State Machine)
         public override void Update()
         {
-            if (Owner.Owner.Room == null)
+            Player master = Master as Player;
+
+            if (master.Room == null)
             {
                 Room.Push(Room.LeaveGame, Id);
+                return;
+            }
+
+            if (master.isFPM == Id)
+            {
                 return;
             }
 
@@ -138,6 +145,7 @@ namespace Server.Game
 
             arrow.Stat.MergeFrom(_projectileInfo);
             arrow.Owner = this;
+            arrow.Master = Master;
             arrow._target = _target;
 
             Room.Push(Room.EnterGame, arrow);
