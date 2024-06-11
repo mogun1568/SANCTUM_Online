@@ -129,4 +129,24 @@ class PacketHandler
 
         room.Push(room.HandleFirstPersonMode, player, firstPersonModePacket);
     }
+
+    public static void C_ShootHandler(PacketSession session, IMessage packet)
+    {
+        C_Shoot shootPacket = packet as C_Shoot;
+        ClientSession clientSession = session as ClientSession;
+
+        Player player = clientSession.MyPlayer;
+        if (player == null)
+        {
+            return;
+        }
+
+        GameRoom room = player.Room;
+        if (room == null)
+        {
+            return;
+        }
+
+        room.Push(room.HandleShoot, player, shootPacket);
+    }
 }

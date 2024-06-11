@@ -20,14 +20,13 @@ namespace Server.Game
         public Map Map { get; private set; } = new Map();
         public Inventory Inventory { get; private set; } = new Inventory();
 
-        public int isFPM;
+        //public int isFPM;
 
         public void Init(int mapid)
 		{
             SetMapStartPoint();
             Map.Init(this);
             Inventory.Init(Id, Room);
-            isFPM = default;
         }
 
         int _countLevelUp = 0;

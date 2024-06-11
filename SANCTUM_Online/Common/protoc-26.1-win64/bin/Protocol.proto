@@ -24,6 +24,8 @@ enum MsgId {
   S_TURRET_U_I = 16;
   C_TURRET_DEMOLITE = 17;
   C_FIRST_PERSON_MODE = 18;
+  S_FIRST_PERSON_MODE = 19;
+  C_SHOOT = 20;
 }
 
 enum CreatureState {
@@ -129,6 +131,16 @@ message C_FirstPersonMode {
   int32 turretId = 2;
 }
 
+message S_FirstPersonMode {
+  int32 playerId = 1;
+  int32 turretId = 2;
+}
+
+message C_Shoot {
+  int32 turretId = 1;
+  PositionInfo posInfo = 2;
+}
+
 message ObjectInfo {
   int32 objectId = 1;
   string name = 2;
@@ -161,6 +173,7 @@ message StatInfo {
   float fireRate = 11;
   int32 exp = 12;
   int32 totalExp = 13;
+  bool isFPM = 14;
 }
 
 message ItemInfo {

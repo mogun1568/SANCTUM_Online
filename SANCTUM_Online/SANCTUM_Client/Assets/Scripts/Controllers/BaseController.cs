@@ -35,6 +35,12 @@ public class BaseController : MonoBehaviour
         set { Stat.Hp = value; }
     }
 
+    public bool IsFPM
+    {
+        get { return Stat.IsFPM; }
+        set { Stat.IsFPM = value; }
+    }
+
     PositionInfo _positionInfo = new PositionInfo();
     public PositionInfo PosInfo
     {

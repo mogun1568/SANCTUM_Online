@@ -4,6 +4,7 @@ using Google.Protobuf.WellKnownTypes;
 using Server.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Numerics;
 using System.Text;
 using System.Threading;
@@ -359,14 +360,34 @@ namespace Server.Game
 
             // TODO : 검증
 
+            Turret turret = Find<Turret>(firstPersonModePacket.TurretId);
+
             if (firstPersonModePacket.IsFPM)
             {
-                player.isFPM = firstPersonModePacket.TurretId;
+                player.IsFPM = true;
+                turret.IsFPM = true;
             }
             else
             {
-                player.isFPM = default;
+                player.IsFPM = false;
+                turret.IsFPM = false;
             }
+        }
+
+        public void HandleShoot(Player player, C_Shoot shootPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            // TODO : 검증
+
+            Turret turret = Find<Turret>(shootPacket.TurretId);
+            if (turret == null)
+                return;
+
+            turret.FPMShoot(shootPacket.PosInfo);
         }
 
         public T Find<T>(int objectId) where T : class

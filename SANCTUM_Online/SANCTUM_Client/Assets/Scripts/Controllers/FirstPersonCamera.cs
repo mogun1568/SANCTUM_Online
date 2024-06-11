@@ -15,13 +15,17 @@ public class FirstPersonCamera : MonoBehaviour
 
     GameObject mainCamera;
 
+    Camera _camera;
+    Turret _turret;
+
     void OnEnable()
     {
         Managers.Game.isFPM = true;
         mainCamera = Camera.main.gameObject;
         mainCamera.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
-
+        _turret = GetComponentInParent<Turret>();
+        _camera = GetComponent<Camera>();
     }
 
     void Update()
@@ -56,6 +60,17 @@ public class FirstPersonCamera : MonoBehaviour
 
     void FireBullet()
     {
+        C_Shoot shootPacket = new C_Shoot() { PosInfo = new PositionInfo() };
+        shootPacket.TurretId = _turret.Id;
+        shootPacket.PosInfo.PosX = transform.position.x;
+        shootPacket.PosInfo.PosY = transform.position.y;
+        shootPacket.PosInfo.PosZ = transform.position.z;
+        shootPacket.PosInfo.DirX = _camera.transform.forward.x;
+        shootPacket.PosInfo.DirY = _camera.transform.forward.y;
+        shootPacket.PosInfo.DirZ = _camera.transform.forward.z;
+        Managers.Network.Send(shootPacket);
+
+
         //Managers.Sound.Play("Effects/Arrow", Define.Sound.Effect);
         //GameObject bulletGO = Managers.Resource.Instantiate("Tower/Prefab/Bullet/StandardBullet", transform.position, transform.rotation);
         //bulletGO.transform.GetChild(0).gameObject.SetActive(false);
@@ -80,7 +95,8 @@ public class FirstPersonCamera : MonoBehaviour
             return;
         }*/
 
-        Managers.Game.isFPM = false;
+        Managers.Object.MyMap.IsFPM = false;
+        _turret.IsFPM = false;
 
         Managers.UI.ClosePopupUI();
         Managers.Game.invenUI.SetActive(true);
@@ -92,6 +108,9 @@ public class FirstPersonCamera : MonoBehaviour
 
         C_FirstPersonMode firstPersonModePacket = new C_FirstPersonMode();
         firstPersonModePacket.IsFPM = false;
+        firstPersonModePacket.TurretId = _turret.Id;
         Managers.Network.Send(firstPersonModePacket);
+
+        Managers.Object.MyMap.StartlevelUpCoroutine();
     }
 }

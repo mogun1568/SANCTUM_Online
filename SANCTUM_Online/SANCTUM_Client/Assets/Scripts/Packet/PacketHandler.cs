@@ -178,7 +178,7 @@ class PacketHandler
 
         myMap.Stat.Exp = expUpdatePacket.Exp;
         myMap.Stat.TotalExp = expUpdatePacket.TotalExp;
-        myMap._countLevelUp = expUpdatePacket.CountLevelUp;
+        myMap._countLevelUp += expUpdatePacket.CountLevelUp;
     }
 
     public static void S_TurretUIHandler(PacketSession session, IMessage packet)
@@ -196,5 +196,21 @@ class PacketHandler
 
         NodeUI nodeUI = Managers.UI.ShowPopupUI<NodeUI>("NodeUI");
         nodeUI.SetTarget(nc, tc);
+    }
+
+    public static void S_FirstPersonModeHandler(PacketSession session, IMessage packet)
+    {
+        S_FirstPersonMode firstPersonModePacket = packet as S_FirstPersonMode;
+
+        if (firstPersonModePacket.PlayerId != Managers.Object.MyMap.Id)
+            return;
+
+        Managers.Object.MyMap.IsFPM = false;
+        Managers.UI.ClosePopupUI();
+        Managers.Game.invenUI.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Managers.Object.MyMap._mainCamera.gameObject.SetActive(true);
+
+        Managers.Object.MyMap.StartlevelUpCoroutine();
     }
 }

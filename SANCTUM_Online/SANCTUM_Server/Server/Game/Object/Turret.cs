@@ -48,7 +48,7 @@ namespace Server.Game
                 return;
             }
 
-            if (master.isFPM == Id)
+            if (IsFPM)
             {
                 return;
             }
@@ -132,6 +132,7 @@ namespace Server.Game
         void Shoot(string name)
         {
             Arrow arrow = ObjectManager.Instance.Add<Arrow>();
+            arrow._mode = 1;
 
             arrow.Info.Name = name;
             arrow.PosInfo.PosX = PosInfo.PosX;
@@ -147,6 +148,32 @@ namespace Server.Game
             arrow.Owner = this;
             arrow.Master = Master;
             arrow._target = _target;
+
+            Room.Push(Room.EnterGame, arrow);
+        }
+
+        long _nextShootTick = 0;
+        public void FPMShoot(PositionInfo pos)
+        {
+            if (_nextShootTick > Environment.TickCount64)
+                return;
+            int moveTick = 250;
+            _nextShootTick = Environment.TickCount64 + moveTick;
+
+            Arrow arrow = ObjectManager.Instance.Add<Arrow>();
+            arrow._mode = 2;
+
+            arrow.Info.Name = "StandardBullet";
+            arrow.PosInfo.PosX = pos.PosX;
+            arrow.PosInfo.PosY = pos.PosY;
+            arrow.PosInfo.PosZ = pos.PosZ;
+            arrow.PosInfo.DirX = pos.DirX;
+            arrow.PosInfo.DirY = pos.DirY;
+            arrow.PosInfo.DirZ = pos.DirZ;
+
+            arrow.Stat.MergeFrom(_projectileInfo);
+            arrow.Owner = this;
+            arrow.Master = Master;
 
             Room.Push(Room.EnterGame, arrow);
         }

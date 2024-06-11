@@ -34,7 +34,9 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.CTurretDemolite, MakePacket<C_TurretDemolite>);
 		_handler.Add((ushort)MsgId.CTurretDemolite, PacketHandler.C_TurretDemoliteHandler);		
 		_onRecv.Add((ushort)MsgId.CFirstPersonMode, MakePacket<C_FirstPersonMode>);
-		_handler.Add((ushort)MsgId.CFirstPersonMode, PacketHandler.C_FirstPersonModeHandler);
+		_handler.Add((ushort)MsgId.CFirstPersonMode, PacketHandler.C_FirstPersonModeHandler);		
+		_onRecv.Add((ushort)MsgId.CShoot, MakePacket<C_Shoot>);
+		_handler.Add((ushort)MsgId.CShoot, PacketHandler.C_ShootHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

@@ -137,6 +137,11 @@ public class ObjectManager
             return;
         }
 
+        //if (go.GetComponent<Turret>() != null)
+        //{
+        //    Util.FindChild(go, "Camera", true)?.SetActive(false);
+        //}
+
         _objects.Remove(id);
         Managers.Resource.Destroy(go);
     }

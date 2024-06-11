@@ -22,13 +22,14 @@ public class FPSUI : UI_Popup
         Icon
     }
 
-    void OnEnable()
+    void Start()
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<TextMeshProUGUI>(typeof(Texts));
         Bind<Image>(typeof(Images));
  
-        //GetImage((int)Images.Icon).sprite = Managers.Resource.Load<Sprite>($"Icon/{towerControl.itemData.itemIcon}");
+        GetImage((int)Images.Icon).sprite = Managers.Resource.Load<Sprite>
+            ($"Icon/{Managers.Data.ItemDict[_turretController.Stat.Name].ItemIcon}");
     }
 
     void Update()

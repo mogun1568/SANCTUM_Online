@@ -37,7 +37,7 @@ public class NodeUI : UI_Popup
     Turret _turret;
     //public TextMeshProUGUI retrunExp; // 추가 예정
 
-    void Start()
+    void Awake()
     {
         transform.rotation = Quaternion.Euler(0, 45, 0);
 
@@ -51,14 +51,14 @@ public class NodeUI : UI_Popup
         BindEvent(fPMButton, (PointerEventData data) => { FirstPersonMode(); }, Define.UIEvent.Click);
         BindEvent(DelButton, (PointerEventData data) => { Demolite(); }, Define.UIEvent.Click);
 
-        if (_turret.Stat.Name == "Water")
-        {
-            fPMButton.SetActive(false);
-        }
-        else
-        {
-            fPMButton.SetActive(true);
-        }
+        //if (_turret.Stat.Name == "Water")
+        //{
+        //    fPMButton.SetActive(false);
+        //}
+        //else
+        //{
+        //    fPMButton.SetActive(true);
+        //}
     }
     void Update()
     {
@@ -100,7 +100,7 @@ public class NodeUI : UI_Popup
 
     public void SetTarget(Node node, Turret turret)
     {
-        if (Managers.Object.MyMap.isFPM)
+        if (Managers.Object.MyMap.IsFPM)
         {
             return;
         }
@@ -114,14 +114,14 @@ public class NodeUI : UI_Popup
         //retrunExp.text = 경헙치 + "Exp"  // 추가 예정
 
         // 왜 start 함수보다 먼저 실행되는지 모르겠는데 일단 해당 코드를 start 함수로 옮겨서 수정함
-        //if (_turret.Stat.Name == "Water")
-        //{
-        //    fPMButton.SetActive(false);
-        //}
-        //else
-        //{
-        //    fPMButton.SetActive(true);
-        //}
+        if (_turret.Stat.Name == "Water")
+        {
+            fPMButton.SetActive(false);
+        }
+        else
+        {
+            fPMButton.SetActive(true);
+        }
     }
 
     void ChangeInfo()

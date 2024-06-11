@@ -10,11 +10,17 @@ public class Turret : BaseController
     void OnEnable()
     {
         _partToRotate = Util.FindChild(gameObject, "PartToRotate", true)?.transform;
+        Util.FindChild(gameObject, "Camera", true)?.SetActive(false);
     }
 
     public override void Update()
     {
         base.Update();
+
+        if (IsFPM)
+        {
+            return;
+        }
 
         if (State != CreatureState.Attacking)
         {

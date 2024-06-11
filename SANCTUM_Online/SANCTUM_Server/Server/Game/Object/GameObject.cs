@@ -87,6 +87,12 @@ namespace Server.Game
             }
         }
 
+        public bool IsFPM
+        {
+            get { return Stat.IsFPM; }
+            set { Stat.IsFPM = value; }
+        }
+
         public GameObject()
         {
             Info.PosInfo = PosInfo;
@@ -151,6 +157,19 @@ namespace Server.Game
         {
             if (Room == null)
                 return;
+
+            if (IsFPM && ObjectManager.GetObjectTypeById(Id) == GameObjectType.Turret)
+            {
+                Player player = master as Player;
+
+                IsFPM = false;
+                player.IsFPM = false;
+
+                S_FirstPersonMode firstPersonMode = new S_FirstPersonMode();
+                firstPersonMode.PlayerId = player.Id;
+                firstPersonMode.TurretId = Id;
+                player.Session.Send(firstPersonMode);
+            }
 
             S_Die diePacket = new S_Die();
             diePacket.ObjectId = Id;
