@@ -156,6 +156,41 @@ namespace Server.Game
             Room.Push(Room.LeaveGame, Id);
         }
 
+        public async Task OnDotDamaged(GameObject attacker, int damage)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                await Task.Delay(1000);
+                OnDamaged(attacker, damage);
+            }
+        }
+
+        bool isAlreadSlow;
+        public async Task OnSlow(GameObject attacker, int damage)
+        {
+            OnDamaged(attacker, damage);
+
+            if (isAlreadSlow)
+                return;
+            isAlreadSlow = true;
+
+            float originalSpeed = Speed;
+            Speed *= 0.5f;
+
+            S_ChangeStat changeStatPacket = new S_ChangeStat();
+            changeStatPacket.ObjectId = Id;
+            changeStatPacket.StatInfo = Stat;
+            Room.Broadcast(changeStatPacket);
+
+            await Task.Delay(3000);
+            Speed = originalSpeed;
+
+            changeStatPacket.StatInfo = Stat;
+            Room.Broadcast(changeStatPacket);
+
+            isAlreadSlow = false;
+        }
+
         public override void OnDead(GameObject attacker)
         {
             base.OnDead(attacker);

@@ -1,6 +1,7 @@
 {
   "projectiles": [
     {
+      "type": "General",
       "name": "StandardBullet",
       "attack": "50",
       "speed": "50.0"

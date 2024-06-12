@@ -132,7 +132,6 @@ namespace Server.Game
         void Shoot(string name)
         {
             Arrow arrow = ObjectManager.Instance.Add<Arrow>();
-            arrow._mode = 1;
 
             arrow.Info.Name = name;
             arrow.PosInfo.PosX = PosInfo.PosX;
@@ -145,6 +144,7 @@ namespace Server.Game
             arrow.PosInfo.DirZ = dir.z;
 
             arrow.Stat.MergeFrom(_projectileInfo);
+            arrow.Info.StatInfo.Level = 1;
             arrow.Owner = this;
             arrow.Master = Master;
             arrow._target = _target;
@@ -161,7 +161,6 @@ namespace Server.Game
             _nextShootTick = Environment.TickCount64 + moveTick;
 
             Arrow arrow = ObjectManager.Instance.Add<Arrow>();
-            arrow._mode = 2;
 
             arrow.Info.Name = "StandardBullet";
             arrow.PosInfo.PosX = pos.PosX;
@@ -172,6 +171,7 @@ namespace Server.Game
             arrow.PosInfo.DirZ = pos.DirZ;
 
             arrow.Stat.MergeFrom(_projectileInfo);
+            arrow.Info.StatInfo.Level = 2;
             arrow.Owner = this;
             arrow.Master = Master;
 

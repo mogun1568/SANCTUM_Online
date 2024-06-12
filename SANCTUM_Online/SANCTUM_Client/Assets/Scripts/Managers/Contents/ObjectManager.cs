@@ -119,6 +119,11 @@ public class ObjectManager
             Vector3 dir = new Vector3(info.PosInfo.DirX, info.PosInfo.DirY, info.PosInfo.DirZ);
             GameObject go = Managers.Resource.Instantiate($"Tower/Prefab/Bullet/{info.Name}", pos, Quaternion.LookRotation(dir));
 
+            if (info.StatInfo.Level == 2)
+                go.transform.GetChild(0).gameObject.SetActive(false);
+            else
+                go.transform.GetChild(0).gameObject.SetActive(true);
+
             go.name = info.Name;
             _objects.Add(info.ObjectId, go);
 

@@ -9,8 +9,6 @@ namespace Server.Game
 {
     public class Arrow : Projectile
     {
-        public int _mode;
-
         public Enemy _target;
         long _nextMoveTick = 0;
 
@@ -19,9 +17,9 @@ namespace Server.Game
             if (Owner == null || Room == null)
                 return;
 
-            if (_mode == 1)
+            if (Stat.Level == 1)
                 ThirdPersonMode();
-            else if (_mode == 2)
+            else if (Stat.Level == 2)
                 FirstPersonMode();
         }
 
@@ -46,7 +44,8 @@ namespace Server.Game
             if (dist < 1f)
             {
                 // 피격
-                _target.OnDamaged(Master, (int)(Attack * Owner.Attack));
+                HitTarget(_target);
+                //_target.OnDamaged(Master, (int)(Attack * Owner.Attack));
 
                 // 소멸
                 Room.Push(Room.LeaveGame, Id);
@@ -88,7 +87,7 @@ namespace Server.Game
             // 타겟에게 도달했다면
             Enemy target = Room.FindEnemy(e =>
             {
-                dist = Vector3.Distance(Pos, e.Pos);
+                dist = Vector3.Distance(Pos, e.Pos + Center(e.Info.Name));
                 return dist <= 2f;
             });
 
@@ -124,6 +123,18 @@ namespace Server.Game
             movePacket.ObjectId = Id;
             movePacket.PosInfo = PosInfo;
             Room.Broadcast(movePacket);
+        }
+
+        Vector3 Center(string name)
+        {
+            Vector3 v = new Vector3();
+
+            if (name == "SalarymanDefault")
+                v.y = 3.5f;
+            else
+                v.y = 1.5f;
+
+            return v;
         }
     }
 }

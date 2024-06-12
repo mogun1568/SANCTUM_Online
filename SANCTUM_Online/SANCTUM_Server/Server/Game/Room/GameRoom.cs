@@ -19,7 +19,7 @@ namespace Server.Game
         public Dictionary<int, Player> _players = new Dictionary<int, Player>();
         Dictionary<int, Node> _nodes = new Dictionary<int, Node>();
         Dictionary<int, Turret> _turrets = new Dictionary<int, Turret>();
-        Dictionary<int, Enemy> _enemys = new Dictionary<int, Enemy>();
+        Dictionary<int, Enemy> _enemies = new Dictionary<int, Enemy>();
         Dictionary<int, Projectile> _projectiles = new Dictionary<int, Projectile>();
 
         public Wave Wave { get; private set; } = new Wave();
@@ -48,7 +48,7 @@ namespace Server.Game
 
             Wave.Update();
 
-            foreach (Enemy enemy in _enemys.Values)
+            foreach (Enemy enemy in _enemies.Values)
             {
                 enemy.Update();
             }
@@ -126,7 +126,7 @@ namespace Server.Game
                         spawnPacket.Objects.Add(t.Info);
                     }
 
-                    foreach (Enemy e in _enemys.Values)
+                    foreach (Enemy e in _enemies.Values)
                     {
                         spawnPacket.Objects.Add(e.Info);
                     }
@@ -154,7 +154,7 @@ namespace Server.Game
             else if (type == GameObjectType.Enemy)
             {
                 Enemy enemy = gameObject as Enemy;
-                _enemys.Add(gameObject.Id, enemy);
+                _enemies.Add(gameObject.Id, enemy);
                 enemy.Room = this;
             }
             else if (type == GameObjectType.Projectile)
@@ -219,7 +219,7 @@ namespace Server.Game
             else if (type == GameObjectType.Enemy)
             {
                 Enemy enemy = null;
-                if (_enemys.Remove(objectId, out enemy) == false)
+                if (_enemies.Remove(objectId, out enemy) == false)
                 {
                     return;
                 }
@@ -412,7 +412,7 @@ namespace Server.Game
 
         public Enemy FindEnemy(Func<GameObject, bool> condition)
         {
-            foreach (Enemy enemy in _enemys.Values)
+            foreach (Enemy enemy in _enemies.Values)
             {
                 if (condition.Invoke(enemy))
                     return enemy;
@@ -420,6 +420,20 @@ namespace Server.Game
 
             return null;
         }
+
+        public List<Enemy> FindEnemies(Func<GameObject, bool> condition)
+        {
+            List<Enemy> foundEnemies = new List<Enemy>();
+
+            foreach (Enemy enemy in _enemies.Values)
+            {
+                if (condition.Invoke(enemy))
+                    foundEnemies.Add(enemy);
+            }
+
+            return foundEnemies;
+        }
+
 
         public Turret FindTurret(Func<GameObject, bool> condition)
         {
