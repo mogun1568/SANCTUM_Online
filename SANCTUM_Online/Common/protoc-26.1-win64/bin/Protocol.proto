@@ -180,7 +180,6 @@ message ItemInfo {
   string itemType = 1;
   string itemName = 2;
   string itemIcon = 3;
-  string bulletType = 4;
-  float upgradeAmount = 5;
-  int32 returnExp = 6;
+  float upgradeAmount = 4;
+  int32 returnExp = 5;
 }

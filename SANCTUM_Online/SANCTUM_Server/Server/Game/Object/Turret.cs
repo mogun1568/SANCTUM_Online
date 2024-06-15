@@ -3,6 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using Server.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -30,8 +31,18 @@ namespace Server.Game
 
             State = CreatureState.Idle;
 
+            BulletInfo(Stat.Name);
+        }
+
+        public void BulletInfo(string name)
+        {
+            string s = name;
+            if (s == "StandardTower")
+                s = "Standard";
+            s += "Bullet";
+
             _projectileInfo = null;
-            if (DataManager.ProjectileDict.TryGetValue("StandardBullet", out _projectileInfo) == false)
+            if (DataManager.ProjectileDict.TryGetValue(s, out _projectileInfo) == false)
             {
                 return;
             }
@@ -94,17 +105,18 @@ namespace Server.Game
         long _nextAttackTick = 0;
         protected virtual void UpdateAttacking()
         {
-            if (_nextAttackTick > Environment.TickCount64)
-                return;
-            int moveTick = (int)(1000 * FireRate);
-            _nextAttackTick = Environment.TickCount64 + moveTick;
-
+            // FireRate마다 총알이 나가지 않는 이유는 여기서 return되는 경우(순서를 위로해서 해결)
             if (_target == null || _target.Room != Room)
             {
                 _target = null;
                 State = CreatureState.Idle;
                 return;
             }
+
+            if (_nextAttackTick > Environment.TickCount64)
+                return;
+            int moveTick = (int)(1000 * FireRate);
+            _nextAttackTick = Environment.TickCount64 + moveTick;
 
             float dist = Vector3.Distance(Pos, _target.Pos);
             if (dist > Range)
@@ -121,7 +133,7 @@ namespace Server.Game
 
             Console.WriteLine($"Shoot {_target.Id}!");
             // TODO
-            Shoot("StandardBullet");
+            Shoot(_projectileInfo.Name);
         }
 
         protected virtual void UpdateDie()

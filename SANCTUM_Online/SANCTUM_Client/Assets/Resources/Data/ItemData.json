@@ -4,21 +4,18 @@
 			"itemType": "Tower",
 			"itemName": "StandardTower",
 			"itemIcon": "StandardTowerIcon",
-			"bulletType": "StandardBullet",
 			"returnExp": 1
 		},
 		{
 			"itemType": "Element",
 			"itemName": "Fire",
 			"itemIcon": "FireIcon",
-			"bulletType": "FireBullet",
 			"returnExp": 1
 		},
 		{
 			"itemType": "Element",
 			"itemName": "Ice",
 			"itemIcon": "IceIcon",
-			"bulletType": "IceBullet",
 			"returnExp": 1
 		},
 		{
@@ -31,14 +28,12 @@
 			"itemType": "Element",
 			"itemName": "Lightning",
 			"itemIcon": "LightningIcon",
-			"bulletType": "LightningBullet",
 			"returnExp": 1
 		},
 		{
 			"itemType": "Element",
 			"itemName": "Dirt",
 			"itemIcon": "DirtIcon",
-			"bulletType": "DirtBullet",
 			"returnExp": 1
 		},
 		{

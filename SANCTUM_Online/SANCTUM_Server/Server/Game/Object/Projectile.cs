@@ -76,7 +76,7 @@ namespace Server.Game
 
         void MassiveDamage(Enemy target)
         {
-            target.OnDamaged(Master, (int)(Attack * Owner.Attack) * 2);
+            target.OnDamaged(Master, (int)(Attack * Owner.Attack));
         }
     }
 }

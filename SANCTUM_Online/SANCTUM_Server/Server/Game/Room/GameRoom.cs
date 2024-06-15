@@ -366,11 +366,13 @@ namespace Server.Game
             {
                 player.IsFPM = true;
                 turret.IsFPM = true;
+                turret.BulletInfo("StandardTower");
             }
             else
             {
                 player.IsFPM = false;
                 turret.IsFPM = false;
+                turret.BulletInfo(turret.Stat.Name);
             }
         }
 

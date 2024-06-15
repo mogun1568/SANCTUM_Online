@@ -120,9 +120,9 @@ namespace Server.Game
             turret.PosInfo.PosX = pos.PosX;
             turret.PosInfo.PosY = pos.PosY;
             turret.PosInfo.PosZ = pos.PosZ;
-            turret.Stat = _turret.Stat;
+            turret.CopyStat(_turret.Stat, turret.Stat);
             turret.Stat.Name = itemName;
-            turret.Info.StatInfo.Name = itemName;
+            turret.BulletInfo(itemName);
 
             Room.Push(Room.LeaveGame, _turret.Id);
             Room.Push(Room.EnterGame, turret);

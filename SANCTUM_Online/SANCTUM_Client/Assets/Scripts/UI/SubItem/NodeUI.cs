@@ -35,6 +35,7 @@ public class NodeUI : UI_Popup
 
     Node _node;
     Turret _turret;
+    string bulletName;
     //public TextMeshProUGUI retrunExp; // 추가 예정
 
     void Awake()
@@ -109,6 +110,11 @@ public class NodeUI : UI_Popup
 
         _turret = turret;
 
+        bulletName = _turret.Stat.Name;
+        if (bulletName == "StandardTower")
+            bulletName = "Standard";
+        bulletName += "Bullet";
+
         transform.position = _node.GetBuildPosition();
 
         //retrunExp.text = 경헙치 + "Exp"  // 추가 예정
@@ -131,7 +137,9 @@ public class NodeUI : UI_Popup
 
         GetObject((int)GameObjects.HpBar).GetComponent<Slider>().value = curHP / maxHP;
 
-        GetText((int)Texts.damageText).text = _turret.Stat.Attack.ToString("F0");
+        
+        float bulletAttack = Managers.Data.ProjectileDict[bulletName].Attack;
+        GetText((int)Texts.damageText).text = (bulletAttack * _turret.Stat.Attack).ToString("F0");
         GetText((int)Texts.fireRateText).text = _turret.Stat.FireRate.ToString("F1");
 
         sphere.localScale = new Vector3(_turret.Stat.Range * 2, sphere.localScale.y, _turret.Stat.Range * 2);

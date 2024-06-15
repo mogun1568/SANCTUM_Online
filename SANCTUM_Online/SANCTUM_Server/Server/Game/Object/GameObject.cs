@@ -20,8 +20,8 @@ namespace Server.Game
         public GameRoom Room { get; set; }
 
         public ObjectInfo Info { get; set; } = new ObjectInfo();
-        public PositionInfo PosInfo { get; set; } = new PositionInfo();
-        public StatInfo Stat { get; set; } = new StatInfo();
+        public PositionInfo PosInfo { get; private set; } = new PositionInfo();
+        public StatInfo Stat { get; private set; } = new StatInfo();
 
         public float Attack
         {
@@ -132,6 +132,24 @@ namespace Server.Game
                 PosInfo.DirY = value.y;
                 PosInfo.DirZ = value.z;
             }
+        }
+
+        public void CopyStat(StatInfo source, StatInfo target)
+        {
+            target.Name = source.Name;
+            target.Type = source.Type;
+            target.HaveEnvironment = source.HaveEnvironment;
+            target.Level = source.Level;
+            target.MaxHp = source.MaxHp;
+            target.Hp = source.Hp;
+            target.Attack = source.Attack;
+            target.StartSpeed = source.StartSpeed;
+            target.Speed = source.Speed;
+            target.Range = source.Range;
+            target.FireRate = source.FireRate;
+            target.Exp = source.Exp;
+            target.TotalExp = source.TotalExp;
+            target.IsFPM = source.IsFPM;
         }
 
         public virtual void OnDamaged(GameObject attacker, int damage)

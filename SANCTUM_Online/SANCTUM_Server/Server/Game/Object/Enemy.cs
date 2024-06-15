@@ -117,7 +117,7 @@ namespace Server.Game
         {
             // TODO : 플레어서 life 감소
             Player owner = Owner as Player;
-            owner.Stat.Hp--;
+            owner.Stat.Hp -= Exp;
 
             S_ChangeStat changeStatPacket = new S_ChangeStat();
             changeStatPacket.ObjectId = owner.Id;
@@ -158,10 +158,15 @@ namespace Server.Game
 
         public async Task OnDotDamaged(GameObject attacker, int damage)
         {
+            OnDamaged(attacker, damage);
+
             for (int i = 0; i < 5; i++)
             {
                 await Task.Delay(1000);
-                OnDamaged(attacker, damage);
+                if (Room == null)
+                    return;
+
+                OnDamaged(attacker, damage / 5);
             }
         }
 
@@ -183,6 +188,9 @@ namespace Server.Game
             Room.Broadcast(changeStatPacket);
 
             await Task.Delay(3000);
+            if (Room == null)
+                return;
+
             Speed = originalSpeed;
 
             changeStatPacket.StatInfo = Stat;
