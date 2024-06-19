@@ -12,6 +12,8 @@ namespace Server.Game
 	{
 		public ClientSession Session { get; set; }
 
+        public WaitingRoom WaitingRoom { get; set; }
+
         public Player()
         {
             ObjectType = GameObjectType.Player;

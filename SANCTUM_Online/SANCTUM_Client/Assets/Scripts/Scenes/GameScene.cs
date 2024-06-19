@@ -21,15 +21,20 @@ public class GameScene : BaseScene
     {
         base.Init();
 
-        SceneType = Define.Scene.GamePlay;
+        SceneType = Define.Scene.MultiPlay;
 
         Screen.SetResolution(640, 480, false);
 
+        C_EnterRoom enterRoomPacket = new C_EnterRoom();
+        enterRoomPacket.RoomId = Managers.Object.RoomList.RoomId;
+        Managers.Network.Send(enterRoomPacket);
+
         //Managers.Game.Init();
         //Managers.Scene.Init();
-        Managers.UI.ShowSceneUI<UI_Scene>("MainUI");
-        GameObject invenUI = Managers.UI.ShowSceneUI<UI_Inven>("InvenUI").gameObject;
-        Managers.Game.invenUI = invenUI;
+
+        //Managers.UI.ShowSceneUI<UI_Scene>("MainUI");
+        //GameObject invenUI = Managers.UI.ShowSceneUI<UI_Inven>("InvenUI").gameObject;
+        //Managers.Game.invenUI = invenUI;
 
         //Managers.UI.getPopStackTop().GetComponentInChildren<SelectItem>().FirstAddItem();
         //GameObject.Find("InvenUI").GetComponentInChildren<SelectItem>().FirstAddItem();

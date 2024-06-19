@@ -26,6 +26,9 @@ enum MsgId {
   C_FIRST_PERSON_MODE = 18;
   S_FIRST_PERSON_MODE = 19;
   C_SHOOT = 20;
+  C_ENTER_ROOM = 21;
+  C_ROOM_LIST = 22;
+  S_ROOM_LIST = 23;
 }
 
 enum CreatureState {
@@ -46,6 +49,7 @@ enum GameObjectType {
 
 message S_EnterGame {
   ObjectInfo player = 1;
+  bool isGameRoom = 2;
 }
 
 message S_LeaveGame {
@@ -141,6 +145,18 @@ message C_Shoot {
   PositionInfo posInfo = 2;
 }
 
+message C_EnterRoom {
+  int32 roomId = 1;
+}
+
+message C_RoomList {
+}
+
+message S_RoomList {
+  int32 playerId = 1;
+  repeated RoomInfo roomList = 2;
+}
+
 message ObjectInfo {
   int32 objectId = 1;
   string name = 2;
@@ -182,4 +198,9 @@ message ItemInfo {
   string itemIcon = 3;
   float upgradeAmount = 4;
   int32 returnExp = 5;
+}
+
+message RoomInfo {
+  int32 id = 1;
+  int32 playerNum = 2;
 }

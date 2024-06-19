@@ -99,6 +99,8 @@ namespace Server.Game
                     player.Info.PosInfo.PosZ = 0;
                 }
 
+                player.Stat.Level = _players.Count;
+
                 _players.Add(gameObject.Id, player);
                 player.Room = this;
                 player.Init(player.Id);
@@ -107,6 +109,7 @@ namespace Server.Game
                 {
                     S_EnterGame enterPacket = new S_EnterGame();
                     enterPacket.Player = player.Info;
+                    enterPacket.IsGameRoom = true;
                     player.Session.Send(enterPacket);
 
                     S_Spawn spawnPacket = new S_Spawn();
@@ -195,6 +198,9 @@ namespace Server.Game
                     S_LeaveGame leavePacket = new S_LeaveGame();
                     player.Session.Send(leavePacket);
                 }
+
+                if (_players.Count == 0)    
+                    RoomManager.Instance.RemoveGameRoom(RoomId);
             }
             else if (type == GameObjectType.Node)
             {

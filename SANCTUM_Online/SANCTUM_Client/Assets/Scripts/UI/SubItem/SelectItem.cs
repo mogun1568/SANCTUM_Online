@@ -74,7 +74,8 @@ public class SelectItem : UI_Base
         }
     }
 
-    void Start()
+    // 아예 전부 UI_Inven으로 옮길 수 있을지도
+    void Awake()
     {
         Init();
     }

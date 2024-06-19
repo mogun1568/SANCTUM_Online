@@ -8,13 +8,24 @@ using UnityEngine.Windows;
 
 public class ObjectManager
 {
+    public RoomSelectUI RoomList {  get; set; }
+    public RoomUI MyRoom { get; set; }
+
     public MyMapController MyMap { get; set; }
-	public Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
+    public Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
 
     public static GameObjectType GetObjectTypeById(int id)
     {
         int type = (id >> 24) & 0x7F;
         return (GameObjectType)type;
+    }
+
+    public void roomAdd(ObjectInfo info, bool myMap = false)
+    {
+        if (myMap)
+        {
+            RoomList = Managers.UI.ShowSceneUI<RoomSelectUI>("RoomSelectUI");
+        }
     }
 
     public void Add(ObjectInfo info, bool myMap = false)
@@ -24,6 +35,8 @@ public class ObjectManager
 		{
             if (myMap)
             {
+                MyRoom = Managers.UI.ShowPopupUI<RoomUI>("RoomUI");
+
                 GameObject go = Managers.Resource.Instantiate("Map/MyMap");
                 go.name = info.Name;
                 _objects.Add(info.ObjectId, go);
@@ -44,6 +57,8 @@ public class ObjectManager
                 mc.PosInfo = info.PosInfo;
                 mc.Stat = info.StatInfo;
             }
+
+            MyRoom.Join(info.Name, myMap);
         }
 		else if (objectType == GameObjectType.Node)
 		{

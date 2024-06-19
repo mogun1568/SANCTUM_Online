@@ -9,42 +9,99 @@ namespace Server.Game
 		public static RoomManager Instance { get; } = new RoomManager();
 
 		object _lock = new object();
-		Dictionary<int, GameRoom> _rooms = new Dictionary<int, GameRoom>();
-		int _roomId = 1;
+        Dictionary<int, WaitingRoom> _waitingRooms = new Dictionary<int, WaitingRoom>();
+        public Dictionary<int, GameRoom> _gameRooms = new Dictionary<int, GameRoom>();
+		int _waitingRoomId = 1, _gameRoomId = 1;
 
-		public GameRoom Add()
+        public WaitingRoom AddWaitingRoom()
+        {
+            WaitingRoom waitingRoom = new WaitingRoom();
+            waitingRoom.Push(waitingRoom.Init);
+
+            lock (_lock)
+            {
+                waitingRoom.RoomId = _waitingRoomId;
+                _waitingRooms.Add(_waitingRoomId, waitingRoom);
+                _waitingRoomId++;
+            }
+
+            Program.TickWaitingRoom(waitingRoom, 50);
+
+            return waitingRoom;
+        }
+
+        public bool RemoveWaitingRoom(int roomId)
+        {
+            lock (_lock)
+            {
+                return _waitingRooms.Remove(roomId);
+            }
+        }
+
+        public GameRoom AddGameRoom()
 		{
 			GameRoom gameRoom = new GameRoom();
 			gameRoom.Push(gameRoom.Init);
 
 			lock (_lock)
 			{
-				gameRoom.RoomId = _roomId;
-				_rooms.Add(_roomId, gameRoom);
-				_roomId++;
+				gameRoom.RoomId = _gameRoomId;
+				_gameRooms.Add(_gameRoomId, gameRoom);
+                _gameRoomId++;
 			}
 
-			return gameRoom;
+            Program.TickRoom(gameRoom, 50);
+
+            return gameRoom;
 		}
 
-		public bool Remove(int roomId)
+		public bool RemoveGameRoom(int roomId)
 		{
 			lock (_lock)
 			{
-				return _rooms.Remove(roomId);
+				return _gameRooms.Remove(roomId);
 			}
 		}
 
-		public GameRoom Find(int roomId)
-		{
-			lock (_lock)
-			{
-				GameRoom room = null;
-				if (_rooms.TryGetValue(roomId, out room))
-					return room;
+        public WaitingRoom FindWaitingRoom(int roomId)
+        {
+            lock (_lock)
+            {
+                WaitingRoom room = null;
+                if (_waitingRooms.TryGetValue(roomId, out room))
+                    return room;
 
-				return null;
-			}
-		}
-	}
+                return null;
+
+                //if (roomId == 0)
+                //{
+                //    room = _waitingRooms.Values.FirstOrDefault(room => room._players.Count < 4);
+                //}
+                //else
+                //{
+                //    if (_waitingRooms.TryGetValue(roomId, out room))
+                //        return room;
+                //}
+
+                //if (room == null)
+                //{
+                //    room = AddWaitingRoom();
+                //}
+
+                //return room;
+            }
+        }
+
+        public GameRoom FindGameRoom(int roomId)
+        {
+            lock (_lock)
+            {
+                GameRoom room = null;
+                if (_gameRooms.TryGetValue(roomId, out room))
+                    return room;
+
+                return null;
+            }
+        }
+    }
 }

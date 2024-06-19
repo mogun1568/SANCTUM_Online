@@ -36,7 +36,11 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.CFirstPersonMode, MakePacket<C_FirstPersonMode>);
 		_handler.Add((ushort)MsgId.CFirstPersonMode, PacketHandler.C_FirstPersonModeHandler);		
 		_onRecv.Add((ushort)MsgId.CShoot, MakePacket<C_Shoot>);
-		_handler.Add((ushort)MsgId.CShoot, PacketHandler.C_ShootHandler);
+		_handler.Add((ushort)MsgId.CShoot, PacketHandler.C_ShootHandler);		
+		_onRecv.Add((ushort)MsgId.CEnterRoom, MakePacket<C_EnterRoom>);
+		_handler.Add((ushort)MsgId.CEnterRoom, PacketHandler.C_EnterRoomHandler);		
+		_onRecv.Add((ushort)MsgId.CRoomList, MakePacket<C_RoomList>);
+		_handler.Add((ushort)MsgId.CRoomList, PacketHandler.C_RoomListHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

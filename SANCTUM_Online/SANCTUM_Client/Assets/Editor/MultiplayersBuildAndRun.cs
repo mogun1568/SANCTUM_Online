@@ -47,13 +47,14 @@ public class MultiplayersBuildAndRun
 
     static string[] GetScenePaths()
     {
-        string[] scenes = new string[1];
+        string[] scenes = new string[2];
 
         //for (int i = 0; i < scenes.Length; i++)
         //{
         //    scenes[i] = EditorBuildSettings.scenes[i].path;
         //}
         scenes[0] = EditorBuildSettings.scenes[2].path;
+        scenes[1] = EditorBuildSettings.scenes[3].path;
 
         return scenes;
     }

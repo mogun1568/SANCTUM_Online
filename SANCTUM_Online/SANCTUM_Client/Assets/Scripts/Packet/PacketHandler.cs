@@ -11,7 +11,11 @@ class PacketHandler
     public static void S_EnterGameHandler(PacketSession session, IMessage packet)
     {
         S_EnterGame enterGamePacket = packet as S_EnterGame;
-        Managers.Object.Add(enterGamePacket.Player, myMap: true);
+
+        if (enterGamePacket.IsGameRoom)
+            Managers.Object.Add(enterGamePacket.Player, myMap: true);
+        else
+            Managers.Object.roomAdd(enterGamePacket.Player, myMap: true);
     }
 
     public static void S_LeaveGameHandler(PacketSession session, IMessage packet)
@@ -34,7 +38,17 @@ class PacketHandler
         S_Despawn despawnPacket = packet as S_Despawn;
         foreach (int id in despawnPacket.ObjectIds)
         {
+            Managers.Object.MyRoom.exit(id);
             Managers.Object.Remove(id);
+        }
+    }
+
+    public static void S_RoomListHandler(PacketSession session, IMessage packet)
+    {
+        S_RoomList roomListPacket = packet as S_RoomList;
+        foreach (RoomInfo ri in roomListPacket.RoomList)
+        {
+            Managers.Object.RoomList.UpdateRoomList(ri);
         }
     }
 
@@ -54,8 +68,12 @@ class PacketHandler
             return;
         }
 
-        Managers.Game.GameStartFlag = true;
+        Managers.UI.ClosePopupUI();
+        Managers.UI.ShowSceneUI<UI_Scene>("MainUI");
+        GameObject invenUI = Managers.UI.ShowSceneUI<UI_Inven>("InvenUI").gameObject;
+        Managers.Game.invenUI = invenUI;
         Managers.UI.SelectItem.LoadInventory(gameStartPacket.PlayerId);
+        Managers.Game.GameStartFlag = true;
     }
 
     public static void S_CreateMapHandler(PacketSession session, IMessage packet)

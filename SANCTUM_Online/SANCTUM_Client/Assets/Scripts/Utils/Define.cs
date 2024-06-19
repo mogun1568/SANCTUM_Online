@@ -8,7 +8,9 @@ public class Define
     {
         Unknown,
         MainMenu,
-        GamePlay
+        GamePlay,
+        MultiPlay,
+        Room
         /*Login,
         Lobby,
         Game*/

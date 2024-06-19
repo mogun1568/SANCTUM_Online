@@ -58,7 +58,7 @@ namespace Server
                 MyPlayer.Session = this;
             }
 
-            GameRoom room = RoomManager.Instance.Find(1);
+            WaitingRoom room = RoomManager.Instance.FindWaitingRoom(1);
             room.Push(room.EnterGame, MyPlayer);
         }
 
@@ -69,8 +69,16 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
-            GameRoom room = RoomManager.Instance.Find(1);
-            room.Push(room.LeaveGame, MyPlayer.Info.ObjectId);
+            if (MyPlayer.Room != null)
+            {
+                GameRoom room = RoomManager.Instance.FindGameRoom(MyPlayer.Room.RoomId);
+                room.Push(room.LeaveGame, MyPlayer.Info.ObjectId);
+            }
+            else
+            {
+                WaitingRoom waitingRoom = RoomManager.Instance.FindWaitingRoom(MyPlayer.WaitingRoom.RoomId);
+                waitingRoom.Push(waitingRoom.LeaveGame, MyPlayer.Info.ObjectId);
+            }
 
             SessionManager.Instance.Remove(this);
 

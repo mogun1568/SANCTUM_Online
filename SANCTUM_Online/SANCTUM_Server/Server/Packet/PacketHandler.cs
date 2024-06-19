@@ -9,6 +9,46 @@ using System.Text;
 
 class PacketHandler
 {
+    public static void C_RoomListHandler(PacketSession session, IMessage packet)
+    {
+        C_RoomList roomListPacket = packet as C_RoomList;
+        ClientSession clientSession = session as ClientSession;
+
+        Player player = clientSession.MyPlayer;
+        if (player == null)
+        {
+            return;
+        }
+
+        WaitingRoom room = player.WaitingRoom;
+        if (room == null)
+        {
+            return;
+        }
+
+        room.Push(room.HandleRoomList, player, roomListPacket);
+    }
+
+    public static void C_EnterRoomHandler(PacketSession session, IMessage packet)
+    {
+        C_EnterRoom enterRoomPacket = packet as C_EnterRoom;
+        ClientSession clientSession = session as ClientSession;
+
+        Player player = clientSession.MyPlayer;
+        if (player == null)
+        {
+            return;
+        }
+
+        WaitingRoom room = player.WaitingRoom;
+        if (room == null)
+        {
+            return;
+        }
+
+        room.Push(room.HandleEnterRoom, player, enterRoomPacket);
+    }
+
     public static void C_GameStartHandler(PacketSession session, IMessage packet)
     {
         C_GameStart gameStartPacket = packet as C_GameStart;

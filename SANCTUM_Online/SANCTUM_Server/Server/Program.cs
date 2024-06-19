@@ -20,7 +20,21 @@ namespace Server.Game
         static Listener _listener = new Listener();
         static List<System.Timers.Timer> _timers = new List<System.Timers.Timer>();
 
-        static void TickRoom(GameRoom room, int tick = 100)
+        public static void TickWaitingRoom(WaitingRoom room, int tick = 100)
+        {
+            var timer = new System.Timers.Timer();
+            timer.Interval = tick;
+            timer.Elapsed += ((s, e) => { room.Update(); });
+            timer.AutoReset = true;
+            timer.Enabled = true;
+
+            _timers.Add(timer);
+
+            // 끄고 싶을 때
+            //timer.Stop();
+        }
+
+        public static void TickRoom(GameRoom room, int tick = 100)
         {
             var timer = new System.Timers.Timer();
             timer.Interval = tick;
@@ -39,8 +53,8 @@ namespace Server.Game
             ConfigManager.LoadConfig();
             DataManager.LoadData();
 
-            GameRoom room = RoomManager.Instance.Add();
-            TickRoom(room, 50);
+            WaitingRoom room = RoomManager.Instance.AddWaitingRoom();
+            TickWaitingRoom(room, 50);
 
             // DNS (Domain Name System)
             string host = Dns.GetHostName();
