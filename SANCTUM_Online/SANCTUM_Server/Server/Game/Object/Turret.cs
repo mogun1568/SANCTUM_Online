@@ -91,6 +91,9 @@ namespace Server.Game
             // 가까운 순으로 수정할까 고민 중
             Enemy target = Room.FindEnemy(e =>
             {
+                if (e.State == CreatureState.Die)
+                    return false;
+
                 float dist = Vector3.Distance(Pos, e.Pos);
                 return dist <= Range;
             });
@@ -106,7 +109,7 @@ namespace Server.Game
         protected virtual void UpdateAttacking()
         {
             // FireRate마다 총알이 나가지 않는 이유는 여기서 return되는 경우(순서를 위로해서 해결)
-            if (_target == null || _target.Room != Room)
+            if (_target == null || _target.Room != Room || _target.State == CreatureState.Die)
             {
                 _target = null;
                 State = CreatureState.Idle;

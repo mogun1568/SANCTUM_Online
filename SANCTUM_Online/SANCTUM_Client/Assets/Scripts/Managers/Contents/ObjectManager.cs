@@ -157,10 +157,20 @@ public class ObjectManager
             return;
         }
 
-        //if (go.GetComponent<Turret>() != null)
-        //{
-        //    Util.FindChild(go, "Camera", true)?.SetActive(false);
-        //}
+        GameObjectType got = GetObjectTypeById(id);
+        switch (got)
+        {
+            case GameObjectType.Player:
+                MyRoom.exit(id);
+                break;
+            case GameObjectType.Turret:
+                Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
+                Managers.Resource.Instantiate("Tower/Prefab/Void Explosion", go.transform.position, Quaternion.identity);
+                break;
+            case GameObjectType.Enemy:
+                Managers.Resource.Instantiate("DeathEffect", go.transform.position, Quaternion.identity);
+                break;
+        }
 
         _objects.Remove(id);
         Managers.Resource.Destroy(go);

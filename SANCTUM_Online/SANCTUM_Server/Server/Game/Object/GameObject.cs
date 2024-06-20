@@ -157,6 +157,9 @@ namespace Server.Game
             if (Room == null)
                 return;
 
+            if (State == CreatureState.Die || Stat.Hp <= 0)
+                return;
+
             Stat.Hp = Math.Max(Stat.Hp - damage, 0);
             Console.WriteLine($"Hit ! {Id}, {Stat.Hp}");
 
@@ -176,6 +179,8 @@ namespace Server.Game
             if (Room == null)
                 return;
 
+            State = CreatureState.Die;
+
             if (IsFPM && ObjectManager.GetObjectTypeById(Id) == GameObjectType.Turret)
             {
                 Player player = master as Player;
@@ -194,7 +199,10 @@ namespace Server.Game
             diePacket.AttackerId = attacker.Id;
             Room.Broadcast(diePacket);
 
-            Room.Push(Room.LeaveGame, Id);
+            if (ObjectManager.GetObjectTypeById(Id) == GameObjectType.Enemy)
+                Room.PushAfter(3000, Room.LeaveGame, Id);
+            else
+                Room.Push(Room.LeaveGame, Id);
         }
     }
 }

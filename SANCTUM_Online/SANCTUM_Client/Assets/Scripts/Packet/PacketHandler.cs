@@ -38,7 +38,6 @@ class PacketHandler
         S_Despawn despawnPacket = packet as S_Despawn;
         foreach (int id in despawnPacket.ObjectIds)
         {
-            Managers.Object.MyRoom.exit(id);
             Managers.Object.Remove(id);
         }
     }

@@ -28,6 +28,8 @@ namespace Server.Game
                 return;
             }
 
+            Console.WriteLine(State);
+
             switch (State)
             {
                 case CreatureState.Moving:
@@ -153,7 +155,7 @@ namespace Server.Game
 
         protected virtual void UpdateDie()
         {
-            Room.Push(Room.LeaveGame, Id);
+            
         }
 
         public async Task OnDotDamaged(GameObject attacker, int damage)
