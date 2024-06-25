@@ -73,6 +73,7 @@ class PacketHandler
         Managers.Game.invenUI = invenUI;
         Managers.UI.SelectItem.LoadInventory(gameStartPacket.PlayerId);
         Managers.Game.GameStartFlag = true;
+        Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
     }
 
     public static void S_CreateMapHandler(PacketSession session, IMessage packet)
@@ -154,7 +155,17 @@ class PacketHandler
         }
 
         bc.Stat = changeStatPacket.StatInfo;
-        //Debug.Log(bc.Hp);
+        
+        if (changeStatPacket.IsItem)
+            Managers.Sound.Play("Effects/Soundiron_Shimmer_Charms_Short_07 [2023-06-13 121009]", Define.Sound.Effect);
+
+        Debug.Log(bc.Stat.Name);
+        if (bc.Stat.Name == "Water")
+        {
+            Transform healEffect = go.transform.GetChild(go.transform.childCount - 1);
+            healEffect.localScale = new Vector3(bc.Stat.Range * 2, healEffect.localScale.y, bc.Stat.Range * 2);
+            Debug.Log(bc.Stat.Range);
+        }
     }
 
     public static void S_DieHandler(PacketSession session, IMessage packet)
@@ -230,4 +241,16 @@ class PacketHandler
 
         Managers.Object.MyMap.StartlevelUpCoroutine();
     }
+
+    public static void S_GameOverHandler(PacketSession session, IMessage packet)
+    {
+        S_GameOver gameOverPacket = packet as S_GameOver;
+
+        if (gameOverPacket.PlayerId != Managers.Object.MyMap.Id)
+            return;
+
+        Managers.UI.CloseAllPopupUI();
+        GameOver go = Managers.UI.ShowPopupUI<GameOver>("GameOverUI(Muity)");
+        go.RankText(gameOverPacket.Rank);
+     }
 }

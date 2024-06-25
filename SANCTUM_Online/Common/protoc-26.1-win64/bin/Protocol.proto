@@ -29,6 +29,7 @@ enum MsgId {
   C_ENTER_ROOM = 21;
   C_ROOM_LIST = 22;
   S_ROOM_LIST = 23;
+  S_GAME_OVER = 24;
 }
 
 enum CreatureState {
@@ -91,6 +92,7 @@ message S_Move {
 message S_ChangeStat {
   int32 objectId = 1;
   StatInfo statInfo = 2;
+  bool isItem = 3;
 }
 
 message S_Die {
@@ -155,6 +157,11 @@ message C_RoomList {
 message S_RoomList {
   int32 playerId = 1;
   repeated RoomInfo roomList = 2;
+}
+
+message S_GameOver {
+  int32 playerId = 1;
+  int32 rank = 2;
 }
 
 message ObjectInfo {

@@ -28,8 +28,6 @@ namespace Server.Game
                 return;
             }
 
-            Console.WriteLine(State);
-
             switch (State)
             {
                 case CreatureState.Moving:
@@ -119,12 +117,13 @@ namespace Server.Game
         {
             // TODO : 플레어서 life 감소
             Player owner = Owner as Player;
-            owner.Stat.Hp -= Exp;
+            // OnDamaged로 변경 예정
+            owner.OnDamaged(this, Exp);
 
-            S_ChangeStat changeStatPacket = new S_ChangeStat();
-            changeStatPacket.ObjectId = owner.Id;
-            changeStatPacket.StatInfo = owner.Stat;
-            owner.Session.Send(changeStatPacket);
+            //S_ChangeStat changeStatPacket = new S_ChangeStat();
+            //changeStatPacket.ObjectId = owner.Id;
+            //changeStatPacket.StatInfo = owner.Stat;
+            //owner.Session.Send(changeStatPacket);
 
             Room.Push(Room.LeaveGame, Id);
         }

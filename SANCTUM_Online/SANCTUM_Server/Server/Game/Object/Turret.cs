@@ -87,6 +87,12 @@ namespace Server.Game
                 return;
             _nextSearchTick = Environment.TickCount64 + 1000;
 
+            if (Stat.Name == "Water")
+            {
+                FindTowersInRange();
+                return;
+            }
+
             // 현재는 가장 가까운 위치가 아닌 빨리 생성된 순으로 찾음
             // 가까운 순으로 수정할까 고민 중
             Enemy target = Room.FindEnemy(e =>
@@ -191,6 +197,40 @@ namespace Server.Game
             arrow.Master = Master;
 
             Room.Push(Room.EnterGame, arrow);
+        }
+
+        void FindTowersInRange()
+        {
+            List<Turret> targets = Room.FindTurrets(t =>
+            {
+                if (t == this)
+                    return false;
+
+                float dist = Vector3.Distance(Pos, t.Pos);
+                return dist <= Range;
+            });
+
+            foreach (Turret t in targets)
+            {
+                Heal(t, (int)(10 * Attack));
+            }
+        }
+
+        void Heal(Turret turret, int healAmount)
+        {
+            if (turret.Stat.Hp + healAmount > turret.Stat.MaxHp)
+            {
+                turret.Stat.Hp = turret.Stat.MaxHp;
+            }
+            else
+            {
+                turret.Stat.Hp += healAmount;
+            }
+
+            S_ChangeStat changeStatPacket = new S_ChangeStat();
+            changeStatPacket.ObjectId = turret.Id;
+            changeStatPacket.StatInfo = turret.Stat;
+            Room.Broadcast(changeStatPacket);
         }
 
         public override void OnDead(GameObject attacker)

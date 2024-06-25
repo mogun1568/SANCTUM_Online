@@ -87,7 +87,7 @@ namespace Server.Game
             // 타겟에게 도달했다면
             Enemy target = Room.FindEnemy(e =>
             {
-                dist = Vector3.Distance(Pos, e.Pos + Center(e.Info.Name));
+                dist = Vector3.Distance(Pos, e.Pos + Center(e.Stat.Type));
                 return dist <= 2f;
             });
 
@@ -125,11 +125,11 @@ namespace Server.Game
             Room.Broadcast(movePacket);
         }
 
-        Vector3 Center(string name)
+        Vector3 Center(string type)
         {
             Vector3 v = new Vector3();
 
-            if (name == "SalarymanDefault")
+            if (type == "Boss")
                 v.y = 3.5f;
             else
                 v.y = 1.5f;

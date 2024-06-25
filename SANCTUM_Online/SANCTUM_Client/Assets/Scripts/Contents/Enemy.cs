@@ -26,4 +26,12 @@ public class Enemy : CreatureController
         Vector3 rotation = Quaternion.Lerp(transform.rotation, lookRotation, Time.deltaTime * _turnSpeed).eulerAngles;
         transform.rotation = Quaternion.Euler(0f, rotation.y, 0f);
     }
+
+    public override void OnDead()
+    {
+        base.OnDead();
+
+        if (name == "SalarymanDefault")
+            Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
+    }
 }

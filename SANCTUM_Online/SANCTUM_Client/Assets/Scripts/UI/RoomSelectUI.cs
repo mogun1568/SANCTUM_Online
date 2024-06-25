@@ -40,6 +40,7 @@ public class RoomSelectUI : UI_Scene
     public void Home()
     {
         Managers.Scene.sceneFader.FadeTo(Define.Scene.MainMenu);
+        Managers.Network.Disconnect();
     }
 
     public void CreateOrJoinRoom(int roomId = default)

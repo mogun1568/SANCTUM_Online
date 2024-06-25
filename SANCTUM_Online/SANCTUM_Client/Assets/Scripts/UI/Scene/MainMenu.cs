@@ -17,7 +17,7 @@ public class MainMenu : UI_Scene
         QuitButton
     }
 
-    void Start()
+    void Awake()
     {
         base.Init();
 
@@ -29,13 +29,12 @@ public class MainMenu : UI_Scene
         BindEvent(GetButton((int)Buttons.PlayButton).gameObject, (PointerEventData data) => { Play(); }, Define.UIEvent.Click);
         BindEvent(GetButton((int)Buttons.SettingButton).gameObject, (PointerEventData data) => { Setting(); }, Define.UIEvent.Click);
         BindEvent(GetButton((int)Buttons.QuitButton).gameObject, (PointerEventData data) => { Quit(); }, Define.UIEvent.Click);
-
     }
 
     public void Play()
     {
         Managers.Sound.Play("Effects/UiClickLow", Define.Sound.Effect);
-        Managers.Scene.sceneFader.FadeTo(Define.Scene.GamePlay);
+        Managers.Scene.sceneFader.FadeTo(Define.Scene.Room);
         //sceneFader.FadeTo(GameToLoad);
     }
 

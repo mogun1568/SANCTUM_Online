@@ -150,6 +150,7 @@ namespace Server.Game
             S_ChangeStat changeStatPacket = new S_ChangeStat();
             changeStatPacket.ObjectId = _turret.Id;
             changeStatPacket.StatInfo = _turret.Stat;
+            changeStatPacket.IsItem = true;
             Room.Broadcast(changeStatPacket);
 
             Console.WriteLine(_turret.Stat);

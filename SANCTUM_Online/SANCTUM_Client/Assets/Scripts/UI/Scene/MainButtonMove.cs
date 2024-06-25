@@ -10,7 +10,7 @@ public class MainButtonMove : UI_Scene
 
     bool RunningScaleChange = false;
 
-    void Start()
+    void Awake()
     {
         BindEvent(gameObject, (PointerEventData data) => { OnPointerEnter(); }, Define.UIEvent.Enter);
         BindEvent(gameObject, (PointerEventData data) => { OnPointerExit(); }, Define.UIEvent.Exit);

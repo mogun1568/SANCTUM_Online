@@ -454,6 +454,19 @@ namespace Server.Game
             return null;
         }
 
+        public List<Turret> FindTurrets(Func<GameObject, bool> condition)
+        {
+            List<Turret> foundTurrets = new List<Turret>();
+
+            foreach (Turret turret in _turrets.Values)
+            {
+                if (condition.Invoke(turret))
+                    foundTurrets.Add(turret);
+            }
+
+            return foundTurrets;
+        }
+
         public void Broadcast(IMessage packet)
         {
             // 매번 lock을 거는 것은 멀티쓰레드의 의미가 희석됨

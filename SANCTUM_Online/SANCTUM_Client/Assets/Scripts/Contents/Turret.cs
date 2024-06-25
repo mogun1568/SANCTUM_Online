@@ -11,6 +11,7 @@ public class Turret : BaseController
     {
         _partToRotate = Util.FindChild(gameObject, "PartToRotate", true)?.transform;
         Util.FindChild(gameObject, "Camera", true)?.SetActive(false);
+        Managers.Resource.Instantiate("Tower/Prefab/Launch Smoke", transform.position, Quaternion.identity);
     }
 
     public override void Update()
@@ -38,5 +39,14 @@ public class Turret : BaseController
         Quaternion lookRotation = Quaternion.LookRotation(dir);
         Vector3 rotation = Quaternion.Lerp(_partToRotate.rotation, lookRotation, Time.deltaTime * _turnSpeed).eulerAngles;
         _partToRotate.rotation = Quaternion.Euler(0f, rotation.y, 0f);
+    }
+
+    public override void OnDead()
+    {
+        base.OnDead();
+
+        Debug.Log("explosion");
+        Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
+        Managers.Resource.Instantiate("Tower/Prefab/Void Explosion", transform.position, Quaternion.identity);
     }
 }

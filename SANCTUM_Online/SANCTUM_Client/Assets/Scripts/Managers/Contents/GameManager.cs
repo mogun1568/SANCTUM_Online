@@ -141,15 +141,15 @@ public class GameManager
 
         if (!isPopup)
         {
-            Managers.UI.ShowPopupUI<PauseMenu>("PauseMenuUI");
+            Managers.UI.ShowPopupUI<PauseMenu>("PauseMenuUI(Multy)");
             isPopup = true;
-            Stop();
+            //Stop();
         }
         else
         {
             Managers.UI.ClosePopupUI();
             isPopup = false;
-            Resume();
+            //Resume();
             //GameManager.instance.soundManager.Play("Effects/UiClickLow", SoundManager.Sound.Effect);
         }
     }

@@ -3,6 +3,7 @@ using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -24,7 +25,8 @@ public class ObjectManager
     {
         if (myMap)
         {
-            RoomList = Managers.UI.ShowSceneUI<RoomSelectUI>("RoomSelectUI");
+            Debug.Log("Join");
+            //RoomList = Managers.UI.ShowSceneUI<RoomSelectUI>("RoomSelectUI");
         }
     }
 
@@ -90,6 +92,13 @@ public class ObjectManager
             tc.Id = info.ObjectId;
             tc.PosInfo = info.PosInfo;
             tc.Stat = info.StatInfo;
+
+            if (info.StatInfo.Name == "Water")
+            {
+                Transform healEffect = go.transform.GetChild(go.transform.childCount - 1);
+                healEffect.localScale = new Vector3(tc.Stat.Range * 2, healEffect.localScale.y, tc.Stat.Range * 2);
+            }
+
             Debug.Log("Turret build!");
         }
         else if (objectType == GameObjectType.Enemy)
@@ -104,6 +113,10 @@ public class ObjectManager
             ec.Id = info.ObjectId;
             ec.PosInfo = info.PosInfo;
             ec.Stat = info.StatInfo;
+
+            if (ec.Stat.Type == "Boss")
+                Managers.Sound.Play("Bgms/battle-of-the-dragons-8037", Define.Sound.Bgm);
+
             //ec.SyncPos(new Vector3(0, 1, 0));
 
             /*GameObject monster = Managers.Resource.Instantiate($"Monster/{info.Name}", 
@@ -164,11 +177,15 @@ public class ObjectManager
                 MyRoom.exit(id);
                 break;
             case GameObjectType.Turret:
-                Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
-                Managers.Resource.Instantiate("Tower/Prefab/Void Explosion", go.transform.position, Quaternion.identity);
+                //Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
+                //Managers.Resource.Instantiate("Tower/Prefab/Void Explosion", go.transform.position, Quaternion.identity);
                 break;
             case GameObjectType.Enemy:
+                Managers.Sound.Play("Effects/Monster_Die", Define.Sound.Effect);
                 Managers.Resource.Instantiate("DeathEffect", go.transform.position, Quaternion.identity);
+
+                //if (go.name == "SalarymanDefault")
+                //    Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
                 break;
         }
 

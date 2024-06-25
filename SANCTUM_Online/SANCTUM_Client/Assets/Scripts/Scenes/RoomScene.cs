@@ -14,6 +14,8 @@ public class RoomScene : BaseScene
         base.Init();
         Managers.Network.Init();
         SceneType = Define.Scene.Room;
+
+        Managers.Object.RoomList = Managers.UI.ShowSceneUI<RoomSelectUI>("RoomSelectUI");
     }
 
     public override void Clear()

@@ -14,7 +14,7 @@ public class PauseMenu : UI_Popup
     {
         Button_Setting,
         Button_Continue,
-        Button_Retry,
+        //Button_Retry,
         Button_GoToMenu
     }
 
@@ -26,7 +26,7 @@ public class PauseMenu : UI_Popup
 
         BindEvent(GetButton((int)Buttons.Button_Setting).gameObject, (PointerEventData data) => { Setting(); }, Define.UIEvent.Click);
         BindEvent(GetButton((int)Buttons.Button_Continue).gameObject, (PointerEventData data) => { Managers.Game.Toggle(); }, Define.UIEvent.Click);
-        BindEvent(GetButton((int)Buttons.Button_Retry).gameObject, (PointerEventData data) => { Retry(); }, Define.UIEvent.Click);
+        //BindEvent(GetButton((int)Buttons.Button_Retry).gameObject, (PointerEventData data) => { Retry(); }, Define.UIEvent.Click);
         BindEvent(GetButton((int)Buttons.Button_GoToMenu).gameObject, (PointerEventData data) => { Menu(); }, Define.UIEvent.Click);
     }
 
@@ -40,6 +40,7 @@ public class PauseMenu : UI_Popup
     {
         Managers.Game.Toggle();
         Managers.Scene.sceneFader.FadeTo(Define.Scene.MainMenu);
+        Managers.Network.Disconnect();
     }
 
     public void Setting()

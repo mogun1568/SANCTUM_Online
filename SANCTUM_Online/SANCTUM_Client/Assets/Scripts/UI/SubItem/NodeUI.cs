@@ -137,9 +137,14 @@ public class NodeUI : UI_Popup
 
         GetObject((int)GameObjects.HpBar).GetComponent<Slider>().value = curHP / maxHP;
 
-        
-        float bulletAttack = Managers.Data.ProjectileDict[bulletName].Attack;
-        GetText((int)Texts.damageText).text = (bulletAttack * _turret.Stat.Attack).ToString("F0");
+        if (_turret.Stat.Name == "Water")
+            GetText((int)Texts.damageText).text = (10 * _turret.Stat.Attack).ToString("F0");
+        else
+        {
+            float bulletAttack = Managers.Data.ProjectileDict[bulletName].Attack;
+            GetText((int)Texts.damageText).text = (bulletAttack * _turret.Stat.Attack).ToString("F0");
+        }
+            
         GetText((int)Texts.fireRateText).text = _turret.Stat.FireRate.ToString("F1");
 
         sphere.localScale = new Vector3(_turret.Stat.Range * 2, sphere.localScale.y, _turret.Stat.Range * 2);
