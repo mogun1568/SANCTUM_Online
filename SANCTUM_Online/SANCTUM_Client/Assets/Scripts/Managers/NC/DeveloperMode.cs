@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DeveloperMode : MonoBehaviour
 {
+    /*
     [SerializeField] NewMap map;
 
     void Start()
@@ -69,4 +70,5 @@ public class DeveloperMode : MonoBehaviour
             Managers.Scene.sceneFader.FadeTo(Define.Scene.MainMenu);
         }
     }
+    */
 }

@@ -7,6 +7,7 @@ using Google.Protobuf.Protocol;
 
 public class WaveSpawner : MonoBehaviour
 {
+    /*
     //public static int EnemiesAlive;
 
     //public GameObject[] monsters;
@@ -184,5 +185,6 @@ public class WaveSpawner : MonoBehaviour
     //    spawnEnemyPacket.EnemyName = enemyName;
     //    Managers.Network.Send(spawnEnemyPacket);
     //}
+    */
 }
 

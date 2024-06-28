@@ -147,10 +147,12 @@ public class DragItem : UI_Base
     {
         if (itemInfo.ItemType == "WorldOnlyItem")
         {
-            Managers.Sound.Play("Effects/userLife", Define.Sound.Effect);
+            //Managers.Sound.Play("Effects/userLife", Define.Sound.Effect);
             Managers.Select.SelectItemToUse(gameObject, itemInfo);
-            Managers.Game.Lives++;
-            Managers.Select.DestroyItemUI();
+
+            C_InvenUpdate invenUpdatePacket = new C_InvenUpdate();
+            invenUpdatePacket.ItemName = itemInfo.ItemName;
+            Managers.Network.Send(invenUpdatePacket);
         }
     }
 

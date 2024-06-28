@@ -1,12 +1,13 @@
 ﻿using Google.Protobuf.Protocol;
+using Server.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Server.Game
 {
@@ -16,7 +17,7 @@ namespace Server.Game
 
         Dictionary<string, int> _invenDict = new Dictionary<string, int>();
         List<string> _items = new List<string>();
-        int _ownerId;
+        Player _master;
 
         #region INVENTORY_EDITOR
 
@@ -28,7 +29,7 @@ namespace Server.Game
 
         void GenerateByItem(string pathPrefix)
         {
-            using (var writer = File.CreateText($"{pathPrefix}/Inventory_{_ownerId}.txt"))
+            using (var writer = File.CreateText($"{pathPrefix}/Inventory_{_master.Id}.txt"))
             {
                 writer.WriteLine(_invenDict.Count);
 
@@ -42,9 +43,9 @@ namespace Server.Game
 
         #endregion
 
-        public void Init(int id, GameRoom room)
+        public void Init(Player player, GameRoom room)
         {
-            _ownerId = id;
+            _master = player;
             Room = room;
 
             for (int i = 0; i < 5; i++)
@@ -52,6 +53,8 @@ namespace Server.Game
                 AddItem("StandardTower");
                 AddItem("Water");
                 AddItem("DamageUp");
+                AddItem("RangeUp");
+                AddItem("LifeRecovery");
             }
 
             GenerateInventory();
@@ -76,15 +79,42 @@ namespace Server.Game
 
         public void UseItem(string itemName, int nodeId, PositionInfo pos)
         {
-            // TODO : Find가 문제가 될지 안될지 모름
-            Node node = Room.Find<Node>(nodeId);
-            if (node == null)
-                return;
-
-            if (!node.CanUseItem(itemName, pos))
+            ItemInfo itemInfo = null;
+            if (DataManager.ItemDict.TryGetValue(itemName, out itemInfo) == false)
             {
-                Console.WriteLine("Can't use item");
+                Console.WriteLine("itemInfo is null");
                 return;
+            }
+
+            if (itemInfo.ItemType != "WorldOnlyItem")
+            {
+                // TODO : Find가 문제가 될지 안될지 모름
+                Node node = Room.Find<Node>(nodeId);
+                if (node == null)
+                    return;
+
+                if (!node.CanUseItem(itemInfo, pos))
+                {
+                    Console.WriteLine("Can't use item");
+                    return;
+                }
+            }
+            else
+            {
+                switch (itemInfo.ItemName)
+                {
+                    case "LifeRecovery":
+                        Console.WriteLine($"Life Recovery {_master.Stat.Hp} -> {_master.Stat.Hp + 1}");
+                        _master.Stat.Hp += 1;
+                        break;
+                }
+
+                S_ChangeStat changeStatPacket = new S_ChangeStat();
+                changeStatPacket.ObjectId = _master.Id;
+                changeStatPacket.StatInfo = _master.Stat;
+                changeStatPacket.IsItem = false;    // 따로 효과음이 있기 때문
+                changeStatPacket.ChangeStat = ChangeStat.UserLifeUp;
+                Room.Broadcast(changeStatPacket);
             }
 
             _invenDict[itemName]--;

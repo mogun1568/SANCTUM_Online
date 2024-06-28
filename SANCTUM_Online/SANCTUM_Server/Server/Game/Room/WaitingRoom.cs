@@ -138,6 +138,8 @@ namespace Server.Game
                 room = RoomManager.Instance.FindGameRoom(enterRoomPacket.RoomId);
             }
             room.Push(room.EnterGame, player);
+
+            Push(LeaveGame, player.Id);
         }
     }
 }

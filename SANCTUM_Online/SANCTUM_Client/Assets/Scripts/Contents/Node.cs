@@ -244,48 +244,48 @@ public class Node : BaseController
         Managers.UI.ShowPopupUI<FPSUI>("FPSModeUI");
     }
 
-    public void DemoliteTower()
-    {
-        // 현재 exp += 이 node의 returnExp; // 이 코드 추가 예정
-        int remainExp = Managers.Game.nextExp;
+    //public void DemoliteTower()
+    //{
+    //    // 현재 exp += 이 node의 returnExp; // 이 코드 추가 예정
+    //    int remainExp = Managers.Game.nextExp;
 
-        for (int i = 1; i < countItem / 2; i++)
-        {
-            remainExp += Mathf.RoundToInt(remainExp * 1.5f);
-            Debug.Log(remainExp);
+    //    for (int i = 1; i < countItem / 2; i++)
+    //    {
+    //        remainExp += Mathf.RoundToInt(remainExp * 1.5f);
+    //        Debug.Log(remainExp);
 
-            // 0/3 -> 0/5 -> 0/8
-        }
-        if (countItem % 2 != 0)
-        {
-            remainExp += remainExp / 2;
-            Debug.Log(remainExp);
+    //        // 0/3 -> 0/5 -> 0/8
+    //    }
+    //    if (countItem % 2 != 0)
+    //    {
+    //        remainExp += remainExp / 2;
+    //        Debug.Log(remainExp);
 
-            // 4/8
-        }
-        Managers.Game.GetExp(remainExp);
-        countItem = 0;
+    //        // 4/8
+    //    }
+    //    Managers.Game.GetExp(remainExp);
+    //    countItem = 0;
 
-        Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
-        PracticeEffect("Void Explosion");
+    //    Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
+    //    PracticeEffect("Void Explosion");
 
-        // 제거를 할 지 철거된 오브젝트로 변경할 지 고민 중
-        Managers.Resource.Destroy(turret);
-        turret = null;
+    //    // 제거를 할 지 철거된 오브젝트로 변경할 지 고민 중
+    //    Managers.Resource.Destroy(turret);
+    //    turret = null;
 
-        Debug.Log("Demolite Tower");
-    }
+    //    Debug.Log("Demolite Tower");
+    //}
 
-    void PracticeEffect(string name)
-    {
-        GameObject effect = Managers.Resource.Instantiate($"Tower/Prefab/{name}", GetBuildPosition(), Quaternion.identity);
-        StartCoroutine(DestroyEffect(effect));
-    }
+    //void PracticeEffect(string name)
+    //{
+    //    GameObject effect = Managers.Resource.Instantiate($"Tower/Prefab/{name}", GetBuildPosition(), Quaternion.identity);
+    //    StartCoroutine(DestroyEffect(effect));
+    //}
 
-    IEnumerator DestroyEffect(GameObject effect)
-    {
-        yield return new WaitForSeconds(5f);
+    //IEnumerator DestroyEffect(GameObject effect)
+    //{
+    //    yield return new WaitForSeconds(5f);
 
-        Managers.Resource.Destroy(effect);
-    }
+    //    Managers.Resource.Destroy(effect);
+    //}
 }

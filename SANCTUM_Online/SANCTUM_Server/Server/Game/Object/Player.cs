@@ -28,7 +28,7 @@ namespace Server.Game
         {
             SetMapStartPoint();
             Map.Init(this);
-            Inventory.Init(Id, Room);
+            Inventory.Init(this, Room);
         }
 
         int _countLevelUp = 0;

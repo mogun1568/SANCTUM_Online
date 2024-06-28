@@ -25,8 +25,7 @@ public class ObjectManager
     {
         if (myMap)
         {
-            Debug.Log("Join");
-            //RoomList = Managers.UI.ShowSceneUI<RoomSelectUI>("RoomSelectUI");
+            RoomList = Managers.UI.ShowSceneUI<RoomSelectUI>("RoomSelectUI");
         }
     }
 
@@ -170,11 +169,13 @@ public class ObjectManager
             return;
         }
 
+        // 정리 필요
         GameObjectType got = GetObjectTypeById(id);
         switch (got)
         {
             case GameObjectType.Player:
-                MyRoom.exit(id);
+                if (MyRoom != null)
+                    MyRoom.exit(id);
                 break;
             case GameObjectType.Turret:
                 //Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);

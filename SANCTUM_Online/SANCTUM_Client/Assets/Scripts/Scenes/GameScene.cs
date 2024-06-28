@@ -27,6 +27,7 @@ public class GameScene : BaseScene
 
         C_EnterRoom enterRoomPacket = new C_EnterRoom();
         enterRoomPacket.RoomId = Managers.Object.RoomList.RoomId;
+        Managers.Object.RoomList = null;
         Managers.Network.Send(enterRoomPacket);
 
         //Managers.Game.Init();
@@ -104,11 +105,6 @@ public class GameScene : BaseScene
         if (!Managers.Game.isLive)
         {
             return;
-        }
-
-        if (Managers.Game.Lives <= 0)
-        {
-            Managers.Game.EndGame();
         }
 
         /*if (!Managers.Game.isFPM && Managers.UI.getPopStackTop()?.name == "FPSModeUI")

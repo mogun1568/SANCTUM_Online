@@ -24,34 +24,24 @@ namespace Server.Game
         int _upgradedNum = 0;    // 원소 적용 (3번까지 가능)
         int _countItem = 0;      // 노드 위에 사용된 아이템 수
 
-        public bool CanUseItem(string itemName, PositionInfo pos)
-        {
-            ItemInfo itemInfo = null;
-            if (DataManager.ItemDict.TryGetValue(itemName, out itemInfo) == false)
-            {
-                Console.WriteLine("itemInfo is null");
-                return false;
-            }   
-
+        public bool CanUseItem(ItemInfo itemInfo, PositionInfo pos)
+        {  
             switch (itemInfo.ItemType)
             {
                 case "Tower":
                     if (_turret != null || _haveEnvironment)
                         return false;
-                    BuildTurret(itemName, pos);
+                    BuildTurret(itemInfo.ItemName, pos);
                     break;
                 case "Element":
                     if (_turret == null)
                         return false;
-                    ApplicateElement(itemName, pos);
+                    ApplicateElement(itemInfo.ItemName, pos);
                     break;
                 case "TowerOnlyItem":
                     if (_turret == null)
                         return false;
-                    UseTowerOnlyItem(itemName, itemInfo);
-                    break;
-                case "WorldOnlyItem":
-                    UseWolrdOnlyItem();
+                    UseTowerOnlyItem(itemInfo.ItemName, itemInfo);
                     break;
             }
 
@@ -151,14 +141,9 @@ namespace Server.Game
             changeStatPacket.ObjectId = _turret.Id;
             changeStatPacket.StatInfo = _turret.Stat;
             changeStatPacket.IsItem = true;
+            if (_turret.Stat.Name == "Water")
+                changeStatPacket.ChangeStat = ChangeStat.Water;
             Room.Broadcast(changeStatPacket);
-
-            Console.WriteLine(_turret.Stat);
-        }
-
-        void UseWolrdOnlyItem()
-        {
-
         }
 
         public void DemoliteTurret()

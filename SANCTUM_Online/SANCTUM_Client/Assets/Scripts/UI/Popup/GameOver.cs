@@ -39,14 +39,12 @@ public class GameOver : UI_Popup
     public void Retry()
     {
         Managers.Sound.Play("Effects/UiClickLow", Define.Sound.Effect);
-        Managers.Game.Resume();
         Managers.Scene.sceneFader.FadeTo(Define.Scene.GamePlay);
     }
 
     public void Menu()
     {
         Managers.Sound.Play("Effects/UiClickLow", Define.Sound.Effect);
-        Managers.Game.Resume();
         Managers.Scene.sceneFader.FadeTo(Define.Scene.MainMenu);
         Managers.Network.Disconnect();
     }

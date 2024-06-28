@@ -255,6 +255,18 @@ namespace Server.Game
             }
         }
 
+        public void HandleLeaveRoom(Player player, C_LeaveRoom leaveRoomPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            WaitingRoom waitingRoom = RoomManager.Instance.FindWaitingRoom(1);
+
+            Push(LeaveGame, player.Id);
+        }
+
         public void HandleGameStart(Player player, C_GameStart gameStartPacket)
         {
             if (player == null)

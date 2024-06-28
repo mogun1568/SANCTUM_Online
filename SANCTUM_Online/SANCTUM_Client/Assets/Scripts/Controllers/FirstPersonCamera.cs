@@ -20,7 +20,7 @@ public class FirstPersonCamera : MonoBehaviour
 
     void OnEnable()
     {
-        Managers.Game.isFPM = true;
+        Managers.Object.MyMap.IsFPM = true;
         mainCamera = Camera.main.gameObject;
         mainCamera.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;

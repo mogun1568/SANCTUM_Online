@@ -49,6 +49,26 @@ class PacketHandler
         room.Push(room.HandleEnterRoom, player, enterRoomPacket);
     }
 
+    public static void C_LeaveRoomHandler(PacketSession session, IMessage packet)
+    {
+        C_LeaveRoom leaveRoomPacket = packet as C_LeaveRoom;
+        ClientSession clientSession = session as ClientSession;
+
+        Player player = clientSession.MyPlayer;
+        if (player == null)
+        {
+            return;
+        }
+
+        GameRoom room = player.Room;
+        if (room == null)
+        {
+            return;
+        }
+
+        room.Push(room.HandleLeaveRoom, player, leaveRoomPacket);
+    }
+
     public static void C_GameStartHandler(PacketSession session, IMessage packet)
     {
         C_GameStart gameStartPacket = packet as C_GameStart;

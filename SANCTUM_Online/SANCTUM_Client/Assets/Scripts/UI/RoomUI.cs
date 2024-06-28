@@ -36,14 +36,22 @@ public class RoomUI : UI_Popup
 
         Character = GetObject((int)GameObjects.Character);
 
-        BindEvent(GetButton((int)Buttons.Button_Back).gameObject, (PointerEventData data) => { Home(); }, Define.UIEvent.Click);
+        BindEvent(GetButton((int)Buttons.Button_Back).gameObject, (PointerEventData data) => { ReturnRoomSelect(); }, Define.UIEvent.Click);
         BindEvent(GetButton((int)Buttons.Button_Home).gameObject, (PointerEventData data) => { Home(); }, Define.UIEvent.Click);
         BindEvent(GetButton((int)Buttons.Button_Start).gameObject, (PointerEventData data) => { GameStart(); }, Define.UIEvent.Click);
     }
 
+    public void ReturnRoomSelect()
+    {
+        Managers.Scene.sceneFader.FadeTo(Define.Scene.Room);
+
+        C_LeaveRoom leaveRoomPacket = new C_LeaveRoom();
+        Managers.Network.Send(leaveRoomPacket);
+    }
+
     public void Home()
     {
-        Managers.Game.Toggle();
+        //Managers.Game.Toggle();
         Managers.Scene.sceneFader.FadeTo(Define.Scene.MainMenu);
     }
 

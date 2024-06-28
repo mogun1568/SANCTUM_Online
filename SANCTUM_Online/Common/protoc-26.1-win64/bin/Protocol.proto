@@ -27,9 +27,10 @@ enum MsgId {
   S_FIRST_PERSON_MODE = 19;
   C_SHOOT = 20;
   C_ENTER_ROOM = 21;
-  C_ROOM_LIST = 22;
-  S_ROOM_LIST = 23;
-  S_GAME_OVER = 24;
+  C_LEAVE_ROOM = 22;
+  C_ROOM_LIST = 23;
+  S_ROOM_LIST = 24;
+  S_GAME_OVER = 25;
 }
 
 enum CreatureState {
@@ -46,6 +47,12 @@ enum GameObjectType {
   TURRET = 3;
   ENEMY = 4;
   PROJECTILE = 5;
+}
+
+enum ChangeStat {
+  USER_LIFE_UP = 0;
+  USER_LIFE_DOWN = 1;
+  WATER = 2;
 }
 
 message S_EnterGame {
@@ -93,6 +100,7 @@ message S_ChangeStat {
   int32 objectId = 1;
   StatInfo statInfo = 2;
   bool isItem = 3;
+  ChangeStat changeStat = 4;
 }
 
 message S_Die {
@@ -149,6 +157,9 @@ message C_Shoot {
 
 message C_EnterRoom {
   int32 roomId = 1;
+}
+
+message C_LeaveRoom {
 }
 
 message C_RoomList {

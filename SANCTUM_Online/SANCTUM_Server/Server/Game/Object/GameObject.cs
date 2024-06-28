@@ -166,6 +166,8 @@ namespace Server.Game
             S_ChangeStat changeStatPacket = new S_ChangeStat();
             changeStatPacket.ObjectId = Id;
             changeStatPacket.StatInfo = Stat;
+            if (ObjectType == GameObjectType.Player)
+                changeStatPacket.ChangeStat = ChangeStat.UserLifeDown;
             Room.Broadcast(changeStatPacket);
 
             if (Stat.Hp <= 0)
