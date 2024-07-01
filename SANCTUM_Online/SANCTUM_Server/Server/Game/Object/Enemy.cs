@@ -207,7 +207,7 @@ namespace Server.Game
             if (ObjectManager.GetObjectTypeById(Id) == GameObjectType.Enemy)
             {
                 Player player = Owner as Player;
-                player.GetExp(Exp);
+                player.LevelManager.GetExp(Exp);
             }
         }
     }

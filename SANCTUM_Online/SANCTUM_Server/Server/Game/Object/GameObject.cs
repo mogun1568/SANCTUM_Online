@@ -183,19 +183,6 @@ namespace Server.Game
 
             State = CreatureState.Die;
 
-            if (IsFPM && ObjectManager.GetObjectTypeById(Id) == GameObjectType.Turret)
-            {
-                Player player = master as Player;
-
-                IsFPM = false;
-                player.IsFPM = false;
-
-                S_FirstPersonMode firstPersonMode = new S_FirstPersonMode();
-                firstPersonMode.PlayerId = player.Id;
-                firstPersonMode.TurretId = Id;
-                player.Session.Send(firstPersonMode);
-            }
-
             S_Die diePacket = new S_Die();
             diePacket.ObjectId = Id;
             diePacket.AttackerId = attacker.Id;

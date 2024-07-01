@@ -6,12 +6,9 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-using static Cinemachine.DocumentationSortingAttribute;
 
 public class GameScene : BaseScene
 {
-    //Coroutine co;
-
     void Start()
     {
         Init();
@@ -29,6 +26,8 @@ public class GameScene : BaseScene
         enterRoomPacket.RoomId = Managers.Object.RoomList.RoomId;
         Managers.Object.RoomList = null;
         Managers.Network.Send(enterRoomPacket);
+
+        Managers.Game._mainCamera = Camera.main;
 
         //Managers.Game.Init();
         //Managers.Scene.Init();
@@ -60,18 +59,18 @@ public class GameScene : BaseScene
     void Update()
     {
         // 확인용 (나중에 고쳐야됨 문제 많음)
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (Managers.Object._objects.Count >= 1 && !Managers.Game.GameStartFlag)
-            {
-                C_GameStart gameStartPacket = new C_GameStart();
-                Managers.Network.Send(gameStartPacket);
-            }
-        }
-        if (!Managers.Game.GameStartFlag)
-        {
-            return;
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    if (Managers.Object._objects.Count >= 1 && !Managers.Game.GameStartFlag)
+        //    {
+        //        C_GameStart gameStartPacket = new C_GameStart();
+        //        Managers.Network.Send(gameStartPacket);
+        //    }
+        //}
+        //if (!Managers.Game.GameStartFlag)
+        //{
+        //    return;
+        //}
 
         //if (Input.GetKeyDown(KeyCode.Z))
         //{
@@ -107,6 +106,37 @@ public class GameScene : BaseScene
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            int cameraDefault = Managers.Object.MyMap.MapDefaultSize * 2 - 24;
+            Managers.Game._mainCamera.transform.position = Managers.Object.MyMap.Pos + new Vector3(cameraDefault, 40, cameraDefault);
+        }
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            if (Managers.Object._players.Count < 2)
+                return;
+
+            int cameraDefault = Managers.Object._players[1].MapDefaultSize * 2 - 24;
+            Managers.Game._mainCamera.transform.position = Managers.Object._players[1].Pos + new Vector3(cameraDefault, 40, cameraDefault);
+        }
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            if (Managers.Object._players.Count < 3)
+                return;
+
+            int cameraDefault = Managers.Object._players[2].MapDefaultSize * 2 - 24;
+            Managers.Game._mainCamera.transform.position = Managers.Object._players[2].Pos + new Vector3(cameraDefault, 40, cameraDefault);
+        }
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            if (Managers.Object._players.Count < 4)
+                return;
+
+            int cameraDefault = Managers.Object._players[3].MapDefaultSize * 2 - 24;
+            Managers.Game._mainCamera.transform.position = Managers.Object._players[3].Pos + new Vector3(cameraDefault, 40, cameraDefault);
+        }
+
+
         /*if (!Managers.Game.isFPM && Managers.UI.getPopStackTop()?.name == "FPSModeUI")
         {
             Managers.UI.ClosePopupUI();
@@ -121,12 +151,10 @@ public class GameScene : BaseScene
         //    StartCoroutine(Managers.Game.WaitForItemSelection(Managers.Object.MyMap._countLevelUp));
         //    Managers.Object.MyMap._countLevelUp = 0;
         //}
-         
-        
+
+
 
         Managers.Game.gameTime += Time.deltaTime;
-
-
     }
 
     public override void Clear()

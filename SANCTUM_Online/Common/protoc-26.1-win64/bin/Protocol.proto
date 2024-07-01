@@ -19,18 +19,19 @@ enum MsgId {
   S_DIE = 11;
   C_INVEN_UPDATE = 12;
   S_INVEN_UPDATE = 13;
-  S_EXP_UPDATE = 14;
-  C_TURRET_U_I = 15;
-  S_TURRET_U_I = 16;
-  C_TURRET_DEMOLITE = 17;
-  C_FIRST_PERSON_MODE = 18;
-  S_FIRST_PERSON_MODE = 19;
-  C_SHOOT = 20;
-  C_ENTER_ROOM = 21;
-  C_LEAVE_ROOM = 22;
-  C_ROOM_LIST = 23;
-  S_ROOM_LIST = 24;
-  S_GAME_OVER = 25;
+  C_LEVEL_UP = 14;
+  S_LEVEL_UP = 15;
+  C_TURRET_U_I = 16;
+  S_TURRET_U_I = 17;
+  C_TURRET_DEMOLITE = 18;
+  C_FIRST_PERSON_MODE = 19;
+  S_FIRST_PERSON_MODE = 20;
+  C_SHOOT = 21;
+  C_ENTER_ROOM = 22;
+  C_LEAVE_ROOM = 23;
+  C_ROOM_LIST = 24;
+  S_ROOM_LIST = 25;
+  S_GAME_OVER = 26;
 }
 
 enum CreatureState {
@@ -50,9 +51,10 @@ enum GameObjectType {
 }
 
 enum ChangeStat {
-  USER_LIFE_UP = 0;
-  USER_LIFE_DOWN = 1;
-  WATER = 2;
+  DEFAULT = 0;
+  USER_LIFE_UP = 1;
+  USER_LIFE_DOWN = 2;
+  WATER = 3;
 }
 
 message S_EnterGame {
@@ -119,11 +121,13 @@ message S_InvenUpdate {
   int32 playerId = 1;
 }
 
-message S_ExpUpdate {
+message C_LevelUp {
+  bool isShow = 1;
+}
+
+message S_LevelUp {
   int32 playerId = 1;
-  int32 exp = 2;
-  int32 totalExp = 3;
-  int32 countLevelUp = 4;
+  repeated int32 itemIdxs = 2;
 }
 
 message C_TurretUI {

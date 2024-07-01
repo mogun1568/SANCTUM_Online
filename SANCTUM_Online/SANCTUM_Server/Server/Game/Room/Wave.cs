@@ -120,7 +120,7 @@ namespace Server.Game
                 changeStatPacket.ObjectId = player.Id;
                 changeStatPacket.StatInfo = player.Stat;
                 changeStatPacket.StatInfo.Level = _round;
-                player.Session.Send(changeStatPacket);
+                Room.Broadcast(changeStatPacket);
             }
 
             List<Task> tasks = new List<Task>();

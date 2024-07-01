@@ -45,8 +45,8 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SDie, PacketHandler.S_DieHandler);		
 		_onRecv.Add((ushort)MsgId.SInvenUpdate, MakePacket<S_InvenUpdate>);
 		_handler.Add((ushort)MsgId.SInvenUpdate, PacketHandler.S_InvenUpdateHandler);		
-		_onRecv.Add((ushort)MsgId.SExpUpdate, MakePacket<S_ExpUpdate>);
-		_handler.Add((ushort)MsgId.SExpUpdate, PacketHandler.S_ExpUpdateHandler);		
+		_onRecv.Add((ushort)MsgId.SLevelUp, MakePacket<S_LevelUp>);
+		_handler.Add((ushort)MsgId.SLevelUp, PacketHandler.S_LevelUpHandler);		
 		_onRecv.Add((ushort)MsgId.STurretUI, MakePacket<S_TurretUI>);
 		_handler.Add((ushort)MsgId.STurretUI, PacketHandler.S_TurretUIHandler);		
 		_onRecv.Add((ushort)MsgId.SFirstPersonMode, MakePacket<S_FirstPersonMode>);

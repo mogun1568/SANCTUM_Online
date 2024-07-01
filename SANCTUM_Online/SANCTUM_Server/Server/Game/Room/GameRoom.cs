@@ -319,6 +319,8 @@ namespace Server.Game
             if (invenUpdatePacket.IsAdd)
             {
                 player.Inventory.AddItem(invenUpdatePacket.ItemName);
+                player.LevelManager._isShow = false;
+                //player.LevelManager._countLevelUp--;
             }
             else
             {
@@ -328,6 +330,20 @@ namespace Server.Game
             S_InvenUpdate resInvenUpdatePacket = new S_InvenUpdate();
             resInvenUpdatePacket.PlayerId = player.Id;
             player.Session.Send(resInvenUpdatePacket);
+        }
+
+        public void HandlelevelUp(Player player, C_LevelUp levelUpPacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            // TODO : 검증
+
+            player.LevelManager._isShow = levelUpPacket.IsShow;
+            //if (levelUpPacket.IsShow == false)
+            //    player.LevelManager._countLevelUp--;
         }
 
         public void HandleTurretUI(Player player, C_TurretUI turretUIPacket)
@@ -391,7 +407,8 @@ namespace Server.Game
                 player.IsFPM = false;
                 turret.IsFPM = false;
                 turret.BulletInfo(turret.Stat.Name);
-            }
+                player.LevelManager.LevelUp();
+    }
         }
 
         public void HandleShoot(Player player, C_Shoot shootPacket)

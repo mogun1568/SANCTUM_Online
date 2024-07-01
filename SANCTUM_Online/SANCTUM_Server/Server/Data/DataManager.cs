@@ -19,16 +19,12 @@ namespace Server.Data
         public static Dictionary<string, StatInfo> EnemyDict { get; private set; } = new Dictionary<string, StatInfo>();
         public static Dictionary<string, StatInfo> ProjectileDict { get; private set; } = new Dictionary<string, StatInfo>();
 
-        public static List<string> EnemyList { get; private set; }
-
         public static void LoadData()
         {
             StatDict = LoadJson<Data.StatData, string, StatInfo>("StatData").MakeDict();
             ItemDict = LoadJson<Data.ItemData, string, ItemInfo>("ItemData").MakeDict();
             EnemyDict = LoadJson<Data.EnemyData, string, StatInfo>("EnemyData").MakeDict();
             ProjectileDict = LoadJson<Data.ProjectileData, string, StatInfo>("ProjectileData").MakeDict();
-
-            EnemyList = new List<string>(EnemyDict.Keys);
         }
 
         static Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>

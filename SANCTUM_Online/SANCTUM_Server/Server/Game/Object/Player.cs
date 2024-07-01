@@ -21,6 +21,7 @@ namespace Server.Game
 
         public Map Map { get; private set; } = new Map();
         public Inventory Inventory { get; private set; } = new Inventory();
+        public LevelManager LevelManager { get; private set; } = new LevelManager();
 
         //public int isFPM;
 
@@ -29,29 +30,7 @@ namespace Server.Game
             SetMapStartPoint();
             Map.Init(this);
             Inventory.Init(this, Room);
-        }
-
-        int _countLevelUp = 0;
-        public void GetExp(int exp)
-        {
-            Exp += exp;
-
-            while (Exp >= Stat.TotalExp)
-            {
-                Exp -= Stat.TotalExp;
-                Stat.TotalExp = (int)(Stat.TotalExp * 1.5f);
-                Math.Min(Stat.TotalExp, 10);
-                _countLevelUp++;
-            }
-
-            S_ExpUpdate expUpdatePacket = new S_ExpUpdate();
-            expUpdatePacket.PlayerId = Id;
-            expUpdatePacket.Exp = Exp;
-            expUpdatePacket.TotalExp = Stat.TotalExp;
-            expUpdatePacket.CountLevelUp = _countLevelUp;
-            Session.Send(expUpdatePacket);
-
-            _countLevelUp = 0;
+            LevelManager.Init(this);
         }
 
         public void SetMapStartPoint()
@@ -73,13 +52,13 @@ namespace Server.Game
         Random random = new Random();
         public string EnemyName()
         {
-            int idx = random.Next(0, DataManager.EnemyList.Count);
-            while (DataManager.EnemyList[idx] == "SalarymanDefault")
+            int idx = random.Next(0, DataManager.EnemyDict.Count);
+            while (DataManager.EnemyDict.Values.ElementAt(idx).Name == "SalarymanDefault")
             {
-                idx = random.Next(0, DataManager.EnemyList.Count);
+                idx = random.Next(0, DataManager.EnemyDict.Count);
             }
 
-            return DataManager.EnemyList[idx];
+            return DataManager.EnemyDict.Values.ElementAt(idx).Name;
         }
 
         public void ClearNodes()

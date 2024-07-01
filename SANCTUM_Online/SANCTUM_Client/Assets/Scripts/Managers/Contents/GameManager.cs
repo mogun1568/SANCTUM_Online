@@ -12,6 +12,7 @@ public class GameManager
     public bool GameIsOver;
     public bool GameStartFlag;
 
+    public Camera _mainCamera;
     public GameObject invenUI;
 
     public void Init()

@@ -110,7 +110,5 @@ public class FirstPersonCamera : MonoBehaviour
         firstPersonModePacket.IsFPM = false;
         firstPersonModePacket.TurretId = _turret.Id;
         Managers.Network.Send(firstPersonModePacket);
-
-        Managers.Object.MyMap.StartlevelUpCoroutine();
     }
 }

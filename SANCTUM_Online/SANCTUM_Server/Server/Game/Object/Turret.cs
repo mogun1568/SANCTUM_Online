@@ -4,6 +4,7 @@ using Server.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -239,6 +240,21 @@ namespace Server.Game
 
             Node node = Owner as Node;
             node.DestroyTurret();
+
+            if (IsFPM)
+            {
+                Player player = Master as Player;
+
+                IsFPM = false;
+                player.IsFPM = false;
+
+                S_FirstPersonMode firstPersonMode = new S_FirstPersonMode();
+                firstPersonMode.PlayerId = player.Id;
+                firstPersonMode.TurretId = Id;
+                player.Session.Send(firstPersonMode);
+
+                player.LevelManager.LevelUp();
+            }
         }
     }
 }

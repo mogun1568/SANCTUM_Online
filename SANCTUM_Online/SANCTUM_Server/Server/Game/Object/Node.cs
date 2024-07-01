@@ -149,7 +149,7 @@ namespace Server.Game
         public void DemoliteTurret()
         {
             Player player = Owner as Player;
-            player.GetExp((int)(_countItem * 1.5));
+            player.LevelManager.GetExp((int)(_countItem * 1.5));
 
             Room.Push(Room.LeaveGame, _turret.Id);
             DestroyTurret();

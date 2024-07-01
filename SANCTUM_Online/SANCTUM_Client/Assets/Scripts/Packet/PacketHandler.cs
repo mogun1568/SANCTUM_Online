@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf;
+using Google.Protobuf.Collections;
 using Google.Protobuf.Protocol;
 using ServerCore;
 using System;
@@ -68,6 +69,9 @@ class PacketHandler
         }
 
         Managers.UI.ClosePopupUI();
+
+        int cameraDefault = Managers.Object.MyMap.MapDefaultSize * 2 - 24;
+        Managers.Game._mainCamera.transform.position = Managers.Object.MyMap.Pos + new Vector3(cameraDefault, 40, cameraDefault);
         Managers.UI.ShowSceneUI<UI_Scene>("MainUI");
         GameObject invenUI = Managers.UI.ShowSceneUI<UI_Inven>("InvenUI").gameObject;
         Managers.Game.invenUI = invenUI;
@@ -174,6 +178,8 @@ class PacketHandler
                 Transform healEffect = go.transform.GetChild(go.transform.childCount - 1);
                 healEffect.localScale = new Vector3(bc.Stat.Range * 2, healEffect.localScale.y, bc.Stat.Range * 2);
                 break;
+            default:
+                break;
         }
     }
 
@@ -205,17 +211,29 @@ class PacketHandler
         Managers.UI.SelectItem.LoadInventory(invenUpdatePacket.PlayerId);
     }
 
-    public static void S_ExpUpdateHandler(PacketSession session, IMessage packet)
+    public static void S_LevelUpHandler(PacketSession session, IMessage packet)
     {
-        S_ExpUpdate expUpdatePacket = packet as S_ExpUpdate;
+        S_LevelUp expUpdatePacket = packet as S_LevelUp;
 
         MyMapController myMap = Managers.Object.MyMap;
         if (expUpdatePacket.PlayerId != myMap.Id)
             return;
 
-        myMap.Stat.Exp = expUpdatePacket.Exp;
-        myMap.Stat.TotalExp = expUpdatePacket.TotalExp;
-        myMap._countLevelUp += expUpdatePacket.CountLevelUp;
+        if (Managers.UI.getPopStackTop()?.name == "LevelUpUI")
+        {
+            return;
+        }
+
+        if (Managers.UI.getPopStackTop()?.name == "NodeUI")
+        {
+            Managers.UI.ClosePopupUI();
+        }
+        LevelUp levelUpUI = Managers.UI.ShowPopupUI<LevelUp>("LevelUpUI");
+
+        List<int> itemIdxs = new List<int>();
+        foreach (int idx in expUpdatePacket.ItemIdxs)
+            itemIdxs.Add(idx);
+        levelUpUI.Show(itemIdxs);
     }
 
     public static void S_TurretUIHandler(PacketSession session, IMessage packet)
@@ -246,9 +264,7 @@ class PacketHandler
         Managers.UI.ClosePopupUI();
         Managers.Game.invenUI.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
-        Managers.Object.MyMap._mainCamera.gameObject.SetActive(true);
-
-        Managers.Object.MyMap.StartlevelUpCoroutine();
+        Managers.Game._mainCamera.gameObject.SetActive(true);
     }
 
     public static void S_GameOverHandler(PacketSession session, IMessage packet)

@@ -36,7 +36,5 @@ public class Item : UI_Base
         Managers.Network.Send(invenUpdatePacket);
 
         GetComponentInParent<LevelUp>().ClosePopupUI();
-        //Managers.Game.Resume();
-        Managers.Object.MyMap.isHide = true;
     }
 }

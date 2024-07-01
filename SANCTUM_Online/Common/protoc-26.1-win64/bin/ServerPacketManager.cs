@@ -29,6 +29,8 @@ class PacketManager
 		_handler.Add((ushort)MsgId.CMove, PacketHandler.C_MoveHandler);		
 		_onRecv.Add((ushort)MsgId.CInvenUpdate, MakePacket<C_InvenUpdate>);
 		_handler.Add((ushort)MsgId.CInvenUpdate, PacketHandler.C_InvenUpdateHandler);		
+		_onRecv.Add((ushort)MsgId.CLevelUp, MakePacket<C_LevelUp>);
+		_handler.Add((ushort)MsgId.CLevelUp, PacketHandler.C_LevelUpHandler);		
 		_onRecv.Add((ushort)MsgId.CTurretUI, MakePacket<C_TurretUI>);
 		_handler.Add((ushort)MsgId.CTurretUI, PacketHandler.C_TurretUIHandler);		
 		_onRecv.Add((ushort)MsgId.CTurretDemolite, MakePacket<C_TurretDemolite>);

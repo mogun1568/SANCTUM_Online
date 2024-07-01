@@ -14,6 +14,7 @@ public class ObjectManager
 
     public MyMapController MyMap { get; set; }
     public Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
+    public List<NewMap> _players = new List<NewMap>();
 
     public static GameObjectType GetObjectTypeById(int id)
     {
@@ -41,6 +42,7 @@ public class ObjectManager
                 GameObject go = Managers.Resource.Instantiate("Map/MyMap");
                 go.name = info.Name;
                 _objects.Add(info.ObjectId, go);
+                _players.Add(go.GetComponent<NewMap>());
 
                 MyMap = go.GetComponent<MyMapController>();
                 MyMap.Id = info.ObjectId;
@@ -52,6 +54,7 @@ public class ObjectManager
                 GameObject go = Managers.Resource.Instantiate("Map/Map");
                 go.name = info.Name;
                 _objects.Add(info.ObjectId, go);
+                _players.Add(go.GetComponent<NewMap>());
 
                 NewMap mc = go.GetComponent<NewMap>();
                 mc.Id = info.ObjectId;
