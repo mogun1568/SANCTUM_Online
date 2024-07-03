@@ -30,10 +30,10 @@ public class FirstPersonCamera : MonoBehaviour
 
     void Update()
     {
-        if (!Managers.Game.isLive)
-        {
-            return;
-        }
+        //if (!Managers.Game.isLive)
+        //{
+        //    return;
+        //}
 
         if (Input.GetKeyDown(KeyCode.E))
         {

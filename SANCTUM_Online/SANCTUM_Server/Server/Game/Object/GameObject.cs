@@ -66,6 +66,11 @@ namespace Server.Game
             set
             {
                 master = value;
+                if (master != null)
+                {
+                    Info.MasterId = master.Id;
+                }
+
                 if (owner == null)
                 {
                     Owner = master;
@@ -80,10 +85,10 @@ namespace Server.Game
             set
             {
                 owner = value;
-                if (owner != null)
-                {
-                    Info.OwnerId = owner.Id;
-                }
+                //if (owner != null)
+                //{
+                //    Info.OwnerId = owner.Id;
+                //}
             }
         }
 
@@ -190,7 +195,7 @@ namespace Server.Game
 
             if (ObjectManager.GetObjectTypeById(Id) == GameObjectType.Enemy)
                 Room.PushAfter(3000, Room.LeaveGame, Id);
-            else
+            else if (ObjectManager.GetObjectTypeById(Id) != GameObjectType.Player)
                 Room.Push(Room.LeaveGame, Id);
         }
     }

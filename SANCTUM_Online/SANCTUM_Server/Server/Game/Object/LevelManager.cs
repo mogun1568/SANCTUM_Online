@@ -42,7 +42,7 @@ namespace Server.Game
             changeStatPacket.StatInfo = _player.Stat;
             _player.Room.Broadcast(changeStatPacket);
 
-            if (!_isPractice && !_player.IsFPM && _countLevelUp > 0)
+            if (!_isPractice && !_player.IsFPM && !_player.isPause && _countLevelUp > 0)
             {
                 _isPractice = true;
                 LevelUp();

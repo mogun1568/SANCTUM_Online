@@ -59,8 +59,6 @@ public class SoundManager
 
     public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
     {
-        return;
-
         if (audioClip == null)
         {
             return;

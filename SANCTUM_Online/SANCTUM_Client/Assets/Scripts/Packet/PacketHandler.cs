@@ -161,18 +161,24 @@ class PacketHandler
 
         bc.Stat = changeStatPacket.StatInfo;
         
-        if (changeStatPacket.IsItem)
+        if (changeStatPacket.IsItem && changeStatPacket.ObjectId == Managers.Object.MyMap.Id)
             Managers.Sound.Play("Effects/Soundiron_Shimmer_Charms_Short_07 [2023-06-13 121009]", Define.Sound.Effect);
 
         switch (changeStatPacket.ChangeStat)
         {
             case ChangeStat.UserLifeUp:
-                Debug.Log("UserLifeUp");
-                Managers.Sound.Play("Effects/userLife", Define.Sound.Effect);
+                if (changeStatPacket.ObjectId == Managers.Object.MyMap.Id)
+                {
+                    Debug.Log("UserLifeUp");
+                    Managers.Sound.Play("Effects/userLife", Define.Sound.Effect);
+                }
                 break;
             case ChangeStat.UserLifeDown:
-                Debug.Log("UserLifeDown");
-                Managers.Sound.Play("Effects/Hit3", Define.Sound.Effect);
+                if (changeStatPacket.ObjectId == Managers.Object.MyMap.Id)
+                {
+                    Debug.Log("UserLifeDown");
+                    Managers.Sound.Play("Effects/Hit3", Define.Sound.Effect);
+                }
                 break;
             case ChangeStat.Water:
                 Transform healEffect = go.transform.GetChild(go.transform.childCount - 1);

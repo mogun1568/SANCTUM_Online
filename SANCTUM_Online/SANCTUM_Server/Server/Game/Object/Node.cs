@@ -51,7 +51,7 @@ namespace Server.Game
 
         void BuildTurret(string itemName, PositionInfo pos)
         {
-            Player player = Owner as Player;
+            Player player = Master as Player;
             if (player == null)
                 return;
 
@@ -148,7 +148,7 @@ namespace Server.Game
 
         public void DemoliteTurret()
         {
-            Player player = Owner as Player;
+            Player player = Master as Player;
             player.LevelManager.GetExp((int)(_countItem * 1.5));
 
             Room.Push(Room.LeaveGame, _turret.Id);

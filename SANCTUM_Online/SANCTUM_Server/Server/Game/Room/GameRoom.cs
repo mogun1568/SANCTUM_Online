@@ -356,6 +356,9 @@ namespace Server.Game
             // TODO : 검증
 
             Node node = Find<Node>(turretUIPacket.NodeId);
+            if (node.Master != player)
+                return;
+
             if (node._turret == null)
                 return;
 
@@ -379,7 +382,7 @@ namespace Server.Game
             if (node._turret == null)
                 return;
 
-            if (node.Owner.Id != player.Id)
+            if (node.Master.Id != player.Id)
                 return;
 
             node.DemoliteTurret();
@@ -425,6 +428,20 @@ namespace Server.Game
                 return;
 
             turret.FPMShoot(shootPacket.PosInfo);
+        }
+
+        public void HandlePause(Player player, C_Pause pausePacket)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            // TODO : 검증
+
+            player.isPause = pausePacket.IsPause;
+            if (pausePacket.IsPause == false)
+                player.LevelManager.LevelUp();
         }
 
         public T Find<T>(int objectId) where T : class

@@ -8,6 +8,8 @@ public class BaseController : MonoBehaviour
     [SerializeField]
     public int Id { get; set; }
 
+    public int MasterId { get; set; }
+
     StatInfo _stat = new StatInfo();
     public StatInfo Stat
     {

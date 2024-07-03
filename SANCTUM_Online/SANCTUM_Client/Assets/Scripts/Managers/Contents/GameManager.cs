@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,8 @@ using UnityEngine;
 public class GameManager
 {
     [Header("# Game Control")]
-    // 이거 제대로 쓰려면 모든 스크립트 Update 함수에 isLive 참일 때만 돌아가게 해야함 - 했음
-    public bool isLive;
+    // 이거 제대로 쓰려면 모든 스크립트 Update 함수에 isLive 참일 때만 돌아가게 해야함 - 멀티는 필요없
+    //public bool isLive;
     //public bool isFPM;
     public float gameTime;
     public bool GameIsOver;
@@ -17,7 +18,7 @@ public class GameManager
 
     public void Init()
     {
-        isLive = true;
+        //isLive = true;
         //isFPM = false;
         GameIsOver = false;
         GameStartFlag = false;
@@ -35,6 +36,8 @@ public class GameManager
             Managers.UI.getPopStackTop().GetComponent<Setting>().Close();
             return;
         }
+        
+        C_Pause pausePacket = new C_Pause();
 
         if (!isPopup)
         {
@@ -46,6 +49,9 @@ public class GameManager
             Managers.UI.ClosePopupUI();
             isPopup = false;
         }
+
+        pausePacket.IsPause = isPopup;
+        Managers.Network.Send(pausePacket);
     }
 
     //public void Stop()

@@ -23,7 +23,7 @@ namespace Server.Game
         public Inventory Inventory { get; private set; } = new Inventory();
         public LevelManager LevelManager { get; private set; } = new LevelManager();
 
-        //public int isFPM;
+        public bool isPause;
 
         public void Init(int mapid)
         {

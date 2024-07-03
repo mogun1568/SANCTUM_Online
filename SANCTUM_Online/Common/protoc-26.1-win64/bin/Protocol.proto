@@ -32,6 +32,7 @@ enum MsgId {
   C_ROOM_LIST = 24;
   S_ROOM_LIST = 25;
   S_GAME_OVER = 26;
+  C_PAUSE = 27;
 }
 
 enum CreatureState {
@@ -179,12 +180,16 @@ message S_GameOver {
   int32 rank = 2;
 }
 
+message C_Pause {
+  bool isPause = 1;
+}
+
 message ObjectInfo {
   int32 objectId = 1;
   string name = 2;
   PositionInfo posInfo = 3;
   StatInfo statInfo = 4;
-  int32 ownerId = 5;
+  int32 masterId = 5;
 }
 
 message PositionInfo {

@@ -229,4 +229,24 @@ class PacketHandler
 
         room.Push(room.HandleShoot, player, shootPacket);
     }
+
+    public static void C_PauseHandler(PacketSession session, IMessage packet)
+    {
+        C_Pause pausePacket = packet as C_Pause;
+        ClientSession clientSession = session as ClientSession;
+
+        Player player = clientSession.MyPlayer;
+        if (player == null)
+        {
+            return;
+        }
+
+        GameRoom room = player.Room;
+        if (room == null)
+        {
+            return;
+        }
+
+        room.Push(room.HandlePause, player, pausePacket);
+    }
 }

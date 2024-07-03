@@ -20,7 +20,7 @@ public class GameScene : BaseScene
 
         SceneType = Define.Scene.MultiPlay;
 
-        Screen.SetResolution(640, 480, false);
+        //Screen.SetResolution(640, 480, false);
 
         C_EnterRoom enterRoomPacket = new C_EnterRoom();
         enterRoomPacket.RoomId = Managers.Object.RoomList.RoomId;
@@ -101,41 +101,10 @@ public class GameScene : BaseScene
             Managers.Game.Toggle();
         }
 
-        if (!Managers.Game.isLive)
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            int cameraDefault = Managers.Object.MyMap.MapDefaultSize * 2 - 24;
-            Managers.Game._mainCamera.transform.position = Managers.Object.MyMap.Pos + new Vector3(cameraDefault, 40, cameraDefault);
-        }
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            if (Managers.Object._players.Count < 2)
-                return;
-
-            int cameraDefault = Managers.Object._players[1].MapDefaultSize * 2 - 24;
-            Managers.Game._mainCamera.transform.position = Managers.Object._players[1].Pos + new Vector3(cameraDefault, 40, cameraDefault);
-        }
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            if (Managers.Object._players.Count < 3)
-                return;
-
-            int cameraDefault = Managers.Object._players[2].MapDefaultSize * 2 - 24;
-            Managers.Game._mainCamera.transform.position = Managers.Object._players[2].Pos + new Vector3(cameraDefault, 40, cameraDefault);
-        }
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            if (Managers.Object._players.Count < 4)
-                return;
-
-            int cameraDefault = Managers.Object._players[3].MapDefaultSize * 2 - 24;
-            Managers.Game._mainCamera.transform.position = Managers.Object._players[3].Pos + new Vector3(cameraDefault, 40, cameraDefault);
-        }
-
+        //if (!Managers.Game.isLive)
+        //{
+        //    return;
+        //}
 
         /*if (!Managers.Game.isFPM && Managers.UI.getPopStackTop()?.name == "FPSModeUI")
         {

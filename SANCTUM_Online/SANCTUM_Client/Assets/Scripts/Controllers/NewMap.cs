@@ -149,7 +149,13 @@ public class NewMap : BaseController
         {
             float y = Random.Range(-0.25f, 0.25f);
             go = Managers.Resource.Instantiate($"Map/ForestGround01", new Vector3(r, y, c), Quaternion.identity, GroundParent.transform);
-            go.GetComponent<Node>().Id = objInfo.ObjectId;
+            
+            Node node = go.GetComponent<Node>();
+            node.Id = objInfo.ObjectId;
+            node.MasterId = objInfo.MasterId;
+            node.PosInfo = objInfo.PosInfo;
+            node.Stat = objInfo.StatInfo;
+            
             //Instantiate(groundPrefab, new Vector3(r, y, c), Quaternion.identity, parent.transform);
             SetChildCount(go.transform);
             if (objInfo.StatInfo.HaveEnvironment)

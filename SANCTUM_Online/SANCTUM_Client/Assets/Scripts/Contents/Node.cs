@@ -24,10 +24,15 @@ public class Node : BaseController
         //    Managers.Select.SelectNode(this);
         //}
 
-        if (Managers.Game.GameIsOver || !Managers.Game.isLive)
+        if (Managers.Game.GameIsOver)
         {
             return;
         }
+
+        //if (!Managers.Game.isLive)
+        //{
+        //    return;
+        //}
 
         Managers.Select.SelectNode(this, turret);
     }

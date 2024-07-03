@@ -31,7 +31,7 @@ public class Enemy : CreatureController
     {
         base.OnDead();
 
-        if (name == "SalarymanDefault")
-            Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
+        //if (name == "SalarymanDefault")
+        //    Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
     }
 }

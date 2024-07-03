@@ -66,7 +66,7 @@ public class ObjectManager
         }
 		else if (objectType == GameObjectType.Node)
 		{
-            GameObject go = Managers.Object.FindById(info.OwnerId);
+            GameObject go = Managers.Object.FindById(info.MasterId);
             if (go == null)
             {
                 return;
@@ -82,7 +82,8 @@ public class ObjectManager
         }
         else if (objectType == GameObjectType.Turret)
         {
-            Managers.Sound.Play("Effects/Build", Define.Sound.Effect);
+            if (info.MasterId == MyMap.Id)
+                Managers.Sound.Play("Effects/Build", Define.Sound.Effect);
             string towerName = info.Name.Substring(0, info.Name.Length - 5);
             Vector3 pos = new Vector3(info.PosInfo.PosX, info.PosInfo.PosY, info.PosInfo.PosZ);
             GameObject go = Managers.Resource.Instantiate($"Tower/Prefab/{towerName}/{info.Name}", pos, Quaternion.identity);
@@ -92,6 +93,7 @@ public class ObjectManager
 
             Turret tc = go.GetComponent<Turret>();
             tc.Id = info.ObjectId;
+            tc.MasterId = info.MasterId;
             tc.PosInfo = info.PosInfo;
             tc.Stat = info.StatInfo;
 
@@ -113,10 +115,11 @@ public class ObjectManager
 
             Enemy ec = go.GetComponent<Enemy>();
             ec.Id = info.ObjectId;
+            ec.MasterId = info.MasterId;
             ec.PosInfo = info.PosInfo;
             ec.Stat = info.StatInfo;
 
-            if (ec.Stat.Type == "Boss")
+            if (info.MasterId == MyMap.Id && ec.Stat.Type == "Boss")
                 Managers.Sound.Play("Bgms/battle-of-the-dragons-8037", Define.Sound.Bgm);
 
             //ec.SyncPos(new Vector3(0, 1, 0));
@@ -144,7 +147,8 @@ public class ObjectManager
         }
         else if (objectType == GameObjectType.Projectile)
         {
-            Managers.Sound.Play("Effects/Arrow", Define.Sound.Effect);
+            if (info.MasterId == MyMap.Id)
+                Managers.Sound.Play("Effects/Arrow", Define.Sound.Effect);
             Vector3 pos = new Vector3(info.PosInfo.PosX, info.PosInfo.PosY, info.PosInfo.PosZ);
             Vector3 dir = new Vector3(info.PosInfo.DirX, info.PosInfo.DirY, info.PosInfo.DirZ);
             GameObject go = Managers.Resource.Instantiate($"Tower/Prefab/Bullet/{info.Name}", pos, Quaternion.LookRotation(dir));
@@ -159,6 +163,7 @@ public class ObjectManager
 
             Projectile pc = go.GetComponent<Projectile>();
             pc.Id = info.ObjectId;
+            pc.MasterId = info.MasterId;
             pc.PosInfo = info.PosInfo;
             pc.Stat = info.StatInfo;
         }
@@ -185,11 +190,15 @@ public class ObjectManager
                 //Managers.Resource.Instantiate("Tower/Prefab/Void Explosion", go.transform.position, Quaternion.identity);
                 break;
             case GameObjectType.Enemy:
-                Managers.Sound.Play("Effects/Monster_Die", Define.Sound.Effect);
+                
                 Managers.Resource.Instantiate("DeathEffect", go.transform.position, Quaternion.identity);
 
-                //if (go.name == "SalarymanDefault")
-                //    Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
+                if (go.GetComponent<BaseController>().MasterId == MyMap.Id)
+                {
+                    Managers.Sound.Play("Effects/Monster_Die", Define.Sound.Effect);
+                    if (go.name == "SalarymanDefault")
+                        Managers.Sound.Play("Bgms/old-story-from-scotland-147143", Define.Sound.Bgm);
+                }
                 break;
         }
 

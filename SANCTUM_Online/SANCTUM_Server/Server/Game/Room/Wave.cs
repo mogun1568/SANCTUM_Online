@@ -95,6 +95,10 @@ namespace Server.Game
                 _expandCount = 0;
                 foreach (Player player in Room._players.Values)
                 {
+                    // 게임 종료로 맵이 없어지면 오류뜸()
+                    if (player.Map == null)
+                        continue;
+
                     player.Map.ExpendMap();
                     foreach (Node node in player.nodeInfos())
                     {
@@ -116,6 +120,9 @@ namespace Server.Game
 
             foreach (Player player in Room._players.Values)
             {
+                if (player.Map == null)
+                    continue;
+
                 S_ChangeStat changeStatPacket = new S_ChangeStat();
                 changeStatPacket.ObjectId = player.Id;
                 changeStatPacket.StatInfo = player.Stat;
@@ -127,6 +134,9 @@ namespace Server.Game
 
             foreach (Player player in Room._players.Values)
             {
+                if (player.Map == null)
+                    continue;
+
                 tasks.Add(SpawnWave(player));
 
                 if (_BossTime > 2)
@@ -148,6 +158,9 @@ namespace Server.Game
             await Task.Delay(5000);
             for (int i = 0; i < _waveCount; i++)
             {
+                if (player.Map == null)
+                    continue;
+
                 SpawnEnemy(player);
                 await Task.Delay(500);
             }
@@ -157,6 +170,9 @@ namespace Server.Game
         {
             for (int i = 0; i < bossCount; i++)
             {
+                if (player.Map == null)
+                    continue;
+
                 SpawnEnemy(player, "SalarymanDefault");
                 await Task.Delay(500);
             }

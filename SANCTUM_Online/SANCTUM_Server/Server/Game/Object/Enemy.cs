@@ -22,7 +22,7 @@ namespace Server.Game
         // FSM (Finite State Machine)
         public override void Update()
         {
-            if (Owner.Room == null)
+            if (Master.Room == null)
             {
                 Room.Push(Room.LeaveGame, Id);
                 return;

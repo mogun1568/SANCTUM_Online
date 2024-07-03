@@ -14,7 +14,13 @@ namespace Server.Game
 
         public override void Update()
         {
-            if (Owner == null || Room == null)
+            if (Master.Room == null)
+            {
+                Room.Push(Room.LeaveGame, Id);
+                return;
+            }
+
+            if (Room == null)
                 return;
 
             if (Stat.Level == 1)
