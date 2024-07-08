@@ -15,7 +15,6 @@ public class SceneFader : MonoBehaviour
 
     public void Init()
     {
-        //img = GetComponentInChildren<Image>();
         img = Util.FindChild<Image>(gameObject, "Black", true);
 
         StopAllCoroutines();

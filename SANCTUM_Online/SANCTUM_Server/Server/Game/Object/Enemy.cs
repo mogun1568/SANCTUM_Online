@@ -22,11 +22,7 @@ namespace Server.Game
         // FSM (Finite State Machine)
         public override void Update()
         {
-            if (Master.Room == null)
-            {
-                Room.Push(Room.LeaveGame, Id);
-                return;
-            }
+            base.Update();
 
             switch (State)
             {
@@ -115,16 +111,8 @@ namespace Server.Game
 
         void EndPath()
         {
-            // TODO : 플레어서 life 감소
             Player owner = Owner as Player;
-            // OnDamaged로 변경 예정
             owner.OnDamaged(this, Exp);
-
-            //S_ChangeStat changeStatPacket = new S_ChangeStat();
-            //changeStatPacket.ObjectId = owner.Id;
-            //changeStatPacket.StatInfo = owner.Stat;
-            //owner.Session.Send(changeStatPacket);
-
             Room.Push(Room.LeaveGame, Id);
         }
 

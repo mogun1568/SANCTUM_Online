@@ -14,11 +14,7 @@ namespace Server.Game
 
         public override void Update()
         {
-            if (Master.Room == null)
-            {
-                Room.Push(Room.LeaveGame, Id);
-                return;
-            }
+            base.Update();
 
             if (Room == null)
                 return;
@@ -36,14 +32,12 @@ namespace Server.Game
             long tick = (long)(1000 / Speed);
             _nextMoveTick = Environment.TickCount64 + tick;
 
-            //if (_target == null || _target.Room != Room)
-            //{
-            //    _target = null;
-
-            //    // 소멸
-            //    Room.LeaveGame(Id);
-            //    return;
-            //}
+            if (_target == null || _target.Room != Room)
+            {
+                // 소멸
+                Room.LeaveGame(Id);
+                return;
+            }
 
             // 타겟에게 도달했다면
             float dist = Vector3.Distance(Pos, _target.Pos);
@@ -51,7 +45,6 @@ namespace Server.Game
             {
                 // 피격
                 HitTarget(_target);
-                //_target.OnDamaged(Master, (int)(Attack * Owner.Attack));
 
                 // 소멸
                 Room.Push(Room.LeaveGame, Id);
@@ -73,7 +66,6 @@ namespace Server.Game
             PosInfo.PosX += dir.x;
             PosInfo.PosY += dir.y;
             PosInfo.PosZ += dir.z;
-            //Console.WriteLine($"{PosInfo.PosX}, {PosInfo.PosY}, {PosInfo.PosZ}");
 
             // 다른 플레이어한테도 알려준다
             S_Move movePacket = new S_Move();
@@ -84,6 +76,7 @@ namespace Server.Game
 
         void FirstPersonMode()
         {
+            // 어색함, 클라의 콜라이더를 써야할 지 고민
             //if (_nextMoveTick >= Environment.TickCount64)
             //    return;
             //long tick = (long)(1000 / (Speed * 2));
@@ -122,8 +115,7 @@ namespace Server.Game
             PosInfo.PosX += dir.x;
             PosInfo.PosY += dir.y;
             PosInfo.PosZ += dir.z;
-            //Console.WriteLine($"{PosInfo.PosX}, {PosInfo.PosY}, {PosInfo.PosZ}");
-
+            
             // 다른 플레이어한테도 알려준다
             S_Move movePacket = new S_Move();
             movePacket.ObjectId = Id;

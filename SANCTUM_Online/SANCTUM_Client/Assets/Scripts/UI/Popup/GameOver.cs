@@ -8,10 +8,6 @@ using UnityEngine.UI;
 
 public class GameOver : UI_Popup
 {
-    //public string MainToLoad = "MainMenu";
-
-    //public SceneFader sceneFader;
-
     enum Buttons
     {
         Button_GoToMenu

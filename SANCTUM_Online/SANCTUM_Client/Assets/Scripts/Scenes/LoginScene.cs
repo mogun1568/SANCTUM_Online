@@ -17,26 +17,7 @@ public class LoginScene : BaseScene
         SceneType = Define.Scene.MainMenu;
 
         Managers.UI.ShowSceneUI<MainMenu>("MainMenuUI");
-
-        /*List<GameObject> list = new List<GameObject>();
-        for (int i = 0; i < 5; i++)
-        {
-            list.Add(Managers.Resource.Instantiate("UnityChan"));
-        }
-
-        foreach (GameObject obj in list)
-        {
-            Managers.Resource.Destroy(obj);
-        }*/
     }
-
-    /*private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Managers.Scene.LoadScene(Define.Scene.Game);
-        }
-    }*/
 
     public override void Clear()
     {

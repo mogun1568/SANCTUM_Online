@@ -41,14 +41,6 @@ namespace Server.Game
             enterPacket.IsGameRoom = false;
             player.Session.Send(enterPacket);
 
-            //S_Spawn mySpawnPacket = new S_Spawn();
-            //foreach (Player p in _players.Values)
-            //{
-            //    if (player != p)
-            //        mySpawnPacket.Objects.Add(p.Info);
-            //}
-            //player.Session.Send(mySpawnPacket);
-
             S_RoomList roomListPacket = new S_RoomList();
             foreach (GameRoom gr in RoomManager.Instance._gameRooms.Values)
             {
@@ -60,16 +52,8 @@ namespace Server.Game
             }
             player.Session.Send(roomListPacket);
 
-            // 타인한테 정보 전송
-            //{
-            //    S_Spawn spawnPacket = new S_Spawn();
-            //    spawnPacket.Objects.Add(gameObject.Info);
-            //    foreach (Player p in _players.Values)
-            //    {
-            //        if (p.Id != gameObject.Id)
-            //            p.Session.Send(spawnPacket);
-            //    }
-            //}
+            // WaitingRoom에서는 클라에서 따로 들어가도 보여주는 것이 없기 때문에
+            // 자신에서 다른 플레이어를 보여주거나 반대도 따로 패킷을 보내주지 않아도 됨
         }
 
         public void LeaveGame(int objectId)

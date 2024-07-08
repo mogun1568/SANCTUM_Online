@@ -185,7 +185,7 @@ namespace Server.Game
             string enemyName = name;
             if (enemyName == default)
             {
-                enemyName = player.EnemyName();
+                enemyName = EnemyName();
             }
             
             StatInfo EnemyInfo = null;
@@ -205,6 +205,18 @@ namespace Server.Game
             enemy.nextRoad = player.Map.roads.First;
 
             Room.Push(Room.EnterGame, enemy);
+        }
+
+        Random random = new Random();
+        public string EnemyName()
+        {
+            int idx = random.Next(0, DataManager.EnemyDict.Count);
+            while (DataManager.EnemyDict.Values.ElementAt(idx).Name == "SalarymanDefault")
+            {
+                idx = random.Next(0, DataManager.EnemyDict.Count);
+            }
+
+            return DataManager.EnemyDict.Values.ElementAt(idx).Name;
         }
     }
 }

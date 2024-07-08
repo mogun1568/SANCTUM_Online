@@ -26,10 +26,10 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        //if (!Managers.Game.isLive)
-        //{
-        //    return;
-        //}
+        if (!Managers.Game.isPopup)
+        {
+            return;
+        }
 
 
         if (_mode == Define.CameraMode.QuarterView)

@@ -102,12 +102,6 @@ public class NewMap : BaseController
         endObj = Managers.Resource.Instantiate("Map/End", default, default, transform);
 
         LoadMap(Id);
-    }  
-
-    // protected로 바꿀지도
-    public virtual void ExpendMap()
-    {
-
     }
 
     public void UpdatePosition()
@@ -120,13 +114,10 @@ public class NewMap : BaseController
         StartCoroutine(SetScaleCoroutine(endObj.transform, 0.003f));
     }
 
-    //public virtual void CreateNode(string type, int r, int c, bool haveEnvironment = false)
     public virtual void CreateNode(ObjectInfo objInfo)
     {
         int r = (int)objInfo.PosInfo.PosX * NodeSize + startR;
         int c = (int)objInfo.PosInfo.PosZ * NodeSize + startC;
-        //r += startdirR;
-        //c += startdirC;
 
         GameObject go;
 
@@ -138,12 +129,10 @@ public class NewMap : BaseController
         if (objInfo.Name == "RoadS")
         {
             go = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
-            //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
             roads.AddFirst(new LocationInfo(r, c));
         } else if (objInfo.Name == "RoadE") 
         {
             go = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
-            //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
             roads.AddLast(new LocationInfo(r, c));
         } else
         {
@@ -156,7 +145,6 @@ public class NewMap : BaseController
             node.PosInfo = objInfo.PosInfo;
             node.Stat = objInfo.StatInfo;
             
-            //Instantiate(groundPrefab, new Vector3(r, y, c), Quaternion.identity, parent.transform);
             SetChildCount(go.transform);
             if (objInfo.StatInfo.HaveEnvironment)
             {
@@ -175,7 +163,6 @@ public class NewMap : BaseController
     protected void CreateEnvironment(int r, float y, int c)
     {
         GameObject EnvironmentObj = Managers.Resource.Instantiate($"Map/Environment/TFF_Birch_Tree_01A", new Vector3(r, y + 1, c), Quaternion.identity, EnvironmentParent.transform);
-        //Instantiate(EnvironmentPrefab, new Vector3(r, y + NodeSize - 0.5f, c), Quaternion.identity, EnvironmentParent.transform);
         StartCoroutine(SetScaleCoroutine(EnvironmentObj.transform, 0.8f));
     }
 
@@ -200,7 +187,6 @@ public class NewMap : BaseController
 
             go.GetChild(randomIndex).gameObject.SetActive(true);
 
-            // 코루틴으로 크기 조정 함수 추가 예정
             StartCoroutine(SetScaleCoroutine(go.GetChild(randomIndex).gameObject.transform, 0.8f));
 
             activeObjectCount--;

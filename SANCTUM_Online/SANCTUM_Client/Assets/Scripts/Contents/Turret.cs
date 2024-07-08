@@ -45,7 +45,6 @@ public class Turret : BaseController
     {
         base.OnDead();
 
-        Debug.Log("explosion");
         Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
         Managers.Resource.Instantiate("Tower/Prefab/Void Explosion", transform.position, Quaternion.identity);
     }

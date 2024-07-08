@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class PauseMenu : UI_Popup
 {
-    //string MainToLoad = "MainMenu";
-
     enum Buttons
     {
         Button_Setting,

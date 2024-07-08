@@ -117,7 +117,7 @@ public class NodeUI : UI_Popup
 
         transform.position = _node.GetBuildPosition();
 
-        //retrunExp.text = 경헙치 + "Exp"  // 추가 예정
+        //retrunExp.text = 경험치 + "Exp"  // 추가 예정
 
         // 왜 start 함수보다 먼저 실행되는지 모르겠는데 일단 해당 코드를 start 함수로 옮겨서 수정함
         if (_turret.Stat.Name == "Water")
@@ -176,7 +176,5 @@ public class NodeUI : UI_Popup
         C_TurretDemolite turretDemolitePacket = new C_TurretDemolite();
         turretDemolitePacket.NodeId = _node.Id;
         Managers.Network.Send(turretDemolitePacket);
-
-        //_node.DemoliteTower();
     }
 }

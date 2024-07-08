@@ -50,11 +50,6 @@ namespace Server
                 MyPlayer.Stat.Exp = 0;
                 MyPlayer.Stat.TotalExp = 3;
 
-                // TODO
-                //StatInfo stat = null;
-                //DataManager.StatDict.TryGetValue(1, out stat);
-                //MyPlayer.Stat.MergeFrom(stat);
-
                 MyPlayer.Session = this;
             }
 
@@ -69,6 +64,7 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
+            // 예상치 못한 문제가 생길 수 있음
             if (MyPlayer.Room != null)
             {
                 GameRoom room = RoomManager.Instance.FindGameRoom(MyPlayer.Room.RoomId);

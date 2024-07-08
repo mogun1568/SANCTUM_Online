@@ -260,11 +260,6 @@ namespace Server.Game
             node.Stat.MergeFrom(statInfo);
             nodes.Add(node);
 
-            //NodeType = type,
-            //PosInfo = new PositionInfo { PosX = r, PosZ = c },
-            //HaveEnvironment = haveEnvironment,
-            //NodeId = 1000 * _mapId + _nodeId++
-
             Node road = new Node();
             road.PosInfo.PosX = node.PosInfo.PosX * NodeSize + startR;
             road.PosInfo.PosY = 1;

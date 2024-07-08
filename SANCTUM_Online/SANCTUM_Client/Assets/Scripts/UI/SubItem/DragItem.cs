@@ -12,7 +12,6 @@ public class DragItem : UI_Base
 
     GameObject SilhouetteItem;
 
-    //Map map;
     ItemInfo itemInfo;
 
     private RaycastHit hit;
@@ -54,7 +53,6 @@ public class DragItem : UI_Base
         {
             SilhouetteItem = Managers.Resource.Instantiate("Cube");
         }
-        //SilhouetteItem = Instantiate(TempItemObject, hit.point, Quaternion.identity);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -132,10 +130,7 @@ public class DragItem : UI_Base
         transform.localScale = normal_size;
         if (hit.transform.name == "ForestGround01")
         {
-            //if ((hit.transform.GetComponent<Node>().turret != null || !hit.transform.GetComponent<Node>().turret))
-            //{
-                hit.transform.GetComponent<Node>().UseItem();
-            //}
+            hit.transform.GetComponent<Node>().UseItem();
         }
 
         Managers.Select.Clear();
@@ -147,7 +142,6 @@ public class DragItem : UI_Base
     {
         if (itemInfo.ItemType == "WorldOnlyItem")
         {
-            //Managers.Sound.Play("Effects/userLife", Define.Sound.Effect);
             Managers.Select.SelectItemToUse(gameObject, itemInfo);
 
             C_InvenUpdate invenUpdatePacket = new C_InvenUpdate();
@@ -155,9 +149,4 @@ public class DragItem : UI_Base
             Managers.Network.Send(invenUpdatePacket);
         }
     }
-
-    //void Start()
-    //{
-    //    map = GameObject.Find("GameMaster").GetComponent<Map>();
-    //}
 }

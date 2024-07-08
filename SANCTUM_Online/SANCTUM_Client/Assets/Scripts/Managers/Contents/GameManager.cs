@@ -6,8 +6,6 @@ using UnityEngine;
 public class GameManager
 {
     [Header("# Game Control")]
-    // 이거 제대로 쓰려면 모든 스크립트 Update 함수에 isLive 참일 때만 돌아가게 해야함 - 멀티는 필요없
-    //public bool isLive;
     //public bool isFPM;
     public float gameTime;
     public bool GameIsOver;
@@ -18,7 +16,6 @@ public class GameManager
 
     public void Init()
     {
-        //isLive = true;
         //isFPM = false;
         GameIsOver = false;
         GameStartFlag = false;

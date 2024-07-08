@@ -12,7 +12,6 @@ public class Item : UI_Base
     ItemInfo _itemInfo;
 
     Image icon;
-    //TextMeshProUGUI textName;
 
     void Awake()
     {

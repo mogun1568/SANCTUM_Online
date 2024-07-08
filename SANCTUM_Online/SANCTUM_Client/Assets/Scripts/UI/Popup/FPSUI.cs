@@ -34,11 +34,6 @@ public class FPSUI : UI_Popup
 
     void Update()
     {
-        //if (!Managers.Game.isLive)
-        //{
-        //    return;
-        //}
-
         if (_turretController)
         {
             ChangeInfo();

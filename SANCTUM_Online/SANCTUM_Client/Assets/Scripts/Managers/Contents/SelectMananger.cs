@@ -6,21 +6,10 @@ using UnityEngine;
 
 public class SelectMananger
 {
-    
-    //GameObject selectItem;
-
-    GameObject itemUI;
-
     [HideInInspector] public Node selectedNode;
-
     ItemInfo _itemInfo;
 
-    //ItemData data;
-
-    //public NodeUI nodeUI;
-
     // node 선택 함수
-
     public void SelectNode(Node node, GameObject turret)
     {
         if (selectedNode == node)   // 선택한 노드를 또 선택하거나 타워가 없는 노드를 선택하면
@@ -32,15 +21,10 @@ public class SelectMananger
         DeselectNode();
 
         selectedNode = node;
-        //itemUI = null;
 
         C_TurretUI turretUIPacket = new C_TurretUI();
         turretUIPacket.NodeId = node.Id;
-
         Managers.Network.Send(turretUIPacket);
-
-        //NodeUI nodeUI = Managers.UI.ShowPopupUI<NodeUI>("NodeUI");
-        //nodeUI.SetTarget(node);
     }
 
     // node 선택 해제 함수
@@ -52,23 +36,14 @@ public class SelectMananger
         {
             Managers.UI.ClosePopupUI();
         }
-        //nodeUI.Hide();
     }
 
     public void SelectItemToUse(GameObject item, ItemInfo itemInfo)
     {
-        /*if (itemUI == item)   // 선택한 아이템을 또 선택하면
-        {
-            Debug.Log("Deselect Item");
-            Clear();
-            return;
-        }*/
-
         Clear();
         _itemInfo = itemInfo;
 
         Debug.Log($"{_itemInfo.ItemName} Selected");
-        itemUI = item;
 
         if (Managers.UI.getPopStackTop()?.name == "NodeUI")
         {
@@ -81,26 +56,8 @@ public class SelectMananger
         return _itemInfo;
     }
 
-    public void itemUITextDecrease()
-    {
-        //Managers.Inven.useItem(itemData.itemName);
-        //itemUI.GetComponentInParent<SelectItem>().useItem(itemData.itemName);
-        //selectItem.GetComponent<SelectItem>().useItem(data.itemId);
-        Clear();
-    }
-
-
-
-    public void DestroyItemUI()
-    {
-        //Managers.Resource.Destroy(itemUI);
-        itemUI.SetActive(false);
-        Clear();
-    }
-
     public void Clear()
     {
-        itemUI = null;
         _itemInfo = null;
     }
 }

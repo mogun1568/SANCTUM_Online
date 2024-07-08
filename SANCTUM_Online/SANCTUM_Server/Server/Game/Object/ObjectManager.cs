@@ -46,6 +46,7 @@ namespace Server.Game
             return (GameObjectType)type;
         }
 
+        // TODO : 룸이 아닌 서버에서 나갈 때 사용
         public bool Remove(int objectId)
         {
             GameObjectType objectType = GetObjectTypeById(objectId);

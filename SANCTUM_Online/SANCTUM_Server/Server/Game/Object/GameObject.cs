@@ -106,7 +106,11 @@ namespace Server.Game
 
         public virtual void Update()
         {
-
+            if (Master.Room == null)
+            {
+                Room.Push(Room.LeaveGame, Id);
+                return;
+            }
         }
 
         public Vector3 Pos

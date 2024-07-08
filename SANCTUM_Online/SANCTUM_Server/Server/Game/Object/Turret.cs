@@ -52,11 +52,7 @@ namespace Server.Game
         // FSM (Finite State Machine)
         public override void Update()
         {
-            if (Master.Room == null)
-            {
-                Room.Push(Room.LeaveGame, Id);
-                return;
-            }
+            base.Update();
 
             if (IsFPM)
             {
@@ -113,7 +109,7 @@ namespace Server.Game
         long _nextAttackTick = 0;
         protected virtual void UpdateAttacking()
         {
-            // FireRate마다 총알이 나가지 않는 이유는 여기서 return되는 경우(순서를 위로해서 해결)
+            // FireRate마다 총알이 나가지 않는 이유는 여기서 return되는 경우(tick 순서를 위로해서 해결)
             if (_target == null || _target.Room != Room || _target.State == CreatureState.Die)
             {
                 _target = null;
@@ -140,7 +136,6 @@ namespace Server.Game
             Room.Broadcast(lookPacket);
 
             Console.WriteLine($"Shoot {_target.Id}!");
-            // TODO
             Shoot(_projectileInfo.Name);
         }
 

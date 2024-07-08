@@ -33,6 +33,10 @@ namespace Server.Game
             LevelManager.Init(this);
         }
 
+        public override void Update()
+        {
+        }
+
         public void SetMapStartPoint()
         {
             Map.startR = (int)PosInfo.PosX;
@@ -47,18 +51,6 @@ namespace Server.Game
         public List<Node> nodeInfos()
         {
             return Map.nodes;
-        }
-
-        Random random = new Random();
-        public string EnemyName()
-        {
-            int idx = random.Next(0, DataManager.EnemyDict.Count);
-            while (DataManager.EnemyDict.Values.ElementAt(idx).Name == "SalarymanDefault")
-            {
-                idx = random.Next(0, DataManager.EnemyDict.Count);
-            }
-
-            return DataManager.EnemyDict.Values.ElementAt(idx).Name;
         }
 
         public void ClearNodes()

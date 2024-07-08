@@ -65,13 +65,9 @@ namespace Server.Game
             _listener.Init(endPoint, () => { return SessionManager.Instance.Generate(); });
             Console.WriteLine("Listening...");
 
-            //FlushRoom();
-            //JobTimer.Instance.Push(FlushRoom);
-
             // TODO
             while (true)
             {
-                //JobTimer.Instance.Flush();
                 Thread.Sleep(100);
             }
         }

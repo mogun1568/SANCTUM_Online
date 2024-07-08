@@ -121,29 +121,6 @@ public class ObjectManager
 
             if (info.MasterId == MyMap.Id && ec.Stat.Type == "Boss")
                 Managers.Sound.Play("Bgms/battle-of-the-dragons-8037", Define.Sound.Bgm);
-
-            //ec.SyncPos(new Vector3(0, 1, 0));
-
-            /*GameObject monster = Managers.Resource.Instantiate($"Monster/{info.Name}", 
-                new Vector3(info.PosInfo.PosX, 1, info.PosInfo.PosZ), 
-                Quaternion.Euler(0, info.PosInfo.Dir, 0));
-
-            EnemyControl ec = monster.GetComponent<EnemyControl>();
-            ec.Stat = info.StatInfo;
-
-            // 맵 생성 전에 몬스터가 생기는 버그가 있음 (확인해봐야 함)
-            GameObject owner = Managers.Object.FindById(info.OwnerId);
-            if (owner == null)
-            {
-                Debug.Log("No owner");
-            }
-            NewMap map = Managers.Object.FindById(info.OwnerId).GetComponent<NewMap>();
-            if (map == null)
-            {
-                Debug.Log("No map");
-            }
-            monster.GetComponent<EnemyMovement>().nextRoad = map.roads.First.Next;
-            monster.GetComponent<EnemyMovement>().mapId = map.Id;*/
         }
         else if (objectType == GameObjectType.Projectile)
         {
@@ -186,8 +163,6 @@ public class ObjectManager
                     MyRoom.exit(id);
                 break;
             case GameObjectType.Turret:
-                //Managers.Sound.Play("Effects/Explosion", Define.Sound.Effect);
-                //Managers.Resource.Instantiate("Tower/Prefab/Void Explosion", go.transform.position, Quaternion.identity);
                 break;
             case GameObjectType.Enemy:
                 

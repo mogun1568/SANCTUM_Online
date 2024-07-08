@@ -20,11 +20,6 @@ public class HUD : MonoBehaviour
 
     void LateUpdate()
     {
-        //if (!Managers.Game.isLive)
-        //{
-        //    return;
-        //}
-
         if (Managers.Object.MyMap == null)
         {
             return;

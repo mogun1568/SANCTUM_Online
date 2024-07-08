@@ -7,10 +7,6 @@ using UnityEngine.UI;
 
 public class MainMenu : UI_Scene
 {
-    //public string GameToLoad = "GamePlay";
-
-    //public SceneFader sceneFader;
-
     enum Buttons {
         PlayButton,
         SettingButton,
@@ -22,7 +18,6 @@ public class MainMenu : UI_Scene
         base.Init();
 
         Managers.Sound.Play("Bgms/bgm2", Define.Sound.Bgm);
-        //Managers.Scene.sceneFader.isFading = false;
 
         Bind<Button>(typeof(Buttons));
 
@@ -35,7 +30,6 @@ public class MainMenu : UI_Scene
     {
         Managers.Sound.Play("Effects/UiClickLow", Define.Sound.Effect);
         Managers.Scene.sceneFader.FadeTo(Define.Scene.Room);
-        //sceneFader.FadeTo(GameToLoad);
     }
 
     public void Setting()
