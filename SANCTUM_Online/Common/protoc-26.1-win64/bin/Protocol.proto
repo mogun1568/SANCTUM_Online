@@ -33,6 +33,7 @@ enum MsgId {
   S_ROOM_LIST = 25;
   S_GAME_OVER = 26;
   C_PAUSE = 27;
+  S_GAME_TIME = 28;
 }
 
 enum CreatureState {
@@ -182,6 +183,11 @@ message S_GameOver {
 
 message C_Pause {
   bool isPause = 1;
+}
+
+message S_GameTime {
+  int32 playerId = 1;
+  int32 gameTime = 2;
 }
 
 message ObjectInfo {

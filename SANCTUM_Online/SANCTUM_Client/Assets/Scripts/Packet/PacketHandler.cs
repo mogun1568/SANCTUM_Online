@@ -71,6 +71,7 @@ class PacketHandler
         Managers.UI.ClosePopupUI();
 
         int cameraDefault = Managers.Object.MyMap.MapDefaultSize * 2 - 24;
+        Debug.Log(cameraDefault);
         Managers.Game._mainCamera.transform.position = Managers.Object.MyMap.Pos + new Vector3(cameraDefault, 40, cameraDefault);
         Managers.UI.ShowSceneUI<UI_Scene>("MainUI");
         GameObject invenUI = Managers.UI.ShowSceneUI<UI_Inven>("InvenUI").gameObject;
@@ -284,4 +285,14 @@ class PacketHandler
         GameOver go = Managers.UI.ShowPopupUI<GameOver>("GameOverUI(Muity)");
         go.RankText(gameOverPacket.Rank);
      }
+
+    public static void S_GameTimeHandler(PacketSession session, IMessage packet)
+    {
+        S_GameTime gameTimePacket = packet as S_GameTime;
+
+        if (gameTimePacket.PlayerId != Managers.Object.MyMap.Id)
+            return;
+
+        Managers.Game.gameTime = gameTimePacket.GameTime;
+    }
 }

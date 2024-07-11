@@ -48,7 +48,7 @@ public class NewMap : BaseController
     public int MapDefaultSize { get; set; }
     public int NodeSize { get; set; }
 
-    int[,] _map;
+    //int[,] _map;
 
     public void LoadMap(int mapId, string pathPrefix = "Assets/Resources/Map")
     {
@@ -68,24 +68,19 @@ public class NewMap : BaseController
         MapDefaultSize = int.Parse(reader.ReadLine());
         NodeSize = int.Parse(reader.ReadLine());
 
-        _map = new int[MapDefaultSize, MapDefaultSize];
+        //_map = new int[MapDefaultSize, MapDefaultSize];
 
-        for (int i = 0; i < MapDefaultSize; i++)
-        {
-            string line = reader.ReadLine();
-            for (int j = 0; j < MapDefaultSize; j++)
-            {
-                _map[i, j] = line[j] - '0';
-            }
-        }
+        //for (int i = 0; i < MapDefaultSize; i++)
+        //{
+        //    string line = reader.ReadLine();
+        //    for (int j = 0; j < MapDefaultSize; j++)
+        //    {
+        //        _map[i, j] = line[j] - '0';
+        //    }
+        //}
     }
 
-    void Start()
-    {
-        Init();
-    }
-
-    protected virtual void Init()
+    protected override void Init()
     {
         transform.position = Pos;
         startR = (int)Pos.x;

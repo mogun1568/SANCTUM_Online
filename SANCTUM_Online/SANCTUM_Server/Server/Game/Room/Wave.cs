@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Server.Game
 {
@@ -72,6 +73,31 @@ namespace Server.Game
     public class Wave
     {
         public GameRoom Room { get; set; }
+
+        private System.Timers.Timer _timer;
+        private int _elapsedSeconds;
+        public void GameTime()
+        {
+            _elapsedSeconds = 0;
+
+            // 1초 간격으로 실행되는 타이머 설정
+            _timer = new System.Timers.Timer(1000);
+            _timer.Elapsed += OnTimedEvent;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+        }
+
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            _elapsedSeconds++;
+            foreach (Player player in Room._players.Values)
+            {
+                S_GameTime gameTimePacket = new S_GameTime();
+                gameTimePacket.PlayerId = player.Id;
+                gameTimePacket.GameTime = _elapsedSeconds;
+                player.Session.Send(gameTimePacket);
+            }     
+        }
 
         int _round = 0;
         int _waveCount = 5;

@@ -21,6 +21,7 @@ public class GameScene : BaseScene
         SceneType = Define.Scene.MultiPlay;
 
         //Screen.SetResolution(640, 480, false);
+        Screen.SetResolution(1920, 1080, true);
 
         C_EnterRoom enterRoomPacket = new C_EnterRoom();
         enterRoomPacket.RoomId = Managers.Object.RoomList.RoomId;
@@ -45,12 +46,10 @@ public class GameScene : BaseScene
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) // Input.GetKeyDown(KeyCode.P)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             Managers.Game.Toggle();
         }
-
-        Managers.Game.gameTime += Time.deltaTime;
     }
 
     public override void Clear()

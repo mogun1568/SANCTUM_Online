@@ -117,7 +117,7 @@ public class BaseController : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    void Start()
     {
         Init();
     }

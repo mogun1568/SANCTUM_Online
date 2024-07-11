@@ -29,6 +29,7 @@ namespace Server.Game
         public void Init()
         {
             Wave.Room = this;
+            
         }
 
         // 누군가가 주기적으로 호출해줘야 한다
@@ -288,6 +289,7 @@ namespace Server.Game
             Broadcast(resGameStartPacket);
 
             isStart = true;
+            Wave.GameTime();
         }
 
         public void HandleMove(Player player, C_Move movePacket)
