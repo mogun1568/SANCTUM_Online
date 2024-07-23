@@ -24,8 +24,9 @@ public class DataManager
     // 이 부분 잘 모르겠음
     Loader LoadJson<Loader, Key, Value>(string path) where Loader : ILoader<Key, Value>
     {
-        string text = File.ReadAllText($"Assets/Resources/Data/{path}.json");
-        return Newtonsoft.Json.JsonConvert.DeserializeObject<Loader>(text);
+        //string text = File.ReadAllText($"Assets/Resources/Data/{path}.json");
+        TextAsset textAsset = Resources.Load<TextAsset>($"Data/{path}");
+        return Newtonsoft.Json.JsonConvert.DeserializeObject<Loader>(textAsset.text);
     }
 }
     

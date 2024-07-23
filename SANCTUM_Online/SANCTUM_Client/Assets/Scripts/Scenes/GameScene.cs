@@ -20,9 +20,6 @@ public class GameScene : BaseScene
 
         SceneType = Define.Scene.MultiPlay;
 
-        //Screen.SetResolution(640, 480, false);
-        Screen.SetResolution(1920, 1080, true);
-
         C_EnterRoom enterRoomPacket = new C_EnterRoom();
         enterRoomPacket.RoomId = Managers.Object.RoomList.RoomId;
         Managers.Object.RoomList = null;

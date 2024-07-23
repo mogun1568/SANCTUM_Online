@@ -55,8 +55,11 @@ public class NewMap : BaseController
         string mapName = "Map_" + mapId.ToString();
 
         // Collision 관련 파일
-        string text = File.ReadAllText($"{pathPrefix}/{mapName}.txt");
-        StringReader reader = new StringReader(text);
+        //string text = File.ReadAllText($"{pathPrefix}/{mapName}.txt");
+        TextAsset textAsset = Resources.Load<TextAsset>($"Map/{mapName}");
+        if (textAsset == null)
+            Debug.Log("null");
+        StringReader reader = new StringReader(textAsset.text);
 
         StartPointR = int.Parse(reader.ReadLine());
         StartPointC = int.Parse(reader.ReadLine());
