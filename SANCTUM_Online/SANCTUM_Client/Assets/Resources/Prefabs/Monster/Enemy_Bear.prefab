@@ -4153,11 +4153,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4948925019917514975}
   - component: {fileID: 4948925019917514944}
-  - component: {fileID: 2412212302892694200}
   - component: {fileID: 5987520267781999346}
   - component: {fileID: 3705978718520894425}
   - component: {fileID: -7460576423415970752}
-  - component: {fileID: 5805097016275406218}
+  - component: {fileID: -9083194038445159834}
+  - component: {fileID: -9165181123507070366}
   m_Layer: 0
   m_Name: Enemy_Bear
   m_TagString: Enemy
@@ -4242,18 +4242,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2412212302892694200
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4948925019917514945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0263d29a8bf6aee40bab01246f4f5947, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &5987520267781999346
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4400,7 +4388,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5805097016275406218
+--- !u!114 &-9083194038445159834
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4409,14 +4397,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 4948925019917514945}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806dc5fd39509484a86826f4dfbb9741, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData:
-    enemyType: 
-    enemyName: 
-  _stat: {fileID: 0}
-  isAttack: 0
+  IsUsing: 0
+--- !u!114 &-9165181123507070366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4948925019917514945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923099ca8b04cd04e8214bd0765ec459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turnSpeed: 10
 --- !u!1 &4948925019919450951
 GameObject:
   m_ObjectHideFlags: 0

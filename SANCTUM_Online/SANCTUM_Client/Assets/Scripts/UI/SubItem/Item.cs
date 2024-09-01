@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using Google.Protobuf.Protocol;
 
 public class Item : UI_Base
 {
-    public ItemData data;
-    Data.Item itemData;
+    ItemInfo _itemInfo;
 
     Image icon;
-    //TextMeshProUGUI textName;
 
     void Awake()
     {
@@ -20,18 +19,20 @@ public class Item : UI_Base
 
     public override void Init()
     {
-        itemData = Managers.Data.ItemDict[gameObject.name];
+        _itemInfo = Managers.Data.ItemDict[gameObject.name];
         icon = GetComponentsInChildren<Image>()[2];
-        icon.sprite = Managers.Resource.Load<Sprite>($"Icon/{itemData.itemIcon}");
+        icon.sprite = Managers.Resource.Load<Sprite>($"Icon/{_itemInfo.ItemIcon}");
 
         BindEvent(gameObject, (PointerEventData data) => { ItemClick(); });
     }
 
     public void ItemClick()
     {
-        Managers.UI.SelectItem.AddItem(itemData.itemName);
+        C_InvenUpdate invenUpdatePacket = new C_InvenUpdate() { PosInfo = new PositionInfo() };
+        invenUpdatePacket.ItemName = gameObject.name;
+        invenUpdatePacket.IsAdd = true;
+        Managers.Network.Send(invenUpdatePacket);
+
         GetComponentInParent<LevelUp>().ClosePopupUI();
-        Managers.Game.Resume();
-        Managers.Game.isHide = true;
     }
 }

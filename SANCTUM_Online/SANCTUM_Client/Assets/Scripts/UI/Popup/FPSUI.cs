@@ -7,7 +7,7 @@ using Data;
 
 public class FPSUI : UI_Popup
 {
-    static public TowerControl towerControl;
+    static public Turret _turretController;
 
     enum GameObjects
     {
@@ -22,23 +22,19 @@ public class FPSUI : UI_Popup
         Icon
     }
 
-    void OnEnable()
+    void Start()
     {
         Bind<GameObject>(typeof(GameObjects));
         Bind<TextMeshProUGUI>(typeof(Texts));
         Bind<Image>(typeof(Images));
  
-        GetImage((int)Images.Icon).sprite = Managers.Resource.Load<Sprite>($"Icon/{towerControl.itemData.itemIcon}");
+        GetImage((int)Images.Icon).sprite = Managers.Resource.Load<Sprite>
+            ($"Icon/{Managers.Data.ItemDict[_turretController.Stat.Name].ItemIcon}");
     }
 
     void Update()
     {
-        if (!Managers.Game.isLive)
-        {
-            return;
-        }
-
-        if (towerControl)
+        if (_turretController)
         {
             ChangeInfo();
         }
@@ -46,15 +42,15 @@ public class FPSUI : UI_Popup
 
     void ChangeInfo()
     {
-        float curHP = towerControl._stat.HP;
-        float maxHP = towerControl._stat.MaxHp;
+        float curHP = _turretController.Stat.Hp;
+        float maxHP = _turretController.Stat.MaxHp;
 
         GetObject((int)GameObjects.HpBar).GetComponent<Slider>().value = curHP / maxHP;
-        GetText((int)Texts.HP).text = towerControl._stat.HP.ToString("F0") + "/100";
+        GetText((int)Texts.HP).text = _turretController.Stat.Hp.ToString("F0") + "/100";
     }
 
-    static public void GetTower(TowerControl _tower)
+    static public void GetTower(Turret turret)
     {
-        towerControl = _tower;
+        _turretController = turret;
     }
 }

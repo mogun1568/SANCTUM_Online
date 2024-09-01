@@ -611,9 +611,9 @@ GameObject:
   - component: {fileID: 3025640061685235187}
   - component: {fileID: 3309419462222844035}
   - component: {fileID: 3522036253766019892}
-  - component: {fileID: 7626164555974827655}
   - component: {fileID: 8647204198725966397}
-  - component: {fileID: -3472270835776713508}
+  - component: {fileID: 4703331172441349207}
+  - component: {fileID: 8759921722944192511}
   m_Layer: 0
   m_Name: NinjaDefault
   m_TagString: Enemy
@@ -748,18 +748,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7626164555974827655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3025640061685235186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0263d29a8bf6aee40bab01246f4f5947, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &8647204198725966397
 AudioSource:
   m_ObjectHideFlags: 0
@@ -856,7 +844,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-3472270835776713508
+--- !u!114 &4703331172441349207
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -865,14 +853,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 3025640061685235186}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806dc5fd39509484a86826f4dfbb9741, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData:
-    enemyType: 
-    enemyName: 
-  _stat: {fileID: 0}
-  isAttack: 0
+  IsUsing: 0
+--- !u!114 &8759921722944192511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3025640061685235186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923099ca8b04cd04e8214bd0765ec459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turnSpeed: 10
 --- !u!1 &3025640061704949175
 GameObject:
   m_ObjectHideFlags: 0

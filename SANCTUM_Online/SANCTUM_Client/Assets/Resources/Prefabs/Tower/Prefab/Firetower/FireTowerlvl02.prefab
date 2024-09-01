@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1286383218549398439}
   - component: {fileID: 1286383218550397287}
   - component: {fileID: -5579325263140705839}
-  - component: {fileID: 1231734455190690024}
+  - component: {fileID: 2089370237581995998}
   m_Layer: 0
   m_Name: FireTowerlvl02
   m_TagString: Tower
@@ -103,7 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca862809ac5d3a449b627c81a3b0bc55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1231734455190690024
+  _turnSpeed: 10
+--- !u!114 &2089370237581995998
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -112,22 +113,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1286383218548459431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 372ba95640510ee46a11d198a4ba4964, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stat: {fileID: 0}
-  itemData:
-    itemType: 
-    itemName: 
-    itemIcon: 
-    bulletType: 
-    upgradeAmount: 0
-    returnExp: 0
-  enemyTag: Enemy
-  towerTag: Tower
-  turnSpeed: 10
-  isFPM: 0
-  isHealTower: 0
+  IsUsing: 0
 --- !u!1 &2301654520480209630
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +301,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6764785125066228816
 Transform:
   m_ObjectHideFlags: 0

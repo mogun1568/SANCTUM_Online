@@ -1,0 +1,248 @@
+﻿using Google.Protobuf.Protocol;
+using Server.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
+
+namespace Server.Game
+{
+    public struct Vector3
+    {
+        public float x;
+        public float y;
+        public float z;
+
+        public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; }
+
+        public static Vector3 operator +(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
+        }
+
+        public static Vector3 operator -(Vector3 a, Vector3 b)
+        {
+            return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
+        }
+
+        public static Vector3 operator *(Vector3 a, float d)
+        {
+            return new Vector3(a.x * d, a.y * d, a.z * d);
+        }
+
+        public static Vector3 operator /(Vector3 a, float d)
+        {
+            return new Vector3(a.x / d, a.y / d, a.z / d);
+        }
+
+        public static float Distance(Vector3 a, Vector3 b)
+        {
+            float num = a.x - b.x;
+            float num2 = a.y - b.y;
+            float num3 = a.z - b.z;
+            return (float)Math.Sqrt(num * num + num2 * num2 + num3 * num3);
+        }
+
+        public static Vector3 Normalize(Vector3 value)
+        {
+            float num = Magnitude(value);
+            if (num > 1E-05f)
+            {
+                return new Vector3(value.x / num, value.y / num, value.z / num);
+            }
+            return new Vector3(0, 0, 0); // zero vector
+        }
+
+        public static float Magnitude(Vector3 vector)
+        {
+            return (float)Math.Sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+        }
+
+        public Vector3 normalized
+        {
+            get
+            {
+                return Vector3.Normalize(this);
+            }
+        }
+    }
+
+    public class Wave
+    {
+        public GameRoom Room { get; set; }
+
+        private System.Timers.Timer _timer;
+        private int _elapsedSeconds;
+        public void GameTime()
+        {
+            _elapsedSeconds = 0;
+
+            // 1초 간격으로 실행되는 타이머 설정
+            _timer = new System.Timers.Timer(1000);
+            _timer.Elapsed += OnTimedEvent;
+            _timer.AutoReset = true;
+            _timer.Enabled = true;
+        }
+
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            _elapsedSeconds++;
+            foreach (Player player in Room._players.Values)
+            {
+                S_GameTime gameTimePacket = new S_GameTime();
+                gameTimePacket.PlayerId = player.Id;
+                gameTimePacket.GameTime = _elapsedSeconds;
+                player.Session.Send(gameTimePacket);
+            }     
+        }
+
+        int _round = 0;
+        int _waveCount = 5;
+        int _expandCount = 0;
+        int _BossTime = -1;
+        int _BossCount = 1;
+
+        long _nextWaveTick = 0;
+        public void Update()
+        {
+            if (Room == null)
+                return;
+
+            if (_nextWaveTick > Environment.TickCount64)
+                return;
+            int moveTick = 20000;
+            _nextWaveTick = Environment.TickCount64 + moveTick;
+
+            if (_expandCount > 1)
+            {
+                _expandCount = 0;
+                foreach (Player player in Room._players.Values)
+                {
+                    // 게임 종료로 맵이 없어지면 오류뜸()
+                    if (player.Map == null)
+                        continue;
+
+                    player.Map.ExpendMap();
+                    foreach (Node node in player.nodeInfos())
+                    {
+                        node.Master = player;
+                        Room.Push(Room.EnterGame, node);
+                    }
+                    S_CreateMap rescreateMapPacket = new S_CreateMap();
+                    rescreateMapPacket.PlayerId = player.Id;
+                    Room.Broadcast(rescreateMapPacket);
+
+                    // TODO : Enemy Hp 소량 증가
+                    _waveCount = (int)Math.Round(_waveCount * 1.1);
+                    _waveCount = Math.Min(_waveCount, 10);
+                }
+            }
+            _round++;
+            _expandCount++;
+            _BossTime++;
+
+            foreach (Player player in Room._players.Values)
+            {
+                if (player.Map == null)
+                    continue;
+
+                S_ChangeStat changeStatPacket = new S_ChangeStat();
+                changeStatPacket.ObjectId = player.Id;
+                changeStatPacket.StatInfo = player.Stat;
+                changeStatPacket.StatInfo.Level = _round;
+                Room.Broadcast(changeStatPacket);
+            }
+
+            List<Task> tasks = new List<Task>();
+
+            foreach (Player player in Room._players.Values)
+            {
+                if (player.Map == null)
+                    continue;
+
+                tasks.Add(SpawnWave(player));
+
+                if (_BossTime > 2)
+                {
+                    tasks.Add(SpawnBoss(player, _BossCount));
+                }
+            }
+
+            if (_BossTime > 2)
+            {
+                _BossTime = 0;
+                if (_BossCount < 2)
+                    _BossCount++;
+            }
+        }
+
+        public async Task SpawnWave(Player player)
+        {
+            await Task.Delay(5000);
+            for (int i = 0; i < _waveCount; i++)
+            {
+                if (player.Map == null)
+                    continue;
+
+                SpawnEnemy(player);
+                await Task.Delay(500);
+            }
+        }
+
+        public async Task SpawnBoss(Player player, int bossCount)
+        {
+            for (int i = 0; i < bossCount; i++)
+            {
+                if (player.Map == null)
+                    continue;
+
+                SpawnEnemy(player, "SalarymanDefault");
+                await Task.Delay(500);
+            }
+        }
+
+        public void SpawnEnemy(Player player, string name = default)
+        {
+            Enemy enemy = ObjectManager.Instance.Add<Enemy>();
+
+            string enemyName = name;
+            if (enemyName == default)
+            {
+                enemyName = EnemyName();
+            }
+            
+            StatInfo EnemyInfo = null;
+            if (DataManager.EnemyDict.TryGetValue(enemyName, out EnemyInfo) == false)
+            {
+                return;
+            }
+
+            Map map = player.Map;
+
+            enemy.Info.Name = enemyName;
+            enemy.PosInfo.PosX = map.startPoint.PosX * map.GetNodeSize() + map.startR;
+            enemy.PosInfo.PosZ = map.startPoint.PosZ * map.GetNodeSize() + map.startC;
+            enemy.PosInfo.DirY = map.startPoint.DirY * 90;
+            enemy.Stat.MergeFrom(EnemyInfo);
+            enemy.Master = player;
+            enemy.nextRoad = player.Map.roads.First;
+
+            Room.Push(Room.EnterGame, enemy);
+        }
+
+        Random random = new Random();
+        public string EnemyName()
+        {
+            int idx = random.Next(0, DataManager.EnemyDict.Count);
+            while (DataManager.EnemyDict.Values.ElementAt(idx).Name == "SalarymanDefault")
+            {
+                idx = random.Next(0, DataManager.EnemyDict.Count);
+            }
+
+            return DataManager.EnemyDict.Values.ElementAt(idx).Name;
+        }
+    }
+}

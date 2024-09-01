@@ -485,10 +485,9 @@ GameObject:
   - component: {fileID: 4998674606424867670}
   - component: {fileID: 814282639009720665}
   - component: {fileID: 5235868790061585140}
-  - component: {fileID: 8033722516496859257}
   - component: {fileID: 7639564640939550003}
   - component: {fileID: 7298792257295401411}
-  - component: {fileID: 7597363224441844634}
+  - component: {fileID: 837690981703822139}
   m_Layer: 0
   m_Name: AlienDefault
   m_TagString: Enemy
@@ -623,18 +622,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8033722516496859257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4998674606424867671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0263d29a8bf6aee40bab01246f4f5947, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &7639564640939550003
 AudioSource:
   m_ObjectHideFlags: 0
@@ -744,7 +731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsUsing: 0
---- !u!114 &7597363224441844634
+--- !u!114 &837690981703822139
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -753,14 +740,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4998674606424867671}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806dc5fd39509484a86826f4dfbb9741, type: 3}
+  m_Script: {fileID: 11500000, guid: 923099ca8b04cd04e8214bd0765ec459, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData:
-    enemyType: 
-    enemyName: 
-  _stat: {fileID: 0}
-  isAttack: 0
+  _turnSpeed: 10
 --- !u!1 &4998674606426831057
 GameObject:
   m_ObjectHideFlags: 0

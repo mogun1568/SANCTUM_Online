@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
 using UnityEngine.EventSystems;
+using Google.Protobuf.Protocol;
 
 public class NodeUI : UI_Popup
 {
@@ -32,11 +33,12 @@ public class NodeUI : UI_Popup
     GameObject DelButton;
 
 
-    Node target;
-    TowerControl towerControl;
+    Node _node;
+    Turret _turret;
+    string bulletName;
     //public TextMeshProUGUI retrunExp; // 추가 예정
 
-    void Start()
+    void Awake()
     {
         transform.rotation = Quaternion.Euler(0, 45, 0);
 
@@ -50,23 +52,25 @@ public class NodeUI : UI_Popup
         BindEvent(fPMButton, (PointerEventData data) => { FirstPersonMode(); }, Define.UIEvent.Click);
         BindEvent(DelButton, (PointerEventData data) => { Demolite(); }, Define.UIEvent.Click);
 
-        if (towerControl.itemData.itemName == "Water")
-        {
-            fPMButton.SetActive(false);
-        }
-        else
-        {
-            fPMButton.SetActive(true);
-        }
+        //if (_turret.Stat.Name == "Water")
+        //{
+        //    fPMButton.SetActive(false);
+        //}
+        //else
+        //{
+        //    fPMButton.SetActive(true);
+        //}
     }
     void Update()
     {
-        if (target.turret == null)
+        if (_turret == null)
         {
             if (Managers.UI.getPopStackTop()?.name == "NodeUI")
             {
                 Managers.UI.ClosePopupUI();
             }
+
+            return;
         }
 
         RectTransform uiElementRectTransform = GetComponentInChildren<RectTransform>();  // UI 요소의 RectTransform 컴포넌트 가져오기
@@ -95,61 +99,82 @@ public class NodeUI : UI_Popup
         ChangeInfo();
     }
 
-    public void SetTarget(Node _target)
+    public void SetTarget(Node node, Turret turret)
     {
-        if (Managers.Game.isFPM)
+        if (Managers.Object.MyMap.IsFPM)
         {
             return;
         }
 
-        target = _target;
+        _node = node;
 
-        transform.position = target.GetBuildPosition();
+        _turret = turret;
 
-        towerControl = target.turret.GetComponent<TowerControl>();
+        bulletName = _turret.Stat.Name;
+        if (bulletName == "StandardTower")
+            bulletName = "Standard";
+        bulletName += "Bullet";
 
-        //retrunExp.text = 경헙치 + "Exp"  // 추가 예정
+        transform.position = _node.GetBuildPosition();
+
+        //retrunExp.text = 경험치 + "Exp"  // 추가 예정
 
         // 왜 start 함수보다 먼저 실행되는지 모르겠는데 일단 해당 코드를 start 함수로 옮겨서 수정함
-        //if (towerControl.itemData.itemName == "Water")
-        //{
-        //    fPMButton.SetActive(false);
-        //}
-        //else
-        //{
-        //    fPMButton.SetActive(true);
-        //}
+        if (_turret.Stat.Name == "Water")
+        {
+            fPMButton.SetActive(false);
+        }
+        else
+        {
+            fPMButton.SetActive(true);
+        }
     }
 
     void ChangeInfo()
     {
-        float curHP = towerControl._stat.HP;
-        float maxHP = 100f;
+        float curHP = _turret.Hp;
+        float maxHP = _turret.Stat.MaxHp;
 
         GetObject((int)GameObjects.HpBar).GetComponent<Slider>().value = curHP / maxHP;
 
-        GetText((int)Texts.damageText).text = towerControl._stat.BulletDamage.ToString("F0");
-        GetText((int)Texts.fireRateText).text = towerControl._stat.FireRate.ToString("F1");
+        if (_turret.Stat.Name == "Water")
+            GetText((int)Texts.damageText).text = (10 * _turret.Stat.Attack).ToString("F0");
+        else
+        {
+            float bulletAttack = Managers.Data.ProjectileDict[bulletName].Attack;
+            GetText((int)Texts.damageText).text = (bulletAttack * _turret.Stat.Attack).ToString("F0");
+        }
+            
+        GetText((int)Texts.fireRateText).text = _turret.Stat.FireRate.ToString("F1");
 
-        sphere.localScale = new Vector3(towerControl._stat.Range * 2, sphere.localScale.y, towerControl._stat.Range * 2);
-        sphere1.localScale = new Vector3(towerControl._stat.Range * 2 - 0.5f, sphere1.localScale.y, towerControl._stat.Range * 2 - 0.5f);
+        sphere.localScale = new Vector3(_turret.Stat.Range * 2, sphere.localScale.y, _turret.Stat.Range * 2);
+        sphere1.localScale = new Vector3(_turret.Stat.Range * 2 - 0.5f, sphere1.localScale.y, _turret.Stat.Range * 2 - 0.5f);
 
         if (curHP <= 0)
         {
-            target.turret = null;
+            _turret = null;
         }
     }
 
     public void FirstPersonMode()
     {
         Managers.Select.DeselectNode();
-        FPSUI.GetTower(towerControl);
-        target.FirstPersonMode();
+
+        C_FirstPersonMode firstPersonModePacket = new C_FirstPersonMode();
+        firstPersonModePacket.IsFPM = true;
+        firstPersonModePacket.TurretId = _turret.Id;
+        Managers.Network.Send(firstPersonModePacket);
+
+        FPSUI.GetTower(_turret);
+        _node.FirstPersonMode(_turret);
     }
 
     public void Demolite()
     {
         Managers.Select.DeselectNode();
-        target.DemoliteTower();
+
+        C_TurretDemolite turretDemolitePacket = new C_TurretDemolite();
+        turretDemolitePacket.NodeId = _node.Id;
+        Managers.Network.Send(turretDemolitePacket);
     }
 }

@@ -1,14 +1,16 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-public class NodeInfo
+public class LocationInfo
 {
     public int R { get; set; }
     public int C { get; set; }
     public int Direction { get; set; }
 
-    public NodeInfo(int r = 0, int c = 0, int direction = 0)
+    public LocationInfo(int r = 0, int c = 0, int direction = 0)
     {
         R = r;
         C = c;
@@ -23,365 +25,141 @@ public class NodeInfo
     }
 }
 
-public class NewMap : MonoBehaviour
+public class NewMap : BaseController
 {
-    GameObject roadPrefab;
-    GameObject groundPrefab;
-    GameObject EnvironmentPrefab;
-    //[SerializeField] GameObject parentPrefab;
-    [SerializeField] GameObject roadParent;
-    [SerializeField] GameObject GroundParent;
-    //[SerializeField] GameObject EnvironmentParentPrefab;
-    [SerializeField] GameObject EnvironmentParent;
+    GameObject roadParent;
+    GameObject GroundParent;
+    GameObject EnvironmentParent;
 
-    //GameObject startPrefab;
-    //GameObject endPrefab;
     [HideInInspector] public GameObject startObj;
     GameObject endObj;
 
-    GameObject enemyPrefab;
+    public LinkedList<LocationInfo> roads = new LinkedList<LocationInfo>();
 
-    const int mapDefaultLength = 101;
+    int startR, startC;
 
-    int[,] map = new int[mapDefaultLength, mapDefaultLength];
-    bool[,] visit = new bool[mapDefaultLength, mapDefaultLength];
-    public static LinkedList<NodeInfo> roads = new LinkedList<NodeInfo>();
+    public int StartPointR { get; set; }
+    public int StartPointC { get; set; }
+    public int StartPointDir { get; set; }
+    public int EndPointR { get; set; }
+    public int EndPointC { get; set; }
+    public int EndPointDir { get; set; }
 
-    // 우, 하, 좌, 상
-    int[] dr = new int[4] { 0, 1, 0, -1 };
-    int[] dc = new int[4] { 1, 0, -1, 0 };
+    public int MapDefaultSize { get; set; }
+    public int NodeSize { get; set; }
 
-    NodeInfo startPoint = new NodeInfo();
-    NodeInfo endPoint = new NodeInfo();
+    //int[,] _map;
 
-    int mapLength = 3;
-    int NodeSize = 4;
-
-    public int playerId = 0;
-    int startdirR, startdirC;
-    int interval = 0;
-
-    void Start()
+    string absolutePath = "C:\\Users\\kmg3329\\Documents\\GitHub\\SANCTUM_Online\\SANCTUM_Online\\SANCTUM_Client";
+    public void LoadMap(int mapId, string pathPrefix = "Assets/Resources/Map")
     {
-        Init();
-    }
+        string mapName = "Map_" + mapId.ToString();
 
-    //void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        if (mapLength > mapDefaultLength / 2 - 1)
-    //        {
-    //            return;
-    //        }
+        // Collision 관련 파일
+        string text = File.ReadAllText($"{absolutePath}/{pathPrefix}/{mapName}.txt");
+        //TextAsset textAsset = Resources.Load<TextAsset>($"Map/{mapName}");
+        StringReader reader = new StringReader(text);
 
-    //        ExpendMap();
+        StartPointR = int.Parse(reader.ReadLine());
+        StartPointC = int.Parse(reader.ReadLine());
+        StartPointDir = int.Parse(reader.ReadLine());
+        EndPointR = int.Parse(reader.ReadLine());
+        EndPointC = int.Parse(reader.ReadLine());
+        EndPointDir = int.Parse(reader.ReadLine());
 
-    //        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    //    }
+        MapDefaultSize = int.Parse(reader.ReadLine());
+        NodeSize = int.Parse(reader.ReadLine());
 
-    //    if (Input.GetKeyDown(KeyCode.A))
-    //    {
-    //        Instantiate(enemyPrefab);
-    //    }
-    //}
+        //_map = new int[MapDefaultSize, MapDefaultSize];
 
-    void Print2DArray()
-    {
-        string s = "(" + startPoint.R + ", " + startPoint.C + "), (" + endPoint.R + ", " + endPoint.C + ")";
-        Debug.Log(s);
-
-        string patternString = "";
-
-        for (int i = 0; i < mapDefaultLength; i++)
-        {
-            for (int j = 0; j < mapDefaultLength; j++)
-            {
-                patternString += map[i, j].ToString();
-            }
-            patternString += "\n"; // 한 행 출력 후 줄 바꿈
-        }
-
-        Debug.Log(patternString);
-
-        /*string boolString = "";
-
-        for (int i = 0; i < mapDefaultLength; i++)
-        {
-            for (int j = 0; j < mapDefaultLength; j++)
-            {
-                if (visit[i, j])
-                {
-                    boolString += 1;
-                } else
-                {
-                    boolString += 0;
-                }
-            }
-            boolString += "\n"; // 한 행 출력 후 줄 바꿈
-        }
-
-        Debug.Log(boolString);*/
-    }
-
-    public void Init()
-    {
-        if (playerId == 0)
-        {
-            startdirR = 0;
-            startdirC = 0;
-        } else if (playerId == 1)
-        {
-            startdirR = 1;
-            startdirC = -1;
-        } else if (playerId == 2)
-        {
-            startdirR = -1;
-            startdirC = -1;
-        } else
-        {
-            startdirR = 0;
-            startdirC = -2;
-        }
-        startdirR *= interval;
-        startdirC *= interval;
-
-        roadParent = GameObject.Find("Roads");
-        GroundParent = GameObject.Find("Nodes");
-        EnvironmentParent = GameObject.Find("Enviroment");
-
-        //parent = Instantiate(parentPrefab);
-        //EnvironmentParent = Instantiate(EnvironmentParentPrefab);
-        startObj = Managers.Resource.Instantiate("Start");
-        endObj = Managers.Resource.Instantiate("End");
-
-        CreateDefaultMap();
-        //CreateDefaultMap1();
-        //CreateDefaultMap2();
-
-        for (int i = mapLength - 2; i < 6; i++)
-        {
-            ExpendMap();
-        }
-
-        //foreach (NodeInfo node in roads)
+        //for (int i = 0; i < MapDefaultSize; i++)
         //{
-        //    Debug.Log($"{node.R}, {node.C}");
+        //    string line = reader.ReadLine();
+        //    for (int j = 0; j < MapDefaultSize; j++)
+        //    {
+        //        _map[i, j] = line[j] - '0';
+        //    }
         //}
     }
 
-    // 1x1 맵 (이걸로 할 듯)
-    void CreateDefaultMap()
+    protected override void Init()
     {
-        int mid = mapDefaultLength / 2;
+        transform.position = Pos;
+        startR = (int)Pos.x;
+        startC = (int)Pos.z;
 
-        map[mid, mid] = 1;
-        CreateNode("RoadE", mid * NodeSize, mid * NodeSize);
-        visit[mid, mid] = true;
+        roadParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
+        roadParent.name = "" + "Roads";
+        GroundParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
+        GroundParent.name = "" + "Nodes";
+        EnvironmentParent = Managers.Resource.Instantiate("Map/Parent", default, default, transform);
+        EnvironmentParent.name = "" + "Environments";
 
-        startPoint.SetValues(mid, mid);
-        endPoint.SetValues(mid, mid);
+        startObj = Managers.Resource.Instantiate("Map/Start", default, default, transform);
+        endObj = Managers.Resource.Instantiate("Map/End", default, default, transform);
 
-        mapLength = 3;
+        LoadMap(Id);
     }
 
-    /*
-    // 3x3 맵
-    void CreateDefaultMap1()
+    public void UpdatePosition()
     {
-        int mid = mapDefaultLength / 2;
-
-        startPoint[0] = mid - 1;
-        startPoint[1] = mid;
-        endPoint[0] = mid + 1;
-        endPoint[1] = mid;
-
-        for (int i = mid - 1; i < mid + 2; i++)
-        {
-            for (int j = mid - 1; j < mid + 2; j++)
-            {
-                if (j == mid)
-                {
-                    map[i, j] = 1;
-                    Instantiate(roadPrefab, new Vector3(i, 0, j), Quaternion.identity, parent.transform);
-                } else
-                {
-                    map[i, j] = 2;
-                    Instantiate(groundPrefab, new Vector3(i, 0, j), Quaternion.identity, parent.transform);
-                }
-                visit[i, j] = true;
-            }
-        }
-
-        mapLength = 5;
-    }
-
-    // 2x2 맵 (맵 확장에서 문제가 있는 듯 안됨)
-    void CreateDefaultMap2()
-    {
-        int mid = mapDefaultLength / 2;
-        int[] nodeR = new int[4] { mid - 1, mid, mid - 1, mid };
-        int[] nodeC = new int[4] { mid - 1, mid - 1, mid, mid };
-
-        int startNode = Random.Range(0, 4);
-        int endNode = Random.Range(0, 4);
-        while (Mathf.Abs(nodeR[startNode] - nodeR[endNode]) + Mathf.Abs(nodeC[startNode] - nodeC[endNode]) != 1)
-        {
-            endNode = Random.Range(0, 4);
-        }
-
-        startPoint[0] = nodeR[startNode];
-        startPoint[1] = nodeC[startNode];
-        endPoint[0] = nodeR[endNode];
-        endPoint[1] = nodeC[endNode];
-
-        for (int i = 0; i < 4; i++)
-        {
-            if (i == startNode || i == endNode)
-            {
-                map[nodeR[i], nodeC[i]] = 1;
-                Instantiate(roadPrefab, new Vector3(nodeR[i], 0, nodeC[i]), Quaternion.identity, parent.transform);
-            } else
-            {
-                map[nodeR[i], nodeC[i]] = 2;
-                Instantiate(groundPrefab, new Vector3(nodeR[i], 0, nodeC[i]), Quaternion.identity, parent.transform);
-            }
-
-            visit[nodeR[i], nodeC[i]] = true;
-        }
-    }
-    */
-
-    public void ExpendMap()
-    {
-        CreateStartPath(startPoint);
-        CreateEndPath(endPoint);
-
-        // 이거 렉 오짐
-        //Print2DArray();
-
-        //foreach (var node in roads)
-        //{
-        //    Debug.Log($"Node Values: R={node.R}, C={node.C}");
-        //}
-    }
-
-
-    // 길이 만들어지는 경우가 너무 적으면
-    // 길을 만들 개수를 랜덤으로 정하고 출발지와 도착지의 거리를 구해서 해야 할듯
-
-
-    // 맵의 마지막 길 노드 다음 방향 구하기 
-    int FirstPathDirection(NodeInfo node)
-    {
-        bool[] dir = new bool[4];
-
-        for (int i = 0; i < 4; i++)
-        {
-            if (!visit[node.R + dr[i], node.C + dc[i]])
-            {
-                if (map[node.R + dr[i], node.C + dc[i]] == 1)
-                {
-                    continue;
-                }
-
-                int nextDirection = (i + 1) % 4;
-                if (map[node.R + dr[i] + dr[nextDirection], node.C + dc[i] + dc[nextDirection]] == 1)
-                {
-                    continue;
-                }
-                nextDirection = (i + 3) % 4;
-                if (map[node.R + dr[i] + dr[nextDirection], node.C + dc[i] + dc[nextDirection]] == 1)
-                {
-                    continue;
-                }
-
-                dir[i] = true;
-            }
-        }
-
-        int result = Random.Range(0, 4);
-        while (!dir[result])
-        {
-            result = Random.Range(0, 4);
-        }
-
-        return result;
-    }
-            
-    // 첫 노드 다음 노드들 방향 정하기
-    int NextPathDirection(NodeInfo node, int firstNodeDirection)
-    {
-        bool[] dir = new bool[4];
-
-        int newPathDirection = (firstNodeDirection + 1) % 4;
-        if (map[node.R + dr[newPathDirection], node.C + dc[newPathDirection]] != 1)
-        {
-            dir[newPathDirection] = true;
-        }
-        newPathDirection = (firstNodeDirection + 3) % 4;
-        if (map[node.R + dr[newPathDirection], node.C + dc[newPathDirection]] != 1)
-        {
-            dir[newPathDirection] = true;
-        }
-
-        int result = Random.Range(0, 4);
-        while (!dir[result])
-        {
-            result = Random.Range(0, 4);
-        }
-
-        return result;
-    }
-
-    void UpdatePosition()
-    {
-        startObj.transform.position = new Vector3(startPoint.R * NodeSize + startdirR, 1, startPoint.C * NodeSize + startdirC);
-        startObj.transform.rotation = Quaternion.Euler(0, startPoint.Direction * 90, 0);
+        startObj.transform.position = new Vector3(StartPointR * NodeSize + startR, 1, StartPointC * NodeSize + startC);
+        startObj.transform.rotation = Quaternion.Euler(0, StartPointDir * 90, 0);
         StartCoroutine(SetScaleCoroutine(startObj.transform, 1));
-        endObj.transform.position = new Vector3(endPoint.R * NodeSize + startdirR, 1, endPoint.C * NodeSize + startdirC);
-        endObj.transform.rotation = Quaternion.Euler(0, endPoint.Direction * 90 + 180, 0);
+        endObj.transform.position = new Vector3(EndPointR * NodeSize + startR, 1, EndPointC * NodeSize + startC);
+        endObj.transform.rotation = Quaternion.Euler(0, EndPointDir * 90 + 180, 0);
         StartCoroutine(SetScaleCoroutine(endObj.transform, 0.003f));
     }
 
-    void CreateNode(string type, int r, int c)
+    public virtual void CreateNode(ObjectInfo objInfo)
     {
-        r += startdirR;
-        c += startdirC;
+        int r = (int)objInfo.PosInfo.PosX * NodeSize + startR;
+        int c = (int)objInfo.PosInfo.PosZ * NodeSize + startC;
 
-        GameObject node;
+        GameObject go;
 
-        if (type == "RoadS")
+        if (roadParent == null)
         {
-            node = Managers.Resource.Instantiate($"Environment/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
-            //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
-            roads.AddFirst(new NodeInfo(r, c));
-        } else if (type == "RoadE") 
+            Debug.Log("null");
+        }
+
+        if (objInfo.Name == "RoadS")
         {
-            node = Managers.Resource.Instantiate($"Environment/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
-            //Instantiate(roadPrefab, new Vector3(r, 0, c), Quaternion.identity, parent.transform);
-            roads.AddLast(new NodeInfo(r, c));
+            go = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
+            roads.AddFirst(new LocationInfo(r, c));
+        } else if (objInfo.Name == "RoadE") 
+        {
+            go = Managers.Resource.Instantiate($"Map/ForestGroundDirt", new Vector3(r, 0, c), Quaternion.identity, roadParent.transform);
+            roads.AddLast(new LocationInfo(r, c));
         } else
         {
             float y = Random.Range(-0.25f, 0.25f);
-            node = Managers.Resource.Instantiate($"Environment/ForestGround01", new Vector3(r, y, c), Quaternion.identity, GroundParent.transform);
-            //Instantiate(groundPrefab, new Vector3(r, y, c), Quaternion.identity, parent.transform);
-            SetChildCount(node.transform);
-            if (Random.Range(0, 10) == 1)
+            go = Managers.Resource.Instantiate($"Map/ForestGround01", new Vector3(r, y, c), Quaternion.identity, GroundParent.transform);
+            
+            Node node = go.GetComponent<Node>();
+            node.Id = objInfo.ObjectId;
+            node.MasterId = objInfo.MasterId;
+            node.PosInfo = objInfo.PosInfo;
+            node.Stat = objInfo.StatInfo;
+            
+            SetChildCount(go.transform);
+            if (objInfo.StatInfo.HaveEnvironment)
             {
-                node.GetComponent<Node>().enviroment = true;
+                go.GetComponent<Node>().environment = true;
                 CreateEnvironment(r, y, c);
             }
         }
 
-        StartCoroutine(MoveObjectCoroutine(node.transform));
-        SetTransparency(node);
+        //go.name = objInfo.Name;
+        Managers.Object._objects.Add(objInfo.ObjectId, go);
+
+        StartCoroutine(MoveObjectCoroutine(go.transform));
+        SetTransparency(go);
     }
 
-    void CreateEnvironment(int r, float y, int c)
+    protected void CreateEnvironment(int r, float y, int c)
     {
-        GameObject EnvironmentObj = Managers.Resource.Instantiate($"Environment/TFF_Birch_Tree_01A", new Vector3(r, y + 1, c), Quaternion.identity, EnvironmentParent.transform);
-        //Instantiate(EnvironmentPrefab, new Vector3(r, y + NodeSize - 0.5f, c), Quaternion.identity, EnvironmentParent.transform);
+        GameObject EnvironmentObj = Managers.Resource.Instantiate($"Map/Environment/TFF_Birch_Tree_01A", new Vector3(r, y + 1, c), Quaternion.identity, EnvironmentParent.transform);
         StartCoroutine(SetScaleCoroutine(EnvironmentObj.transform, 0.8f));
     }
 
@@ -406,7 +184,6 @@ public class NewMap : MonoBehaviour
 
             go.GetChild(randomIndex).gameObject.SetActive(true);
 
-            // 코루틴으로 크기 조정 함수 추가 예정
             StartCoroutine(SetScaleCoroutine(go.GetChild(randomIndex).gameObject.transform, 0.8f));
 
             activeObjectCount--;
@@ -499,202 +276,7 @@ public class NewMap : MonoBehaviour
         go.localScale = targetScale;
     }
 
-    void CreateStartPath(NodeInfo startNode)
-    {
-        // 밑에 SetValues 함수를 실행하면 startNode 값이 참조되어 바뀌므로 새로 NodeInfo 객체를 만들어서 할당해줘야 함
-        NodeInfo node = new NodeInfo(startNode.R, startNode.C, startNode.Direction);
-
-        // 첫 노드 방향, 현재 길 방향, 다음 길 방향, 회전 방향
-        int firstNodeDirection, currentPathDirection, nextPathDirection, clockwise = 1;
-        int nextR, nextC;
-        bool isCorner;  // 코너 확인
-
-        firstNodeDirection = FirstPathDirection(node);
-        nextR = node.R + dr[firstNodeDirection];
-        nextC = node.C + dc[firstNodeDirection];
-
-        // map[nextR, nextC]에 길 노드 생성
-        map[nextR, nextC] = 1;
-        CreateNode("RoadS", nextR * NodeSize, nextC * NodeSize);
-        startPoint.SetValues(nextR, nextC, (firstNodeDirection + 2) % 4);
-
-        // 길을 더 만들지 말지 결정
-        if (Random.Range(0, 2) == 0)
-        {
-            return;
-        }
-
-        currentPathDirection = NextPathDirection(node, firstNodeDirection);
-        // 반시계 방향인 경우
-        if (firstNodeDirection - currentPathDirection == -3 || firstNodeDirection - currentPathDirection == 1)
-        {
-            clockwise = 3;
-        }
-        // 다음 방향
-        nextPathDirection = (currentPathDirection + clockwise) % 4;
-
-        int[] currentCoor = new int[2] { nextR + dr[currentPathDirection], nextC + dc[currentPathDirection] };
-        int MaxNodeCount = mapLength * 4 - 4 - 1;
-
-        while (MaxNodeCount > 0)
-        {
-            int currentR = currentCoor[0];
-            int currentC = currentCoor[1];
-            isCorner = false;
-
-            // 코너인 경우
-            if (!visit[currentR + dr[nextPathDirection], currentC + dc[nextPathDirection]])
-            {
-                currentPathDirection = nextPathDirection;
-                nextPathDirection = (currentPathDirection + clockwise) % 4;
-
-                isCorner = true;
-            }
-
-            if (!isCorner)
-            {
-                // 옆에 있는 경우
-                if (map[currentR + dr[nextPathDirection], currentC + dc[nextPathDirection]] == 1)
-                {
-                    return;
-                }
-                // 대각선에 있는 경우
-                else if (map[currentR + dr[currentPathDirection] + dr[nextPathDirection], currentC + dc[currentPathDirection] + dc[nextPathDirection]] == 1)
-                {
-                    return;
-                }
-            }
-
-            // map[currentR, currentC]에 길 노드 생성
-            map[currentR, currentC] = 1;
-            CreateNode("RoadS", currentR * NodeSize, currentC * NodeSize);
-            if (!isCorner)
-            {
-                startPoint.SetValues(currentR, currentC, (currentPathDirection + 2 * clockwise) % 4);
-            }
-            else
-            {
-                startPoint.SetValues(currentR, currentC, (currentPathDirection + clockwise) % 4);
-            }
-
-            if (Random.Range(0, 2) == 0)
-            {
-                return;
-            }
-
-            currentCoor[0] = currentR + dr[currentPathDirection];
-            currentCoor[1] = currentC + dc[currentPathDirection];
-
-            MaxNodeCount--;
-        }
-    }
-    void CreateEndPath(NodeInfo endNode)
-    {
-        // 밑에 SetValues 함수를 실행하면 endNode 값이 참조되어 바뀌므로 새로 NodeInfo 객체를 만들어서 할당해줘야 함
-        NodeInfo node = new NodeInfo(endNode.R, endNode.C, endNode.Direction);
-
-        // 첫 노드 방향, 현재 길 방향, 다음 길 방향, 회전 방향, 길인지 땅인지 확인 변수
-        int firstNodeDirection, currentPathDirection, nextPathDirection, clockwise = 1, createNode = 1;
-        int nextR, nextC;
-        bool isCorner; // 코너 확인
-
-        firstNodeDirection = FirstPathDirection(node);
-        nextR = node.R + dr[firstNodeDirection];
-        nextC = node.C + dc[firstNodeDirection];
-
-        // map[currentR, currentC]에 길 노드 생성
-        map[nextR, nextC] = createNode;
-        CreateNode("RoadE", nextR * NodeSize, nextC * NodeSize);
-        visit[nextR, nextC] = true;
-        endPoint.SetValues(nextR, nextC, (firstNodeDirection + 2) % 4);
-
-        createNode = Random.Range(1, 3);
-
-        currentPathDirection = NextPathDirection(node, firstNodeDirection);
-        // 반시계 방향인 경우
-        if (firstNodeDirection - currentPathDirection == -3 || firstNodeDirection - currentPathDirection == 1)
-        {
-            clockwise = 3;
-        }
-        // 다음 방향
-        nextPathDirection = (currentPathDirection + clockwise) % 4;
-
-        int[] currentCoor = new int[2] { nextR + dr[currentPathDirection], nextC + dc[currentPathDirection] };
-        int MaxNodeCount = mapLength * 4 - 4 - 1;
-
-        while (MaxNodeCount > 0)
-        {
-            int currentR = currentCoor[0];
-            int currentC = currentCoor[1];
-            isCorner = false;
-
-            // 코너인 경우
-            if (!visit[currentR + dr[nextPathDirection], currentC + dc[nextPathDirection]])
-            {
-                currentPathDirection = nextPathDirection;
-                nextPathDirection = (currentPathDirection + clockwise) % 4;
-
-                isCorner = true;
-            }
-
-            if (createNode == 1 && !isCorner)
-            {
-                // 앞에 있는 경우
-                if (map[currentR + dr[currentPathDirection], currentC + dc[currentPathDirection]] == 1)
-                {
-                    createNode = 2;
-                }
-                // 옆에 있는 경우
-                else if (map[currentR + dr[nextPathDirection], currentC + dc[nextPathDirection]] == 1)
-                {
-                    createNode = 2;
-                }
-                // 대각선에 있는 경우
-                else if (map[currentR + dr[currentPathDirection] + dr[nextPathDirection], currentC + dc[currentPathDirection] + dc[nextPathDirection]] == 1)
-                {
-                    createNode = 2;
-                }
-            }
-
-            // map[currentR, currentC]에 길 노드 생성
-            if (map[currentR, currentC] == 0)
-            {
-                map[currentR, currentC] = createNode;
-                if (createNode == 1)
-                {
-                    CreateNode("RoadE", currentR * NodeSize, currentC * NodeSize);
-                    if (!isCorner)
-                    {
-                        endPoint.SetValues(currentR, currentC, (currentPathDirection + 2 * clockwise) % 4);
-                    } else
-                    {
-                        endPoint.SetValues(currentR, currentC, (currentPathDirection + clockwise) % 4);
-                    }
-                }
-                else
-                {
-                    CreateNode("Ground", currentR * NodeSize, currentC * NodeSize);
-                }
-            }
-            visit[currentR, currentC] = true;
-
-            if (createNode == 1)
-            {
-                createNode = Random.Range(1, 3);
-            }
-
-            currentCoor[0] = currentR + dr[currentPathDirection];
-            currentCoor[1] = currentC + dc[currentPathDirection];
-
-            MaxNodeCount--;
-        }
-
-        UpdatePosition();
-
-        mapLength += 2;
-    }
-
-    public static void clear()
+    public void clear()
     {
         roads.Clear();
     }

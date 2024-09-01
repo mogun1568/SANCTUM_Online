@@ -1,0 +1,19 @@
+{
+  "stats": [
+    {
+      "name": "GroundE",
+      "haveEnvironment": true
+    },
+    {
+      "name": "Ground",
+      "haveEnvironment": false
+    },
+    {
+      "name": "RoadS"
+    },
+    {
+      "name": "RoadE"
+    }
+  ]
+}
+

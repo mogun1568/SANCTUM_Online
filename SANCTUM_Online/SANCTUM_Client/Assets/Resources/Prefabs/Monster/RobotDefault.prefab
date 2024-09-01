@@ -6369,9 +6369,9 @@ GameObject:
   - component: {fileID: 4173166080071207075}
   - component: {fileID: 8828092552833339984}
   - component: {fileID: 1965187485559607536}
-  - component: {fileID: 1135063119445002684}
   - component: {fileID: 3046985972226527338}
-  - component: {fileID: -9068322473632583006}
+  - component: {fileID: 2454899769956935565}
+  - component: {fileID: 3234479090464072862}
   m_Layer: 0
   m_Name: RobotDefault
   m_TagString: Enemy
@@ -6506,18 +6506,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1135063119445002684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4173166080071207074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0263d29a8bf6aee40bab01246f4f5947, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &3046985972226527338
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6614,7 +6602,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &-9068322473632583006
+--- !u!114 &2454899769956935565
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6623,14 +6611,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 4173166080071207074}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806dc5fd39509484a86826f4dfbb9741, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData:
-    enemyType: 
-    enemyName: 
-  _stat: {fileID: 0}
-  isAttack: 0
+  IsUsing: 0
+--- !u!114 &3234479090464072862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4173166080071207074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923099ca8b04cd04e8214bd0765ec459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turnSpeed: 10
 --- !u!1001 &1617447680637214200
 PrefabInstance:
   m_ObjectHideFlags: 0

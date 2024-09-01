@@ -6,10 +6,12 @@ using TMPro;
 using System;
 using Unity.VisualScripting;
 using System.Xml;
+using System.IO;
+using System.Net;
 
 public class SelectItem : UI_Base
 {
-    Dictionary<string, int> invenDict = new Dictionary<string, int>(); // 아이템 아이디와 개수를 저장하는 딕셔너리
+    Dictionary<string, int> _invenDict = new Dictionary<string, int>(); // 아이템 아이디와 개수를 저장하는 딕셔너리
 
     RectTransform InventoryTransform;
     //[SerializeField] float ScrlSpd = 1.75f;
@@ -47,11 +49,40 @@ public class SelectItem : UI_Base
         LifeRecoveryCountText
     }
 
-    void Start()
+    string absolutePath = "C:\\Users\\kmg3329\\Documents\\GitHub\\SANCTUM_Online\\SANCTUM_Online\\SANCTUM_Client";
+    public void LoadInventory(int playerId, string pathPrefix = "Assets/Resources/Inventory")
+    {
+        string inventoryName = "Inventory_" + playerId.ToString();
+
+        // Collision 관련 파일
+        string text = File.ReadAllText($"{absolutePath}/{pathPrefix}/{inventoryName}.txt");
+        //TextAsset textAsset = Resources.Load<TextAsset>($"Inventory/{inventoryName}");
+        StringReader reader = new StringReader(text);
+
+        // 다 비활성화
+        foreach (Transform child in inventory.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        int len = int.Parse(reader.ReadLine());
+        for (int i = 0; i < len; i++)
+        {
+            string itemName = reader.ReadLine();
+            int cnt = int.Parse(reader.ReadLine());
+
+            CreateItemUI(itemName);
+            UpdateItemUI(itemName, cnt);
+        }
+    }
+
+    // 아예 전부 UI_Inven으로 옮길 수 있을지도
+    void Awake()
     {
         Init();
     }
 
+    GameObject inventory;
     public override void Init()
     {
         Managers.UI.SelectItem = GetComponent<SelectItem>();
@@ -59,68 +90,14 @@ public class SelectItem : UI_Base
         Bind<GameObject>(typeof(GameObjects));
         Bind<TextMeshProUGUI>(typeof(Texts));
 
-        GameObject inventory = Get<GameObject>((int)GameObjects.SelectItem);
+        inventory = Get<GameObject>((int)GameObjects.SelectItem);
         foreach (Transform child in inventory.transform)
         {
-            //Managers.Resource.Destroy(child.gameObject);
             child.gameObject.SetActive(false);
-        }
-
-        // 실제 인벤토리 정보를 참고해서
-        for (int i = 0; i < 5; i++)
-        {
-            AddItem("StandardTower");
-
-            //GameObject item = Managers.UI.MakeSubItem<UI_Inven_Item>(inventory.transform).gameObject;
-            //UI_Inven_Item invenItem = item.GetOrAddComponent<UI_Inven_Item>();
-            //invenItem.SetInfo($"Sword{i}");
         }
 
         InventoryTransform = transform.parent.GetComponent<RectTransform>();
         tok = 1;
-    }
-
-    public void FirstAddItem()
-    {
-        // 실제 인벤토리 정보를 참고해서
-        for (int i = 0; i < 3; i++)
-        {
-            AddItem("StandardTower");
-
-            //GameObject item = Managers.UI.MakeSubItem<UI_Inven_Item>(inventory.transform).gameObject;
-            //UI_Inven_Item invenItem = item.GetOrAddComponent<UI_Inven_Item>();
-            //invenItem.SetInfo($"Sword{i}");
-        }
-    }
-    public void AddItem(string itemName)
-    {
-        if (invenDict.ContainsKey(itemName))
-        {
-            // 이미 해당 아이템이 인벤토리에 있는 경우
-            invenDict[itemName]++; // 아이템 개수를 1 증가시킴
-            UpdateItemUI(itemName, invenDict[itemName]); // 아이템 UI 업데이트
-        }
-        else
-        {
-            // 새로운 아이템을 획득한 경우
-            invenDict.Add(itemName, 1); // 아이템을 딕셔너리에 추가하고 개수를 1로 초기화함
-            //CreateItemUI(item); // 아이템 UI 생성
-            CreateItemUI(itemName);
-        }
-    }
-
-    public void useItem(string itemName)
-    {
-        invenDict[itemName]--;
-        if (invenDict[itemName] == 0)
-        {
-            invenDict.Remove(itemName);
-            Managers.Select.DestroyItemUI();
-        }
-        else
-        {
-            UpdateItemUI(itemName, invenDict[itemName]);
-        }
     }
 
     void UpdateItemUI(string itemName, int itemCount)
@@ -134,17 +111,10 @@ public class SelectItem : UI_Base
         {
             Debug.LogError($"Failed to parse enum value for itemName: {itemName}");
         }
-
-        //Transform itemUI = transform.Find(itemName);
-        //TextMeshProUGUI itemText = itemUI.GetComponentInChildren<TextMeshProUGUI>();
-        //itemText.text = itemCount.ToString();
     }
 
     void CreateItemUI(string itemName)
     {
-        //GameObject item = Managers.UI.MakeSubItem<UI_Inven_Item>(transform, itemName).gameObject;
-        //UI_Inven_Item invenItem = item.GetOrAddComponent<UI_Inven_Item>();
-
         if (Enum.TryParse(itemName, out GameObjects enumValue))
         {
             if (GetObject((int)enumValue) == null)
@@ -159,9 +129,6 @@ public class SelectItem : UI_Base
         {
             Debug.LogError($"Failed to parse enum value for itemName: {itemName}");
         }
-        //Transform itemUI = transform.Find(itemName.ToString());
-        //itemUI.SetAsLastSibling();
-        //itemUI.gameObject.SetActive(true);
     }
 
     public IEnumerator StartLerpUp()

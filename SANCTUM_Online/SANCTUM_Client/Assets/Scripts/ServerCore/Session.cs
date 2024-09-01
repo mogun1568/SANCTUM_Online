@@ -73,8 +73,12 @@ namespace ServerCore
 		public void Start(Socket socket)
 		{
 			_socket = socket;
+            _disconnected = 0;
+            _recvBuffer = new RecvBuffer(65535);
+            _sendArgs = new SocketAsyncEventArgs();
+            _recvArgs = new SocketAsyncEventArgs();
 
-			_recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecvCompleted);
+            _recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecvCompleted);
 			_sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
 
 			RegisterRecv();

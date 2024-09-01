@@ -9,39 +9,238 @@ enum MsgId {
   S_LEAVE_GAME = 1;
   S_SPAWN = 2;
   S_DESPAWN = 3;
-  C_MOVE = 4;
-  S_MOVE = 5;
+  C_GAME_START = 4;
+  S_GAME_START = 5;
+  S_CREATE_MAP = 6;
+  S_LOOK = 7;
+  C_MOVE = 8;
+  S_MOVE = 9;
+  S_CHANGE_STAT = 10;
+  S_DIE = 11;
+  C_INVEN_UPDATE = 12;
+  S_INVEN_UPDATE = 13;
+  S_LEVEL_UP = 14;
+  C_TURRET_U_I = 15;
+  S_TURRET_U_I = 16;
+  C_TURRET_DEMOLITE = 17;
+  C_FIRST_PERSON_MODE = 18;
+  S_FIRST_PERSON_MODE = 19;
+  C_SHOOT = 20;
+  C_ENTER_ROOM = 21;
+  S_ENTER_ROOM = 22;
+  C_LEAVE_ROOM = 23;
+  C_ROOM_LIST = 24;
+  S_ROOM_LIST = 25;
+  S_GAME_OVER = 26;
+  C_PAUSE = 27;
+  S_GAME_TIME = 28;
+}
+
+enum CreatureState {
+  IDLE = 0;
+  MOVING = 1;
+  ATTACKING = 2;
+  DIE = 3;
+}
+
+enum GameObjectType {
+  NONE = 0;
+  PLAYER = 1;
+  NODE = 2;
+  TURRET = 3;
+  ENEMY = 4;
+  PROJECTILE = 5;
+}
+
+enum ChangeStat {
+  DEFAULT = 0;
+  USER_LIFE_UP = 1;
+  USER_LIFE_DOWN = 2;
+  WATER = 3;
 }
 
 message S_EnterGame {
-  PlayerInfo player = 1;
+  ObjectInfo player = 1;
+  bool isGameRoom = 2;
 }
 
 message S_LeaveGame {
 }
 
 message S_Spawn {
-  repeated PlayerInfo players = 1;
+  repeated ObjectInfo objects = 1;
 }
 
 message S_Despawn {
-  repeated int32 playerIds = 1;
+  repeated int32 objectIds = 1;
+}
+
+message C_GameStart {
+}
+
+message S_GameStart {
+  int32 playerId = 1;
+}
+
+message S_CreateMap {
+  int32 playerId = 1;
+}
+
+message S_Look {
+  int32 objectId = 1;
+  PositionInfo targetPosinfo = 2;
 }
 
 message C_Move {
-  int32 posX = 1;
-  int32 posY = 2;
+  PositionInfo posInfo = 1;
 }
 
 message S_Move {
-  int32 playerId = 1;
-  int32 posX = 2;
-  int32 posY = 3;
+  int32 objectId = 1;
+  PositionInfo posInfo = 2;
 }
 
-message PlayerInfo {
+message S_ChangeStat {
+  int32 objectId = 1;
+  StatInfo statInfo = 2;
+  bool isItem = 3;
+  ChangeStat changeStat = 4;
+}
+
+message S_Die {
+  int32 objectId = 1;
+  int32 attackerId = 2;
+}
+
+message C_InvenUpdate {
+  string itemName = 1;
+  bool isAdd = 2;
+  int32 nodeId = 3;
+  PositionInfo posInfo = 4;
+}
+
+message S_InvenUpdate {
   int32 playerId = 1;
+}
+
+message C_LevelUp {
+  bool isShow = 1;
+}
+
+message S_LevelUp {
+  int32 playerId = 1;
+  repeated int32 itemIdxs = 2;
+}
+
+message C_TurretUI {
+  int32 nodeId = 1;
+}
+
+message S_TurretUI {
+  int32 playerId = 1;
+  int32 nodeId = 2;
+  int32 turretId = 3;
+}
+
+message C_TurretDemolite {
+  int32 nodeId = 1;
+}
+
+message C_FirstPersonMode {
+  bool isFPM = 1;
+  int32 turretId = 2;
+}
+
+message S_FirstPersonMode {
+  int32 playerId = 1;
+  int32 turretId = 2;
+}
+
+message C_Shoot {
+  int32 turretId = 1;
+  PositionInfo posInfo = 2;
+}
+
+message C_EnterRoom {
+  int32 roomId = 1;
+  bool isGameRoom = 2;
+}
+
+message S_EnterRoom {
+  int32 playerId = 1;
+  bool CanEnter = 2;
+}
+
+message C_LeaveRoom {
+}
+
+message C_RoomList {
+}
+
+message S_RoomList {
+  int32 playerId = 1;
+  repeated RoomInfo roomList = 2;
+}
+
+message S_GameOver {
+  int32 playerId = 1;
+  int32 rank = 2;
+}
+
+message C_Pause {
+  bool isPause = 1;
+}
+
+message S_GameTime {
+  int32 playerId = 1;
+  int32 gameTime = 2;
+}
+
+message ObjectInfo {
+  int32 objectId = 1;
   string name = 2;
-  int32 posX = 3;
-  int32 posY = 4;
+  PositionInfo posInfo = 3;
+  StatInfo statInfo = 4;
+  int32 masterId = 5;
+}
+
+message PositionInfo {
+  float posX = 1;
+  float posY = 2;
+  float posZ = 3;
+  float dirX = 4;
+  float dirY = 5;
+  float dirZ = 6;
+  CreatureState state = 7;
+}
+
+message StatInfo {
+  string name = 1;
+  string type = 2;
+  bool haveEnvironment = 3;
+  int32 level = 4;
+  int32 maxHp = 5;
+  int32 hp = 6;
+  float attack = 7;
+  float startSpeed = 8;
+  float speed = 9;
+  float range = 10;
+  float fireRate = 11;
+  int32 exp = 12;
+  int32 totalExp = 13;
+  bool isFPM = 14;
+}
+
+message ItemInfo {
+  string itemType = 1;
+  string itemName = 2;
+  string itemIcon = 3;
+  float upgradeAmount = 4;
+  int32 returnExp = 5;
+}
+
+message RoomInfo {
+  int32 id = 1;
+  int32 playerNum = 2;
+  bool isStart = 3;
 }

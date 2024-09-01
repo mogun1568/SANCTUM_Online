@@ -12,7 +12,7 @@ public class Setting : UI_Popup
     Slider soundSlider;
     Slider mouseSlider;
 
-    static float soundValue = 0.7f;
+    static float soundValue = 0.1f;
     static float mouseValue = 100;
 
     enum GameObjects

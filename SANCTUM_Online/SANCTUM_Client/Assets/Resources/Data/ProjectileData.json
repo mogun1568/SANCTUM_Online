@@ -1,0 +1,34 @@
+{
+  "projectiles": [
+    {
+      "type": "General",
+      "name": "StandardBullet",
+      "attack": "50",
+      "speed": "50.0"
+    },
+    {
+      "type": "Explode",
+      "name": "LightningBullet",
+      "attack": "50",
+      "speed": "50.0"
+    },
+    {
+      "type": "Dot",
+      "name": "FireBullet",
+      "attack": "50",
+      "speed": "50.0"
+    },
+    {
+      "type": "Slow",
+      "name": "IceBullet",
+      "attack": "50",
+      "speed": "50.0"
+    },
+    {
+      "type": "Massive",
+      "name": "DirtBullet",
+      "attack": "100",
+      "speed": "50.0"
+    }
+  ]
+}

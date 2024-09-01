@@ -1842,9 +1842,9 @@ GameObject:
   - component: {fileID: 6600777019711765998}
   - component: {fileID: 3646678435842873841}
   - component: {fileID: 207880212533646399}
-  - component: {fileID: 6038098474578711480}
   - component: {fileID: 2164924156513853846}
-  - component: {fileID: 8853006321859977477}
+  - component: {fileID: -6467088318789052773}
+  - component: {fileID: 3271200875444102635}
   m_Layer: 0
   m_Name: ChemicalmanDefault
   m_TagString: Enemy
@@ -1979,18 +1979,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6038098474578711480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6600777019711765999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0263d29a8bf6aee40bab01246f4f5947, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &2164924156513853846
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2087,7 +2075,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &8853006321859977477
+--- !u!114 &-6467088318789052773
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2096,14 +2084,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 6600777019711765999}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 806dc5fd39509484a86826f4dfbb9741, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyData:
-    enemyType: 
-    enemyName: 
-  _stat: {fileID: 0}
-  isAttack: 0
+  IsUsing: 0
+--- !u!114 &3271200875444102635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600777019711765999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 923099ca8b04cd04e8214bd0765ec459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turnSpeed: 10
 --- !u!1 &6600777019722556958
 GameObject:
   m_ObjectHideFlags: 0

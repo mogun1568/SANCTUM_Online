@@ -9,6 +9,8 @@ using System.Net;
 using Google.Protobuf.Protocol;
 using Google.Protobuf;
 using Server.Game;
+using System.Numerics;
+using Server.Data;
 
 namespace Server
 {
@@ -35,15 +37,24 @@ namespace Server
 
             // 원래는 서버에서 패킷을 보내고 클라에서 준비됐다는 패킷을 보내면 입장시킴
             // 지금은 그냥 강제 입장시키는 방식으로 진행
-            MyPlayer = PlayerManager.Instance.Add();
+            MyPlayer = ObjectManager.Instance.Add<Player>();
             {
-                MyPlayer.Info.Name = $"Player_{MyPlayer.Info.PlayerId}";
-                MyPlayer.Info.PosX = 0;
-                MyPlayer.Info.PosY = 0;
+                MyPlayer.Info.Name = $"Player_{MyPlayer.Info.ObjectId}";
+                MyPlayer.Info.PosInfo.PosX = 0;
+                MyPlayer.Info.PosInfo.PosY = 0;
+                MyPlayer.Info.PosInfo.PosZ = 0;
+
+                MyPlayer.Stat.Level = 1;
+                MyPlayer.Stat.MaxHp = 10;
+                MyPlayer.Stat.Hp = 10;
+                MyPlayer.Stat.Exp = 0;
+                MyPlayer.Stat.TotalExp = 3;
+
                 MyPlayer.Session = this;
             }
 
-            RoomManager.Instance.Find(1).EnterGame(MyPlayer);
+            WaitingRoom room = RoomManager.Instance.FindWaitingRoom(1);
+            room.Push(room.EnterGame, MyPlayer);
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
@@ -53,7 +64,17 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint)
         {
-            RoomManager.Instance.Find(1).LeaveGame(MyPlayer.Info.PlayerId);
+            // 예상치 못한 문제가 생길 수 있음
+            if (MyPlayer.Room != null)
+            {
+                GameRoom room = RoomManager.Instance.FindGameRoom(MyPlayer.Room.RoomId);
+                room.Push(room.LeaveGame, MyPlayer.Info.ObjectId);
+            }
+            if (MyPlayer.WaitingRoom != null)
+            {
+                WaitingRoom waitingRoom = RoomManager.Instance.FindWaitingRoom(MyPlayer.WaitingRoom.RoomId);
+                waitingRoom.Push(waitingRoom.LeaveGame, MyPlayer.Info.ObjectId);
+            }
 
             SessionManager.Instance.Remove(this);
 

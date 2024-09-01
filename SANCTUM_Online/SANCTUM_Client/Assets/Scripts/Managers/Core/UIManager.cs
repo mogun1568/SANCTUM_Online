@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -147,6 +148,9 @@ public class UIManager
         {
             ClosePopupUI();
         }
+
+        Managers.Game.isPopup = false;
+        Managers.Game.isSettingUI = false;
     }
 
     public void Clear()

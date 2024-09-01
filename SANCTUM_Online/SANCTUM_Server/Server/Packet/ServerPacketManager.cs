@@ -23,8 +23,28 @@ class PacketManager
 
 	public void Register()
 	{		
+		_onRecv.Add((ushort)MsgId.CGameStart, MakePacket<C_GameStart>);
+		_handler.Add((ushort)MsgId.CGameStart, PacketHandler.C_GameStartHandler);		
 		_onRecv.Add((ushort)MsgId.CMove, MakePacket<C_Move>);
-		_handler.Add((ushort)MsgId.CMove, PacketHandler.C_MoveHandler);
+		_handler.Add((ushort)MsgId.CMove, PacketHandler.C_MoveHandler);		
+		_onRecv.Add((ushort)MsgId.CInvenUpdate, MakePacket<C_InvenUpdate>);
+		_handler.Add((ushort)MsgId.CInvenUpdate, PacketHandler.C_InvenUpdateHandler);		
+		_onRecv.Add((ushort)MsgId.CTurretUI, MakePacket<C_TurretUI>);
+		_handler.Add((ushort)MsgId.CTurretUI, PacketHandler.C_TurretUIHandler);		
+		_onRecv.Add((ushort)MsgId.CTurretDemolite, MakePacket<C_TurretDemolite>);
+		_handler.Add((ushort)MsgId.CTurretDemolite, PacketHandler.C_TurretDemoliteHandler);		
+		_onRecv.Add((ushort)MsgId.CFirstPersonMode, MakePacket<C_FirstPersonMode>);
+		_handler.Add((ushort)MsgId.CFirstPersonMode, PacketHandler.C_FirstPersonModeHandler);		
+		_onRecv.Add((ushort)MsgId.CShoot, MakePacket<C_Shoot>);
+		_handler.Add((ushort)MsgId.CShoot, PacketHandler.C_ShootHandler);		
+		_onRecv.Add((ushort)MsgId.CEnterRoom, MakePacket<C_EnterRoom>);
+		_handler.Add((ushort)MsgId.CEnterRoom, PacketHandler.C_EnterRoomHandler);		
+		_onRecv.Add((ushort)MsgId.CLeaveRoom, MakePacket<C_LeaveRoom>);
+		_handler.Add((ushort)MsgId.CLeaveRoom, PacketHandler.C_LeaveRoomHandler);		
+		_onRecv.Add((ushort)MsgId.CRoomList, MakePacket<C_RoomList>);
+		_handler.Add((ushort)MsgId.CRoomList, PacketHandler.C_RoomListHandler);		
+		_onRecv.Add((ushort)MsgId.CPause, MakePacket<C_Pause>);
+		_handler.Add((ushort)MsgId.CPause, PacketHandler.C_PauseHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
