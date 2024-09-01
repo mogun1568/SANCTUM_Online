@@ -1,2 +1,2 @@
 # SANCTUM_Online
-SANCTUM에 멀티 기능 추가
+멀티 플레이 타워 디펜스 게임
