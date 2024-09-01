@@ -23,7 +23,7 @@ namespace Server.Game
 
         void GenerateInventory()
         {
-            //GenerateByPath("../../../../../Common/MapData");
+            //GenerateByItem("../../../../../Common/InventoryData");
             GenerateByItem("../../../../../SANCTUM_Client/Assets/Resources/Inventory");
         }
 
@@ -97,12 +97,10 @@ namespace Server.Game
             }
             else
             {
-                switch (itemInfo.ItemName)
+                if (itemInfo.ItemName == "LifeRecovery")
                 {
-                    case "LifeRecovery":
-                        Console.WriteLine($"Life Recovery {_master.Stat.Hp} -> {_master.Stat.Hp + 1}");
-                        _master.Stat.Hp += 1;
-                        break;
+                    Console.WriteLine($"Life Recovery {_master.Stat.Hp} -> {_master.Stat.Hp + 1}");
+                    _master.Stat.Hp += 1;
                 }
 
                 S_ChangeStat changeStatPacket = new S_ChangeStat();

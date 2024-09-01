@@ -59,6 +59,7 @@ namespace Server.Game
 		{
 			lock (_lock)
 			{
+                Console.WriteLine($"Remove GameRoom {roomId}");
 				return _gameRooms.Remove(roomId);
 			}
 		}

@@ -50,16 +50,15 @@ public class NewMap : BaseController
 
     //int[,] _map;
 
+    string absolutePath = "C:\\Users\\kmg3329\\Documents\\GitHub\\SANCTUM_Online\\SANCTUM_Online\\SANCTUM_Client";
     public void LoadMap(int mapId, string pathPrefix = "Assets/Resources/Map")
     {
         string mapName = "Map_" + mapId.ToString();
 
         // Collision 관련 파일
-        //string text = File.ReadAllText($"{pathPrefix}/{mapName}.txt");
-        TextAsset textAsset = Resources.Load<TextAsset>($"Map/{mapName}");
-        if (textAsset == null)
-            Debug.Log("null");
-        StringReader reader = new StringReader(textAsset.text);
+        string text = File.ReadAllText($"{absolutePath}/{pathPrefix}/{mapName}.txt");
+        //TextAsset textAsset = Resources.Load<TextAsset>($"Map/{mapName}");
+        StringReader reader = new StringReader(text);
 
         StartPointR = int.Parse(reader.ReadLine());
         StartPointC = int.Parse(reader.ReadLine());

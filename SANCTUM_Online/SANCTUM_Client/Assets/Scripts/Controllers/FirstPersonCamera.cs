@@ -30,12 +30,12 @@ public class FirstPersonCamera : MonoBehaviour
 
     void Update()
     {
-        if (!Managers.Game.GameIsOver)
+        if (Managers.Game.GameIsOver)
         {
             return;
         }
 
-        if (!Managers.Game.isPopup)
+        if (Managers.Game.isPopup)
         {
             return;
         }

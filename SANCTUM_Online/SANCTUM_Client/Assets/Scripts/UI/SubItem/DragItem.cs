@@ -90,9 +90,6 @@ public class DragItem : UI_Base
                     foreach (Component com in SilhouetteItem.GetComponentsInChildren<Component>())
                         foreach (Renderer ren in com.GetComponentsInChildren<Renderer>())
                             ren.material.color = new Color(0.1375f, 1, 0, 0);
-                    //foreach (Renderer mat in SilhouetteItem.GetComponentsInChildren<Renderer>())
-                    //    foreach(Renderer mat2 in mat.GetComponentsInChildren<Renderer>())
-                    //        mat2.material.color = new Color(0.1375f, 1, 0, 0);
                 }
                 else
                 {

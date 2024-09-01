@@ -49,14 +49,15 @@ public class SelectItem : UI_Base
         LifeRecoveryCountText
     }
 
+    string absolutePath = "C:\\Users\\kmg3329\\Documents\\GitHub\\SANCTUM_Online\\SANCTUM_Online\\SANCTUM_Client";
     public void LoadInventory(int playerId, string pathPrefix = "Assets/Resources/Inventory")
     {
         string inventoryName = "Inventory_" + playerId.ToString();
 
         // Collision 관련 파일
-        //string text = File.ReadAllText($"{pathPrefix}/{inventoryName}.txt");
-        TextAsset textAsset = Resources.Load<TextAsset>($"Inventory/{inventoryName}");
-        StringReader reader = new StringReader(textAsset.text);
+        string text = File.ReadAllText($"{absolutePath}/{pathPrefix}/{inventoryName}.txt");
+        //TextAsset textAsset = Resources.Load<TextAsset>($"Inventory/{inventoryName}");
+        StringReader reader = new StringReader(text);
 
         // 다 비활성화
         foreach (Transform child in inventory.transform)

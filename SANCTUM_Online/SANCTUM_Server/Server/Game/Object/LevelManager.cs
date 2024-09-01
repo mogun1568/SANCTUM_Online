@@ -16,7 +16,7 @@ namespace Server.Game
         public Player _player;
         public int _countLevelUp;
         bool _isPractice;
-        public bool _isShow;
+        //public bool _isShow;
 
         Random _random = new Random();
 
@@ -71,32 +71,45 @@ namespace Server.Game
             foreach (int i in ran)
                levelUpPacket.ItemIdxs.Add(i);
             _player.Session.Send(levelUpPacket);
-            Console.WriteLine($"{_isShow}, {_countLevelUp}");
 
             // 추후 벨런스 문제가 있다면 동일 아이템 개수 제한 기능 추가
         }
 
-        public async void LevelUp()
+        public void LevelUp()
         {
-            await LevelUpUIAsync();
-        }
+            if (_player.IsFPM || _player.isPause)
+                return;
 
-        async Task LevelUpUIAsync()
-        {
-            while (_countLevelUp > 0)
+            if (_countLevelUp > 0)
             {
-                // isShow가 false가 될 때까지 대기
-                while (_isShow)
-                {
-                    await Task.Delay(100); // 100ms 간격으로 상태 확인 (필요에 따라 조정)
-                }
-
                 RandomItem();
                 _countLevelUp--;
-                _isShow = true;
             }
-
-            _isPractice = false;
+            else
+                _isPractice = false;
         }
+
+        //public async void LevelUp()
+        //{
+        //    await LevelUpUIAsync();
+        //}
+
+        //async Task LevelUpUIAsync()
+        //{
+        //    while (_countLevelUp > 0)
+        //    {
+        //        // isShow가 false가 될 때까지 대기
+        //        while (_isShow)
+        //        {
+        //            await Task.Delay(100); // 100ms 간격으로 상태 확인 (필요에 따라 조정)
+        //        }
+
+        //        RandomItem();
+        //        _countLevelUp--;
+        //        _isShow = true;
+        //    }
+
+        //    _isPractice = false;
+        //}
     }
 }

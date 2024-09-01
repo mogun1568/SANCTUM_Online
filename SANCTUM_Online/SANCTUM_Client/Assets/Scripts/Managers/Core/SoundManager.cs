@@ -37,6 +37,8 @@ public class SoundManager
             }
 
             _audioSources[(int)Define.Sound.Bgm].loop = true;
+
+            audioMixer.SetFloat("Master", Mathf.Log10(0.1f) * 20);
         }
     }
 

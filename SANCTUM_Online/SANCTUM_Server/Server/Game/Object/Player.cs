@@ -31,6 +31,9 @@ namespace Server.Game
             Map.Init(this);
             Inventory.Init(this, Room);
             LevelManager.Init(this);
+
+            // 코드 상으론 문제가 없지만 클라에서 Map text를 파일을 읽는 게 빠른 것 같음
+            //System.Threading.Thread.Sleep(1000);
         }
 
         public override void Update()

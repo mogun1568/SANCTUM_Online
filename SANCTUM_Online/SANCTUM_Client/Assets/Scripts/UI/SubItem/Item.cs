@@ -8,7 +8,6 @@ using Google.Protobuf.Protocol;
 
 public class Item : UI_Base
 {
-    public ItemData data;
     ItemInfo _itemInfo;
 
     Image icon;

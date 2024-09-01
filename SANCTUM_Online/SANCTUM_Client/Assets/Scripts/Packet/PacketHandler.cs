@@ -9,6 +9,16 @@ using UnityEngine;
 
 class PacketHandler
 {
+    public static void S_EnterRoomHandler(PacketSession session, IMessage packet)
+    {
+        S_EnterRoom enterRoomPacket = packet as S_EnterRoom;
+
+        if (enterRoomPacket.CanEnter)
+            Managers.Scene.sceneFader.FadeTo(Define.Scene.MultiPlay);
+        else
+            Managers.Object.RoomList = null;
+    }
+
     public static void S_EnterGameHandler(PacketSession session, IMessage packet)
     {
         S_EnterGame enterGamePacket = packet as S_EnterGame;
@@ -268,7 +278,7 @@ class PacketHandler
             return;
 
         Managers.Object.MyMap.IsFPM = false;
-        Managers.UI.ClosePopupUI();
+        Managers.UI.CloseAllPopupUI();
         Managers.Game.invenUI.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Managers.Game._mainCamera.gameObject.SetActive(true);

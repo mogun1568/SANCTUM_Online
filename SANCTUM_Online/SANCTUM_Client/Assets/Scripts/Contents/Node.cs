@@ -18,7 +18,7 @@ public class Node : BaseController
             return;
         }
 
-        if (!Managers.Game.isPopup)
+        if (Managers.Game.isPopup)
         {
             return;
         }

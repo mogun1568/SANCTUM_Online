@@ -43,6 +43,7 @@ public class RoomUI : UI_Popup
 
     public void ReturnRoomSelect()
     {
+        Managers.Object.RoomList = null;
         Managers.Scene.sceneFader.FadeTo(Define.Scene.Room);
 
         C_LeaveRoom leaveRoomPacket = new C_LeaveRoom();
@@ -52,7 +53,9 @@ public class RoomUI : UI_Popup
     public void Home()
     {
         //Managers.Game.Toggle();
+        Managers.Object.RoomList = null;
         Managers.Scene.sceneFader.FadeTo(Define.Scene.MainMenu);
+        Managers.Network.Disconnect();
     }
 
     public void GameStart()

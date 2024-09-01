@@ -1,6 +1,7 @@
 using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -44,18 +45,18 @@ public class RoomSelectUI : UI_Scene
     }
 
     public void CreateOrJoinRoom(int roomId = default)
-    {
-        if (roomId != default)
-            RoomId = roomId;
+        {
+        RoomId = roomId;
 
-        Managers.Scene.sceneFader.FadeTo(Define.Scene.MultiPlay);
+        C_EnterRoom enterRoomPacket = new C_EnterRoom();
+        enterRoomPacket.RoomId = RoomId = roomId;
+        enterRoomPacket.IsGameRoom = false;
+        Managers.Network.Send(enterRoomPacket);
     }
 
     public void RequestRoomList()
     {
-        Content.transform.GetChild(0).gameObject.SetActive(false);
-        for (int i = 1; i < Content.transform.childCount; i++)
-            Destroy(Content.transform.GetChild(i).gameObject);
+        Clear();
 
         C_RoomList roomListPacket = new C_RoomList();
         Managers.Network.Send(roomListPacket);
@@ -64,18 +65,20 @@ public class RoomSelectUI : UI_Scene
     public void UpdateRoomList(RoomInfo roomInfo)
     {
         GameObject go;
-        if (Content.transform.childCount == 1)
-        {
-            go = Content.transform.GetChild(0).gameObject;
-            go.SetActive(true);
-        }
-        else
-            go = Instantiate(Content.transform.GetChild(0).gameObject, Content.transform);
+        go = Instantiate(Content.transform.GetChild(0).gameObject, Content.transform);
+        go.gameObject.SetActive(true);
 
         go.GetComponentsInChildren<TextMeshProUGUI>()[0].text = $"Room_{roomInfo.Id}";
         go.GetComponentsInChildren<TextMeshProUGUI>()[2].text = $"{roomInfo.PlayerNum} / 4";
 
         Button button = go.GetComponentInChildren<Button>();
+        button.gameObject.SetActive(true);
+
+        if (roomInfo.IsStart) {
+            button.gameObject.SetActive(false);
+            return;
+        }
+
         if (button != null)
         {
             button.onClick.RemoveAllListeners(); // 기존의 리스너를 모두 제거 (중복 방지)
@@ -93,5 +96,12 @@ public class RoomSelectUI : UI_Scene
             }
         }
         return null;
+    }
+
+    void Clear()
+    {
+        Content.transform.GetChild(0).gameObject.SetActive(false);
+        for (int i = 1; i < Content.transform.childCount; i++)
+            Destroy(Content.transform.GetChild(i).gameObject);
     }
 }

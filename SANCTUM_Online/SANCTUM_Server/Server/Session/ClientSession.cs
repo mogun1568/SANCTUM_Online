@@ -70,7 +70,7 @@ namespace Server
                 GameRoom room = RoomManager.Instance.FindGameRoom(MyPlayer.Room.RoomId);
                 room.Push(room.LeaveGame, MyPlayer.Info.ObjectId);
             }
-            else
+            if (MyPlayer.WaitingRoom != null)
             {
                 WaitingRoom waitingRoom = RoomManager.Instance.FindWaitingRoom(MyPlayer.WaitingRoom.RoomId);
                 waitingRoom.Push(waitingRoom.LeaveGame, MyPlayer.Info.ObjectId);

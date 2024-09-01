@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -65,10 +66,47 @@ namespace Server.Game
             _listener.Init(endPoint, () => { return SessionManager.Instance.Generate(); });
             Console.WriteLine("Listening...");
 
+            DeleteAllFiles();
+
             // TODO
             while (true)
             {
                 Thread.Sleep(100);
+            }
+        }
+
+        static void DeleteAllFiles()
+        {
+            DeleteAllFilesInFolder("../../../../../Common/MapData");
+            DeleteAllFilesInFolder("../../../../../SANCTUM_Client/Assets/Resources/Map");
+            DeleteAllFilesInFolder("../../../../../SANCTUM_Client/Assets/Resources/Inventory");
+        }
+
+        static void DeleteAllFilesInFolder(string folderPath)
+        {
+            if (Directory.Exists(folderPath))
+            {
+                // 폴더 내 모든 파일 경로 가져오기
+                string[] files = Directory.GetFiles(folderPath);
+
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        // 각 파일을 삭제합니다.
+                        File.Delete(file);
+                        //Console.WriteLine($"파일 삭제됨: {file}");
+                    }
+                    catch (IOException ioEx)
+                    {
+                        // 파일 삭제 중 오류 발생 시 출력
+                        Console.WriteLine($"파일 삭제 중 오류 발생: {file}, 오류: {ioEx.Message}");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"폴더를 찾을 수 없습니다: {folderPath}");
             }
         }
     }

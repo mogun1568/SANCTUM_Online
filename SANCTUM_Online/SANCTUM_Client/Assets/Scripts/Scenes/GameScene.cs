@@ -22,6 +22,7 @@ public class GameScene : BaseScene
 
         C_EnterRoom enterRoomPacket = new C_EnterRoom();
         enterRoomPacket.RoomId = Managers.Object.RoomList.RoomId;
+        enterRoomPacket.IsGameRoom = true;
         Managers.Object.RoomList = null;
         Managers.Network.Send(enterRoomPacket);
 

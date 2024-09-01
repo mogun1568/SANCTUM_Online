@@ -97,6 +97,7 @@ namespace Server.Game
                 RoomInfo roomInfo = new RoomInfo();
                 roomInfo.Id = gr.RoomId;
                 roomInfo.PlayerNum = gr._players.Count;
+                roomInfo.IsStart = gr.isStart;
 
                 resRoomListPacket.RoomList.Add(roomInfo);
             }
@@ -111,19 +112,39 @@ namespace Server.Game
             }
 
             GameRoom room;
-            if (enterRoomPacket.RoomId == default)
+
+            if (enterRoomPacket.IsGameRoom)
             {
-                // 새 GameRoom 생성
-                room = RoomManager.Instance.AddGameRoom();
+                if (enterRoomPacket.RoomId == default)
+                {
+                    // 새 GameRoom 생성
+                    room = RoomManager.Instance.AddGameRoom();
+                }
+                else
+                {
+                    // GameRoom 찾기
+                    room = RoomManager.Instance.FindGameRoom(enterRoomPacket.RoomId);
+                }
+
+                room.Push(room.EnterGame, player);
+                Push(LeaveGame, player.Id);
             }
             else
             {
-                // GameRoom 찾기
-                room = RoomManager.Instance.FindGameRoom(enterRoomPacket.RoomId);
-            }
-            room.Push(room.EnterGame, player);
+                if (enterRoomPacket.RoomId != default)
+                {
+                    // GameRoom 찾기
+                    room = RoomManager.Instance.FindGameRoom(enterRoomPacket.RoomId);
 
-            Push(LeaveGame, player.Id);
+                    if (room.isStart || room._players.Count >= 4)
+                        return;
+                }
+
+                S_EnterRoom resEnterGamePacket = new S_EnterRoom();
+                resEnterGamePacket.PlayerId = player.Id;
+                resEnterGamePacket.CanEnter = true;
+                player.Session.Send(resEnterGamePacket);
+            }
         }
     }
 }

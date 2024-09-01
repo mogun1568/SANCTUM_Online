@@ -31,16 +31,31 @@ namespace Server.Game
                 case "Tower":
                     if (_turret != null || _haveEnvironment)
                         return false;
+
                     BuildTurret(itemInfo.ItemName, pos);
                     break;
                 case "Element":
                     if (_turret == null)
                         return false;
+
+                    if (_upgradedNum > 0 && _element != itemInfo.ItemName)
+                    {
+                        Console.WriteLine("already ues element!");
+                        return false;
+                    }
+
+                    if (_upgradedNum >= 3)
+                    {
+                        Console.WriteLine("Upgrade Done!");
+                        return false;
+                    }
+
                     ApplicateElement(itemInfo.ItemName, pos);
                     break;
                 case "TowerOnlyItem":
                     if (_turret == null)
                         return false;
+
                     UseTowerOnlyItem(itemInfo.ItemName, itemInfo);
                     break;
             }
@@ -83,18 +98,7 @@ namespace Server.Game
 
         void ApplicateElement(string itemName, PositionInfo pos)
         {
-            if (_upgradedNum > 0 && _element != itemName)
-            {
-                Console.WriteLine("already ues element!");
-                return;
-            }
             _element = itemName;
-
-            if (_upgradedNum >= 3)
-            {
-                Console.WriteLine("Upgrade Done!");
-                return;
-            }
 
             Console.WriteLine($"{itemName} Upgrade {_upgradedNum} -> {_upgradedNum + 1}");
             _upgradedNum++;

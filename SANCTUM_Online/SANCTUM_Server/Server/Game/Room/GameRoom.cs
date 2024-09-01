@@ -24,12 +24,11 @@ namespace Server.Game
 
         public Wave Wave { get; private set; } = new Wave();
 
-        bool isStart;
+        public bool isStart;
 
         public void Init()
         {
             Wave.Room = this;
-            
         }
 
         // 누군가가 주기적으로 호출해줘야 한다
@@ -69,6 +68,9 @@ namespace Server.Game
 
             if (type == GameObjectType.Player)
             {
+                if (isStart)
+                    return;
+
                 Player player = gameObject as Player;
                 Console.WriteLine(player.Id);
 
@@ -258,8 +260,6 @@ namespace Server.Game
                 return;
             }
 
-            WaitingRoom waitingRoom = RoomManager.Instance.FindWaitingRoom(1);
-
             Push(LeaveGame, player.Id);
         }
 
@@ -316,8 +316,8 @@ namespace Server.Game
             if (invenUpdatePacket.IsAdd)
             {
                 player.Inventory.AddItem(invenUpdatePacket.ItemName);
-                player.LevelManager._isShow = false;
-                //player.LevelManager._countLevelUp--;
+                player.LevelManager.LevelUp();
+                //player.LevelManager._isShow = false;
             }
             else
             {
@@ -327,20 +327,6 @@ namespace Server.Game
             S_InvenUpdate resInvenUpdatePacket = new S_InvenUpdate();
             resInvenUpdatePacket.PlayerId = player.Id;
             player.Session.Send(resInvenUpdatePacket);
-        }
-
-        public void HandlelevelUp(Player player, C_LevelUp levelUpPacket)
-        {
-            if (player == null)
-            {
-                return;
-            }
-
-            // TODO : 검증
-
-            player.LevelManager._isShow = levelUpPacket.IsShow;
-            //if (levelUpPacket.IsShow == false)
-            //    player.LevelManager._countLevelUp--;
         }
 
         public void HandleTurretUI(Player player, C_TurretUI turretUIPacket)

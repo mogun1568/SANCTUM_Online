@@ -28,7 +28,8 @@ public class Turret : BaseController
             return;
         }
 
-        LockOnTarget();
+        if (_partToRotate != null)
+            LockOnTarget();
     }
 
     public override void LockOnTarget()

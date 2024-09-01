@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     Vector3 pos, move, dragOrigin;  // dragOrigin: 드래그 시작 위치 저장 변수
 
     [SerializeField]
-    float moveSpeed = 30f, scrollSpeed = 5f, minY = 15f, maxY = 80f;
+    float moveSpeed = 50f, scrollSpeed = 5f, minY = 15f, maxY = 80f;
 
     void Start()
     {
@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
 
         if (_mode == Define.CameraMode.QuarterView)
         {
-            CameraMove3();
+            CameraMove2();
 
             pos = transform.position;
 
@@ -122,7 +122,7 @@ public class CameraController : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal"); // A, D 키 입력
         float moveVertical = Input.GetAxis("Vertical"); // W, S 키 입력
 
-        move = Quaternion.Euler(60f, 45f, 0f) * new Vector3(moveHorizontal, 0.0f, moveVertical);
+        move = Quaternion.Euler(60f, 45f, 0f) * new Vector3(moveHorizontal, 0.0f, moveVertical * 2);
 
         move.y = 0;
 

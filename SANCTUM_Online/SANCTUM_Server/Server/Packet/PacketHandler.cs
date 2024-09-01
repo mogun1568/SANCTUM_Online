@@ -130,26 +130,6 @@ class PacketHandler
         room.Push(room.HandleInvenUpdate, player, invenUpdatePacket);
     }
 
-    public static void C_LevelUpHandler(PacketSession session, IMessage packet)
-    {
-        C_LevelUp levelUpPacket = packet as C_LevelUp;
-        ClientSession clientSession = session as ClientSession;
-
-        Player player = clientSession.MyPlayer;
-        if (player == null)
-        {
-            return;
-        }
-
-        GameRoom room = player.Room;
-        if (room == null)
-        {
-            return;
-        }
-
-        room.Push(room.HandlelevelUp, player, levelUpPacket);
-    }
-
     public static void C_TurretUIHandler(PacketSession session, IMessage packet)
     {
         C_TurretUI turretUIPacket = packet as C_TurretUI;

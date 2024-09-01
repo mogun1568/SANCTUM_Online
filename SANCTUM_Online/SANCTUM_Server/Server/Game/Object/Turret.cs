@@ -246,6 +246,7 @@ namespace Server.Game
                 firstPersonMode.TurretId = Id;
                 player.Session.Send(firstPersonMode);
 
+                player.isPause = false;
                 player.LevelManager.LevelUp();
             }
         }

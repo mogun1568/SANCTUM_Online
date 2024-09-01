@@ -40,11 +40,17 @@ public class GameManager
         {
             Managers.UI.ShowPopupUI<PauseMenu>("PauseMenuUI(Multy)");
             isPopup = true;
+
+            if (Managers.Object.MyMap.IsFPM)
+                Cursor.lockState = CursorLockMode.None;
         }
         else
         {
             Managers.UI.ClosePopupUI();
             isPopup = false;
+
+            if (Managers.Object.MyMap.IsFPM)
+                Cursor.lockState = CursorLockMode.Locked;
         }
 
         pausePacket.IsPause = isPopup;

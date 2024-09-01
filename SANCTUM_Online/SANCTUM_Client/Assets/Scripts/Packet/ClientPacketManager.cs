@@ -51,6 +51,8 @@ class PacketManager
 		_handler.Add((ushort)MsgId.STurretUI, PacketHandler.S_TurretUIHandler);		
 		_onRecv.Add((ushort)MsgId.SFirstPersonMode, MakePacket<S_FirstPersonMode>);
 		_handler.Add((ushort)MsgId.SFirstPersonMode, PacketHandler.S_FirstPersonModeHandler);		
+		_onRecv.Add((ushort)MsgId.SEnterRoom, MakePacket<S_EnterRoom>);
+		_handler.Add((ushort)MsgId.SEnterRoom, PacketHandler.S_EnterRoomHandler);		
 		_onRecv.Add((ushort)MsgId.SRoomList, MakePacket<S_RoomList>);
 		_handler.Add((ushort)MsgId.SRoomList, PacketHandler.S_RoomListHandler);		
 		_onRecv.Add((ushort)MsgId.SGameOver, MakePacket<S_GameOver>);
