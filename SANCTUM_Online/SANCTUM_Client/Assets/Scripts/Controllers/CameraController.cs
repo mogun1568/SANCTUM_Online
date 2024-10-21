@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
 
         if (_mode == Define.CameraMode.QuarterView)
         {
-            CameraMove2();
+            CameraMove3();
 
             pos = transform.position;
 
@@ -97,13 +97,13 @@ public class CameraController : MonoBehaviour
 
     void CameraMove1()
     {
-        // 마우스 왼쪽 버튼을 누르는 순간 드래그 시작 위치를 저장합니다.
+        // 마우스 오른쪽 버튼을 누르는 순간 드래그 시작 위치를 저장합니다.
         if (Input.GetMouseButtonDown(1))
         {
             dragOrigin = Input.mousePosition;
         }
 
-        // 마우스 왼쪽 버튼을 누르고 있는 동안 드래그한 거리만큼 카메라를 이동합니다.
+        // 마우스 오른쪽 버튼을 누르고 있는 동안 드래그한 거리만큼 카메라를 이동합니다.
         if (Input.GetMouseButton(1))
         {
             pos = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
