@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 1532642208514420712}
   - component: {fileID: -5437016546278261598}
   - component: {fileID: 5779149640330886065}
+  - component: {fileID: -8260001763394529828}
   m_Layer: 0
   m_Name: ForestGround01
-  m_TagString: Untagged
+  m_TagString: ForestGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,8 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57915969470e97f488edbf42bda63cd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _turnSpeed: 10
   turret: {fileID: 0}
-  enviroment: 0
+  environment: 0
 --- !u!65 &5779149640330886065
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -145,6 +147,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-8260001763394529828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518290777679343708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac2896cc7b306049ac92f4f4774af79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsUsing: 0
 --- !u!1001 &186475966290863265
 PrefabInstance:
   m_ObjectHideFlags: 0
