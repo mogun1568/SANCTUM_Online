@@ -1,24 +1,17 @@
 using Google.Protobuf.Protocol;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 public class DragItem : UI_Base
 {
-    [SerializeField] GameObject TempItemObject;
-
-    GameObject SilhouetteItem;
-
+    GameObject silhouetteItem;
     ItemInfo itemInfo;
 
     private RaycastHit hit;
-    private Vector3 normal_position;
-    private Vector3 normal_size;
-
-    Image icon;
+    private Vector3 normalPosition;
+    private Vector3 normalSize;
+    private Image icon;
 
     void Awake()
     {
@@ -43,96 +36,100 @@ public class DragItem : UI_Base
 
     public void OnBeginDrag()
     {
-        normal_position = transform.position;
-        normal_size = transform.localScale;
+        normalPosition = transform.position;
+        normalSize = transform.localScale;
         Managers.Select.SelectItemToUse(gameObject, itemInfo);
+
         if (itemInfo.ItemType == "Tower")
         {
-            SilhouetteItem = Managers.Resource.Instantiate("ItemE_Tower");
+            silhouetteItem = Managers.Resource.Instantiate("ItemE_Tower");
         } else
         {
-            SilhouetteItem = Managers.Resource.Instantiate("Cube");
+            silhouetteItem = Managers.Resource.Instantiate("Cube");
         }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (SilhouetteItem == null)
+        if (silhouetteItem == null)
         {
-            Debug.Log("null");
+            Debug.Log("SilhouetteItem is null");
+            return;
         }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out hit);
 
-        float size = Mathf.Sqrt((normal_position.x - eventData.position.x) * (normal_position.x - eventData.position.x) + (normal_position.y - eventData.position.y) * (normal_position.y - eventData.position.y));
+        UpdateUITransform(eventData);
+        UpdateSilhouetteTransform();
+    }
 
-        if (normal_size.x - size / 100 > 0)
+    private void UpdateUITransform(PointerEventData eventData)
+    {
+        float size = Vector2.Distance(normalPosition, eventData.position);
+
+        if (normalSize.x - size / 100 > 0)
         {
             transform.position = eventData.position;
-
-            transform.localScale = new Vector3(normal_size.x - size / 120, normal_size.y - size / 120, 0);
-            SilhouetteItem.transform.localScale = new Vector3(1 - (normal_size.x - size / 100), 1 - (normal_size.x - size / 100), 1 - (normal_size.x - size / 100));
+            transform.localScale = normalSize - Vector3.one * (size / 120);
+            silhouetteItem.transform.localScale = Vector3.one * (1 - (normalSize.x - size / 100));
         }
         else
         {
-            transform.localScale = new Vector2(0, 0);
-            SilhouetteItem.transform.localScale = new Vector3(1.01f, 1.01f, 1.01f);
+            transform.localScale = Vector3.zero;
+            silhouetteItem.transform.localScale = Vector3.one * 1.01f;
+        }
+    }
+
+    private void UpdateSilhouetteTransform()
+    {
+        switch (hit.transform?.tag)
+        {
+            case "ForestGround":
+                HandleGroundPlacement();
+                break;
+            default:
+                SetSilhouetteColor(Color.red);
+                silhouetteItem.transform.position = hit.point;
+                break;
+        }
+    }
+
+    private void HandleGroundPlacement()
+    {
+        var node = hit.transform.GetComponent<Node>();
+        if (itemInfo.ItemType == "Tower")
+        {
+            if (node != null && node.turret == null && !node.environment)
+                SetSilhouetteColor(Color.green);
+            else
+                SetSilhouetteColor(Color.red);
         }
 
-        //Move
-        Physics.Raycast(ray, out hit);
-        if (hit.transform.name == "ForestGround01")
-        {
-            if (itemInfo.ItemType == "Tower")
-            {
-                if ((hit.transform.GetComponent<Node>().turret != null || !hit.transform.GetComponent<Node>().turret) && !hit.transform.GetComponent<Node>().environment)
-                {
-                    foreach (Component com in SilhouetteItem.GetComponentsInChildren<Component>())
-                        foreach (Renderer ren in com.GetComponentsInChildren<Renderer>())
-                            ren.material.color = new Color(0.1375f, 1, 0, 0);
-                }
-                else
-                {
-                    foreach (Renderer mat in SilhouetteItem.GetComponentsInChildren<Renderer>())
-                        mat.material.color = new Color(1, 0.01f, 0, 0);
-                }
-            }
+        silhouetteItem.transform.position = hit.transform.position + Vector3.up * hit.transform.localScale.y;
+    }
 
-
-            SilhouetteItem.transform.position = hit.transform.position + new Vector3(0, hit.transform.localScale.y, 0);
-        }
-        else if (hit.transform.name == "Plane")
+    private void SetSilhouetteColor(Color color)
+    {
+        foreach (Renderer mat in silhouetteItem.GetComponentsInChildren<Renderer>())
         {
-            if (itemInfo.ItemType == "Tower")
-            {
-                foreach (Renderer mat in SilhouetteItem.GetComponentsInChildren<Renderer>())
-                    mat.material.SetColor("_Color", new Color(1, 1, 1));
-            }
-            SilhouetteItem.transform.position = hit.point;
-        }
-        else
-        {
-            if (itemInfo.ItemType == "Tower")
-            {
-                foreach (Renderer mat in SilhouetteItem.GetComponentsInChildren<Renderer>())
-                    mat.material.color = new Color(1, 0.01f, 0, 0);
-            }
-            SilhouetteItem.transform.position = hit.point;
+            mat.material.color = color;
         }
     }
 
     public void OnEndDrag()
     {
-        transform.position = normal_position;
-        transform.localScale = normal_size;
-        if (hit.transform.name == "ForestGround01")
+        transform.position = normalPosition;
+        transform.localScale = normalSize;
+
+        if (hit.transform != null && hit.transform.CompareTag("ForestGround"))
         {
             hit.transform.GetComponent<Node>().UseItem();
         }
 
         Managers.Select.Clear();
-        Destroy(SilhouetteItem);
-        SilhouetteItem = null;
+        Destroy(silhouetteItem);
+        silhouetteItem = null;
     }
 
     public void Onclick()

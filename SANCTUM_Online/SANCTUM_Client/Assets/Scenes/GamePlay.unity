@@ -847,7 +847,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed73df9bfa70934c9d41edfc0c2cee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  map: {fileID: 1042228140}
 --- !u!114 &1042228140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -860,11 +859,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e43fe8798b255594696e25f7c1175f9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roadParent: {fileID: 1891021186457725618}
-  GroundParent: {fileID: 110342310}
-  EnvironmentParent: {fileID: 2065247546}
+  _turnSpeed: 10
   startObj: {fileID: 0}
-  playerId: 3
 --- !u!1 &1236805029
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +905,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ed73df9bfa70934c9d41edfc0c2cee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  map: {fileID: 0}
 --- !u!1 &1477806273
 GameObject:
   m_ObjectHideFlags: 0

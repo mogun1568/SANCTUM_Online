@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
 
         if (_mode == Define.CameraMode.QuarterView)
         {
-            CameraMove3();
+            CameraMove2();
 
             pos = transform.position;
 
